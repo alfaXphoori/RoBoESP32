@@ -1,0 +1,3 @@
+Serve these files as-is. GitHub Pages must not run Jekyll over them:
+index.html fetches lesson-m3-th.md and worksheet-m3-th.md as raw text and
+renders them in the browser, so the .md files have to stay untouched.

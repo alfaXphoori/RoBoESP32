@@ -1,0 +1,86 @@
+<!doctype html><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=no"><style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;font:16px system-ui;background:#0e1116;color:#e6edf3;text-align:center;overflow:hidden}
+#w{display:flex;flex-direction:column;height:100dvh;padding:10px;gap:8px}
+.z{flex:1;display:none;overflow-y:auto}
+.z.y{display:flex;gap:12px}
+#li,#mo{flex-direction:column}
+#p{flex:1.1;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:8px}
+#F{grid-area:1/2}#L{grid-area:2/1}#S{grid-area:2/2}#R{grid-area:2/3}#B{grid-area:3/2}
+#g{flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px}
+button{border:0;border-radius:14px;background:#1b2430;color:#7ee2b8;font-size:26px;touch-action:none}
+.on{background:#7ee2b8!important;color:#0e1116!important}
+#S{background:#2a1b20;color:#ff8f8f;font-size:20px}
+input{-webkit-appearance:none;appearance:none;width:100%;height:56px;background:none;margin:0}
+input::-webkit-slider-runnable-track{height:22px;border-radius:11px;background:#1b2430}
+input::-webkit-slider-thumb{-webkit-appearance:none;width:48px;height:48px;border-radius:24px;background:#7ee2b8;margin-top:-13px}
+input::-moz-range-track{height:22px;border-radius:11px;background:#1b2430}
+input::-moz-range-thumb{width:48px;height:48px;border:0;border-radius:24px;background:#7ee2b8}
+.n{font-size:14px;letter-spacing:1px;color:#9aa6b4;text-align:left}
+.x{display:flex;gap:8px}
+.x button{flex:1;height:52px;font-size:14px}
+.x div{flex:1}
+#rot{display:none;padding-top:44vh;color:#7ee2b8;letter-spacing:1px}
+@media(orientation:portrait){#w{display:none}#rot{display:block}}
+</style>
+<div id=w>
+<div id=Y class=x></div>
+<div id=d class="z y">
+<div id=p><button id=F>&#9650;</button><button id=L>&#9664;</button><button id=S>&#9632;</button><button id=R>&#9654;</button><button id=B>&#9660;</button></div>
+<div id=g>
+<div><div id=t class=n>SPEED 70%</div><input id=sp type=range min=20 max=100 value=70></div>
+<div><div id=u class=n>SERVO 90&deg;</div><input id=sv type=range min=0 max=180 value=90></div>
+<div id=r class=x><button id=W>&#9728; LIGHT</button><button id=H>&#9834; HORN</button></div>
+</div>
+</div>
+<div id=li class=z>
+<div id=O class=x></div>
+<div id=A class=x></div>
+<div id=Q class=x></div>
+</div>
+<div id=mo class=z>
+<div id=X></div>
+<div id=K class=x></div>
+<div id=I class=n></div>
+</div>
+</div>
+<div id=rot>&#8635; ROTATE TO LANDSCAPE</div>
+<script>
+var q=null,b=0,C={F:"Forward",B:"Backward",L:"Left",R:"Right"},E=function(i){return document.getElementById(i)};
+function s(p){q=p;g()}
+function g(){if(b||q==null)return;b=1;var p=q;q=null;var d=function(){b=0;g()};fetch("/"+p).then(d,d)}
+"FBLR".split("").forEach(function(i){var e=E(i);
+e.onpointerdown=function(v){v.preventDefault();e.className="on";s(C[i])};
+e.onpointerup=e.onpointercancel=e.onpointerleave=function(){if(e.className){e.className="";s("Stop")}}});
+E("S").onclick=function(){s("Stop")};
+var m=0;
+E("W").onpointerdown=function(v){v.preventDefault();m=m?0:1;this.className=m?"on":"";s("Light"+m)};
+E("H").onpointerdown=function(v){v.preventDefault();s("Horn")};
+E("sp").oninput=function(){E("t").textContent="SPEED "+this.value+"%"};
+E("sp").onchange=function(){s("Speed_"+this.value)};
+E("sv").oninput=function(){E("u").textContent="SERVO "+this.value+"\u00b0";s("Servo_"+this.value)};
+var k={ArrowUp:"F",ArrowDown:"B",ArrowLeft:"L",ArrowRight:"R",w:"F",s:"B",a:"L",d:"R"};
+onkeydown=function(e){var c=k[e.key];if(c&&!e.repeat){E(c).className="on";s(C[c])}};
+onkeyup=function(e){var c=k[e.key];if(c){E(c).className="";s("Stop")}};
+const y=t=>document.createElement(t);
+const M=(p,t,f)=>p.appendChild(Object.assign(y("button"),{textContent:t,onclick:f}));
+const T=["DRIVE","LIGHT","MORE"].map((l,i)=>M(Y,l,()=>P(i)));
+let G=0,J=0,Z=0;
+T[0].className="on";
+function P(n){Z=n;for(let i=0;i<3;i++){[d,li,mo][i].className=i==n?"z y":"z";T[i].className=i==n?"on":""}}
+[[255,0,0],[255,80,0],[255,220,0],[0,200,0],[0,200,200],[0,80,255],[200,0,255],[255,255,255]].forEach(c=>M(O,"",()=>s("Rgb_"+G+"_"+c.join("_"))).style.background="rgb("+c+")");
+[0,1,"ALL"].forEach((l,i)=>M(A,l,()=>G=i));
+for(let i=1;i<9;i++){const e=M(Q,i);e.onclick=()=>s("Led_"+i+"_"+ +e.classList.toggle("on"))}
+const V=(p,o,h,v,b,f)=>{const d=p.appendChild(y("div"));d.textContent=b;const i=d.appendChild(Object.assign(y("input"),{type:"range",min:o,max:h,value:v}));i.oninput=()=>f(i.value);return i};
+[["_","D4"],["B_","D5"],["C_","D18"],["D_","D19"]].forEach(a=>V(X,0,180,90,a[1],v=>s("Servo"+a[0]+v)));
+[1,2].forEach(i=>{const N=V(K,-100,100,0,"M"+i,v=>s("Motor_"+i+"_"+v));N.onchange=()=>{N.value=0;N.oninput()}});
+[[A,"DIM-","Dim_-25"],[A,"DIM+","Dim_25"],[A,"ON","Leds_1"],[A,"OFF","Leds_0"],[K,"SONG","Song"],[K,"BEEP","Beep"]].forEach(a=>M(a[0],a[1],()=>s(a[2])));
+const U=V(K,200,2000,440,"TONE",()=>{});
+M(K,"PLAY",()=>s("Tone_"+U.value+"_300"));
+const sd=Object.assign(y("div"),{className:"n",textContent:"DIST -- cm"});
+sd.style.cssText="font-size:22px;color:#7ee2b8";
+E("g").insertBefore(sd,E("g").firstChild);
+function N(){if(Z==1||b){J=setTimeout(N,400);return}fetch("/Status").then(r=>r.text(),()=>0).then(t=>{if(t){const v=t.split(","),c=(+v[4]||"--");sd.textContent="DIST "+c+" cm";I.textContent="D34 "+(+v[0]?"\u25cf":"\u25cb")+" D35 "+(+v[1]?"\u25cf":"\u25cb")+" DIST "+c+" cm"}J=setTimeout(N,Z==2?500:800)})}
+N();
+</script>
