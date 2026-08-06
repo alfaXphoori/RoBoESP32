@@ -12,8 +12,7 @@ a phone browser.
 
 There is no build/lint/test tooling — this is not a conventional software project. The
 "source" is a MicroBlocks library and one MicroBlocks project file, edited either in the
-MicroBlocks IDE (block editor) or as plain text here. Alongside them is a set of Thai
-teaching materials published as a GitHub Pages site.
+MicroBlocks IDE (block editor) or as plain text here.
 
 ## Files
 
@@ -22,11 +21,6 @@ teaching materials published as a GitHub Pages site.
 | `KSU_RoBoESP32.ubl` | The library: all reusable blocks students call from their project. |
 | `RoboCar.ubp` | The one project file — answer key. The `forever` loop uses `KSU do command`; the ten-command long-form `if` chain sits beside it as an unattached script (so the class can see the shortcut block is not magic), along with click-to-run demo blocks. Embeds its own full copy of the library (see below). |
 | `RoboCar-Control.html` | A standalone, human-editable copy of the HTML/CSS/JS control page. This is NOT what the board serves — it exists only so the page can be previewed/edited in a normal browser/editor. Changes here must be manually re-split and copied into the two `.ubp`/`.ubl` files (see below). |
-| `README.md` | Full reference: hardware wiring, pin map, command list, library API, troubleshooting. Read this first for anything not covered below. |
-| `lesson-m3-th.md`, `slides-m3-th.html`, `worksheet-m3-th.md` | The current Thai teaching set for Grade 9 (ม.3): teacher lesson plan, reveal-style slide deck, student worksheet. These are what the classroom actually uses. |
-| `index.html` | GitHub Pages landing page linking the Thai materials. Uses screenshots in `images/`. |
-| `worksheet.md` | The older English worksheet (~50 min). **Stale** — still references `robocar-STUDENT.ubp`, which no longer exists (recoverable via `git show 40df6c7:robocar-STUDENT.ubp`). |
-| `backup_20260729/` | Pre-consolidation copies of the old STUDENT/TEACHER projects. Reference only; do not edit. |
 
 ## File format
 
@@ -79,12 +73,12 @@ once per iteration of the student's `forever` loop. Each call:
 **Wire protocol: split the path on underscores.** Element 1 is the command word, elements
 2..n are numbers, parsed into the args list (`_ksu_args` / `_KSU_RoBoESP32_args`). So `/Speed_70` → word `Speed`, args
 `[70]`; `/Rgb_2_255_120_0` → word `Rgb`, args `[2 255 120 0]`. A path with no underscore
-is a bare word — which is why `Light1`/`Light0` stay whole words, deliberately, so the
-worksheet can teach "different word → different action" before it teaches passing values.
+is a bare word — which is why `Light1`/`Light0` stay whole words, deliberately, so students
+can learn "different word → different action" before learning to pass values.
 Read the numbers with `KSU_ROBOESP32_value` (first) or `KSU_ROBOESP32_valueN` (i-th) in the *same* iteration.
 `KSU_ROBOESP32_value` reports 90 when the last command carried no number.
 
-Two student-facing patterns in `module main`. The long form the worksheet teaches:
+Two student-facing patterns in `module main`. The long form:
 ```
 set command to (KSU web command)
 if (command) = 'Forward' : KSU forward
@@ -127,8 +121,7 @@ loop while it waits, so it belongs once per `forever` iteration, never several t
 row. Both caveats belong in any doc that names the pins.
 
 Motor direction is controlled by two trim variables, `_ksu_rev1`/`_ksu_rev2` (`KSU set motor
-trim`), both defaulting to `-1` to match how the classroom cars are wired — see the
-Troubleshooting table in README.md before "fixing" direction bugs elsewhere.
+trim`), both defaulting to `-1` to match how the classroom cars are wired.
 
 **The board does whole-number arithmetic.** Multiply before you divide. `KSU_ROBOESP32_steer` has a
 comment about this because the obvious form of its formula silently collapses to three
@@ -204,17 +197,12 @@ concatenation, not the chunk boundaries, so a surgical edit beats a full re-spli
 - Command words sent by the page are case-sensitive: capitalized first letter, lowercase rest
   (`Forward`, not `forward` or `FORWARD`). Keep new commands consistent with this convention.
 - A library change is only finished when it has landed in **both** `KSU_RoBoESP32.ubl` and the
-  embedded module in `RoboCar.ubp`, translated to that file's naming (see the table above),
-  with `README.md` updated to match. The Thai materials (`lesson-m3-th.md`,
-  `slides-m3-th.html`, `worksheet-m3-th.md`, `index.html`) are lesson-paced, not API
-  reference — update them only when asked, or when a change breaks a step they describe.
-- The Thai worksheet's Part 2 teaches exactly ten core command words (Forward, Backward,
-  Left, Right, Stop, Light1, Light0, Horn, Speed, Servo). **Do not add new commands to
-  Part 2** — extra commands belong to the LIGHT/MORE tabs and are reached with the single
-  `KSU do command` block, which is what the "Going further" section is for. The README's
-  "Commands sent by the page" table is the one place that lists all of them.
-- Adding a command means touching four things at once: the page must send it, `_KSU_ROBOESP32_do2` must
-  handle it, the README table must list it, and — if it needs a new block — the library needs
+  embedded module in `RoboCar.ubp`, translated to that file's naming (see the table above).
+- There are exactly ten core command words (Forward, Backward,
+  Left, Right, Stop, Light1, Light0, Horn, Speed, Servo). Extra commands belong to the LIGHT/MORE tabs and are reached with the single
+  `KSU do command` block, which is what the "Going further" section is for.
+- Adding a command means touching three things at once: the page must send it, `_KSU_ROBOESP32_do2` must
+  handle it, and — if it needs a new block — the library needs
   the `spec` line. A command the page sends but `_KSU_ROBOESP32_do2` ignores fails silently.
 - A *sensor* is not a command. Readings reach the page through the `/Status` body, not through
   a new command word — that is how the ultrasonic distance gets onto the MORE tab, and it
