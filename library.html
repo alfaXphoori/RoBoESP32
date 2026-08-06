@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือไลบรารี KSU_RoBoESP32 | RoboESP32</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Prompt:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --secondary: #10B981;
+            --dark: #0F172A;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #F1F5F9;
+            --text-muted: #94A3B8;
+            --blk: #A855F7;
+            --blk-var: #F59E0B;
+            --line: rgba(255,255,255,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Prompt', 'Inter', sans-serif; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text-main);
+            line-height: 1.75;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* ---------- Navbar ---------- */
+        nav {
+            padding: 16px 0;
+            backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.75);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--line);
+        }
+        nav .container { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .logo {
+            font-size: 1.4rem; font-weight: 800; text-decoration: none;
+            background: linear-gradient(to right, #60A5FA, #34D399);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 20px; flex-wrap: wrap; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; transition: color .2s; }
+        .nav-links a:hover { color: #fff; }
+
+        /* ---------- Hero ---------- */
+        .hero { padding: 72px 0 40px; text-align: center; }
+        .kicker {
+            display: inline-block; padding: 6px 16px; border-radius: 50px;
+            background: rgba(79, 70, 229, 0.2); border: 1px solid rgba(129, 140, 248, 0.4);
+            color: #A5B4FC; font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 20px;
+        }
+        .hero h1 { font-size: 3rem; font-weight: 800; line-height: 1.25; margin-bottom: 16px; }
+        .hero p { color: var(--text-muted); max-width: 720px; margin: 0 auto; font-size: 1.1rem; }
+
+        /* ---------- Sections ---------- */
+        section { margin-top: 72px; scroll-margin-top: 90px; }
+        h2 {
+            font-size: 1.9rem; font-weight: 800; margin-bottom: 8px;
+            display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+        }
+        h2 .num {
+            font-size: 1rem; font-weight: 600; color: var(--secondary);
+            border: 1px solid rgba(16,185,129,.4); border-radius: 8px; padding: 2px 10px;
+            background: rgba(16,185,129,.1); white-space: nowrap;
+        }
+        .lead { color: var(--text-muted); margin-bottom: 28px; font-size: 1.05rem; }
+        h3 { font-size: 1.25rem; margin: 32px 0 12px; color: #fff; }
+        h4 { font-size: 1.05rem; margin-bottom: 10px; }
+        p { margin-bottom: 14px; }
+        ul, ol { margin: 0 0 16px 22px; }
+        li { margin-bottom: 8px; }
+
+        .card {
+            background: var(--card-bg); border: 1px solid var(--line);
+            backdrop-filter: blur(16px); border-radius: 20px; padding: 28px;
+        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .panel {
+            background: rgba(0,0,0,0.25); padding: 22px; border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* ---------- Table of contents ---------- */
+        .toc { margin-top: 40px; }
+        .toc ol { columns: 2; column-gap: 40px; margin: 0 0 0 20px; }
+        .toc a { color: var(--text-main); text-decoration: none; border-bottom: 1px dashed rgba(255,255,255,.2); }
+        .toc a:hover { color: #34D399; border-color: #34D399; }
+        @media (max-width: 700px) { .toc ol { columns: 1; } }
+
+        /* ---------- MicroBlocks block chips ---------- */
+        .blk, .rep, .var {
+            display: inline-block; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em; font-weight: 600; color: #fff;
+            padding: 2px 10px; line-height: 1.7; white-space: nowrap;
+        }
+        .blk { background: var(--blk); border-radius: 5px; }
+        .rep { background: var(--blk); border-radius: 50px; }
+        .var { background: var(--blk-var); border-radius: 50px; color: #1a1206; }
+        .slot {
+            background: rgba(255,255,255,.9); color: #111; border-radius: 50px;
+            padding: 0 7px; margin: 0 2px; font-weight: 700;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.88em;
+            background: rgba(255,255,255,0.08); padding: 2px 7px; border-radius: 6px;
+            color: #A5F3D0; white-space: nowrap;
+        }
+        pre {
+            background: #060a12; border: 1px solid var(--line); border-radius: 14px;
+            padding: 20px; overflow-x: auto; margin-bottom: 16px;
+        }
+        pre code { background: none; padding: 0; color: #C9D6E4; white-space: pre; font-size: 0.9rem; line-height: 1.8; }
+        .c-key { color: #C084FC; } .c-str { color: #7EE2B8; } .c-num { color: #FBBF24; } .c-com { color: #64748B; }
+
+        /* ---------- Tables ---------- */
+        .tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 0.95rem; }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+        th { background: rgba(255,255,255,0.06); font-weight: 600; color: #fff; white-space: nowrap; }
+        tr:last-child td { border-bottom: none; }
+        td:first-child { white-space: nowrap; }
+
+        /* ---------- Callouts ---------- */
+        .note, .warn, .tip {
+            border-radius: 12px; padding: 18px 22px; margin: 20px 0;
+            border-left: 4px solid; font-size: 0.98rem;
+        }
+        .note { background: rgba(79, 70, 229, 0.12); border-color: #6366F1; }
+        .warn { background: rgba(239, 68, 68, 0.12); border-color: #EF4444; }
+        .tip  { background: rgba(16, 185, 129, 0.12); border-color: #10B981; }
+        .note strong, .warn strong, .tip strong { color: #fff; }
+        .note p:last-child, .warn p:last-child, .tip p:last-child { margin-bottom: 0; }
+
+        figure { margin: 24px 0; text-align: center; }
+        figure img {
+            max-width: 100%; border-radius: 16px; border: 1px solid var(--line);
+            box-shadow: 0 16px 32px rgba(0,0,0,.45);
+        }
+        figcaption { color: var(--text-muted); font-size: 0.9rem; margin-top: 12px; }
+
+        .btn {
+            display: inline-block; padding: 12px 26px; background: var(--primary);
+            color: #fff; text-decoration: none; border-radius: 50px; font-weight: 600;
+            transition: all .3s ease; box-shadow: 0 4px 15px rgba(79,70,229,.4);
+        }
+        .btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .btn.ghost { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2); box-shadow: none; }
+
+        .pill { display:inline-block; padding: 2px 10px; border-radius: 50px; font-size:.8rem; font-weight:600; }
+        .p-in { background: rgba(239,68,68,.18); color:#FCA5A5; }
+        .p-ok { background: rgba(16,185,129,.18); color:#6EE7B7; }
+
+        footer {
+            text-align: center; padding: 40px 0; border-top: 1px solid var(--line);
+            color: var(--text-muted); margin-top: 90px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.1rem; }
+            h2 { font-size: 1.5rem; }
+            .card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="container">
+        <a href="index.html" class="logo">RoboESP32</a>
+        <div class="nav-links">
+            <a href="index.html">หน้าแรก</a>
+            <a href="#ch1">รู้จักไลบรารี</a>
+            <a href="#ch6">คู่มือบล็อก</a>
+            <a href="#ch7">คำสั่งหน้าเว็บ</a>
+            <a href="#ch10">ตารางขา</a>
+            <a href="#ch12">แก้ปัญหา</a>
+        </div>
+    </div>
+</nav>
+
+<header class="hero container">
+    <div class="kicker">คู่มือการสอน · ฉบับเริ่มจากไลบรารี</div>
+    <h1>ไลบรารี KSU_RoBoESP32</h1>
+    <p>เรียนรู้ตั้งแต่ไลบรารีคืออะไร ติดตั้งอย่างไร ไปจนถึงบล็อกทุกตัว คำสั่งทุกคำที่หน้าเว็บส่งมา
+       และวิธีต่อยอดเขียนคำสั่งของตัวเอง — สำหรับบอร์ด Cytron ROBO ESP32 บน MicroBlocks</p>
+</header>
+
+<!-- ================= TOC ================= -->
+<div class="container toc">
+    <div class="card">
+        <h4 style="color:#fff;">สารบัญ</h4>
+        <ol>
+            <li><a href="#ch1">ไลบรารีนี้คืออะไร</a></li>
+            <li><a href="#ch2">ติดตั้งและเปิดใช้ไลบรารี</a></li>
+            <li><a href="#ch3">โปรแกรมแรก 3 บล็อก</a></li>
+            <li><a href="#ch4">หลักการทำงานเบื้องหลัง</a></li>
+            <li><a href="#ch5">แบบยาว (if) กับแบบบล็อกเดียว</a></li>
+            <li><a href="#ch6">คู่มือบล็อกทั้งหมด</a></li>
+            <li><a href="#ch7">คำสั่งที่หน้าเว็บส่งมา</a></li>
+            <li><a href="#ch8">หน้าเว็บควบคุม 3 แท็บ</a></li>
+            <li><a href="#ch9">เซนเซอร์วัดระยะ HC-SR04</a></li>
+            <li><a href="#ch10">ตารางขา GPIO</a></li>
+            <li><a href="#ch11">เพิ่มคำสั่งใหม่ด้วยตัวเอง</a></li>
+            <li><a href="#ch12">ปัญหาที่พบบ่อย</a></li>
+            <li><a href="#ch13">ใบงานสำหรับห้องเรียน</a></li>
+        </ol>
+    </div>
+</div>
+
+<!-- ================= 1 ================= -->
+<section id="ch1" class="container">
+    <h2><span class="num">บทที่ 1</span> ไลบรารีนี้คืออะไร</h2>
+    <p class="lead">ก่อนจะเขียนโปรแกรมสักบรรทัด ต้องเข้าใจก่อนว่าไฟล์ในโปรเจกต์นี้แต่ละไฟล์ทำหน้าที่อะไร</p>
+
+    <p><strong>KSU_RoBoESP32</strong> คือไลบรารีของ MicroBlocks ที่ห่อความสามารถทั้งหมดของบอร์ด Cytron ROBO ESP32
+       เอาไว้เป็นบล็อกภาษาไทยเข้าใจง่าย พร้อมกับ<strong>เว็บเซิร์ฟเวอร์ในตัว</strong> — บอร์ดจะปล่อยสัญญาณ WiFi ของตัวเอง
+       แล้วส่งหน้าเว็บควบคุมให้โทรศัพท์ที่เข้ามาเชื่อมต่อ นักเรียนจึงบังคับรถจากมือถือได้โดยไม่ต้องเขียน HTML เลยสักบรรทัด</p>
+
+    <div class="tw">
+        <table>
+            <thead><tr><th>ไฟล์</th><th>หน้าที่</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>KSU_RoBoESP32.ubl</code></td>
+                    <td>ตัวไลบรารี — รวมบล็อกทั้งหมดที่นักเรียนเรียกใช้ นำไปเพิ่มเข้าโปรเจกต์ใหม่ของตัวเองได้</td>
+                </tr>
+                <tr>
+                    <td><code>RoboCar.ubp</code></td>
+                    <td>ไฟล์โปรเจกต์ (เฉลย) — <strong>ไฟล์ที่นักเรียนโหลดลงบอร์ดจริง</strong> ข้างในมีสำเนาไลบรารีฝังมาครบแล้ว</td>
+                </tr>
+                <tr>
+                    <td><code>RoboCar-Control.html</code></td>
+                    <td>หน้าเว็บควบคุมฉบับอ่านง่าย ไว้เปิดดู/แก้ในเบราว์เซอร์ปกติ (ไม่ใช่ไฟล์ที่บอร์ดส่งออกไปโดยตรง)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>เรื่องสำคัญที่สุดที่ต้องรู้ก่อน: ไลบรารีมี 2 สำเนา</h3>
+    <p><code>RoboCar.ubp</code> <strong>ฝังสำเนาไลบรารีของตัวเองไว้ข้างใน</strong> การแก้ไฟล์ <code>.ubl</code> เฉย ๆ
+       จึงไม่ทำให้พฤติกรรมของ <code>.ubp</code> ที่ส่งออกไปแล้วเปลี่ยนแปลง และเพราะสองสำเนานี้ตั้งชื่อไม่เหมือนกัน
+       ชื่อบล็อกที่นักเรียนเห็นจึงต่างกันตามไฟล์ที่เปิด</p>
+
+    <div class="tw">
+        <table>
+            <thead>
+                <tr><th></th><th>เปิดจาก <code>RoboCar.ubp</code></th><th>เพิ่มจาก <code>KSU_RoBoESP32.ubl</code></th></tr>
+            </thead>
+            <tbody>
+                <tr><td>ชื่อบล็อกที่เห็น</td><td><span class="blk">KSU forward</span></td><td><span class="blk">KSU_RoBoESP32 forward</span></td></tr>
+                <tr><td>บล็อกเริ่มต้น</td><td><span class="blk">KSU start web control</span></td><td><span class="blk">KSU_RoBoESP32 start web control</span></td></tr>
+                <tr><td>การทำงาน</td><td colspan="2" style="white-space:normal;"><span class="p-ok pill">เหมือนกันทุกประการ</span> ต่างกันแค่ชื่อที่แสดงเท่านั้น</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <p><strong>ในคู่มือนี้เขียนชื่อบล็อกแบบสั้น</strong> (<span class="blk">KSU forward</span>) ตามที่เห็นใน
+        <code>RoboCar.ubp</code> เพราะเป็นไฟล์ที่ใช้สอนจริง ถ้านักเรียนเพิ่มไลบรารีจากไฟล์ <code>.ubl</code> เอง
+        ให้อ่านว่า <code>KSU</code> = <code>KSU_RoBoESP32</code> ทุกที่</p>
+    </div>
+</section>
+
+<!-- ================= 2 ================= -->
+<section id="ch2" class="container">
+    <h2><span class="num">บทที่ 2</span> ติดตั้งและเปิดใช้ไลบรารี</h2>
+    <p class="lead">มีสองทาง เลือกตามว่าจะสอนแบบ "เปิดเฉลยมาดู" หรือ "เริ่มจากโปรเจกต์เปล่า"</p>
+
+    <div class="grid">
+        <div class="panel">
+            <h4 style="color:#60A5FA;">ทาง ก · เปิดไฟล์เฉลย (แนะนำสำหรับคาบแรก)</h4>
+            <ol style="color:var(--text-muted);">
+                <li>เปิดโปรแกรม MicroBlocks</li>
+                <li>เมนู <strong>File → Open</strong> แล้วเลือก <code>RoboCar.ubp</code></li>
+                <li>ไลบรารีติดมาพร้อมไฟล์ทันที ไม่ต้องเพิ่มอะไรอีก</li>
+                <li>ต่อสาย USB แล้วกดปุ่มเชื่อมต่อ (รูป USB) เลือกพอร์ตของบอร์ด</li>
+            </ol>
+        </div>
+        <div class="panel">
+            <h4 style="color:#34D399;">ทาง ข · เพิ่มไลบรารีเข้าโปรเจกต์เปล่า</h4>
+            <ol style="color:var(--text-muted);">
+                <li>เปิด MicroBlocks แล้วสร้างโปรเจกต์ใหม่</li>
+                <li>ที่แถบบล็อกด้านซ้าย กด <strong>+ Add Library</strong></li>
+                <li>เลือกไฟล์ <code>KSU_RoBoESP32.ubl</code> จากเครื่อง</li>
+                <li>จะได้หมวดบล็อกใหม่ ชื่อบล็อกจะขึ้นต้นด้วย <code>KSU_RoBoESP32</code></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="warn">
+        <p><strong>ครั้งแรกที่ใช้เครื่องนี้</strong> ต้องติดตั้งไดรเวอร์ <code>CP210x</code> ก่อน ไม่อย่างนั้นคอมพิวเตอร์จะมองไม่เห็นบอร์ด
+           (มีไฟล์ <code>CP210x_Windows_Drivers.zip</code> อยู่ในโปรเจกต์)</p>
+    </div>
+
+    <div class="tip">
+        <p><strong>เปิดใช้งานถาวรในบอร์ด:</strong> หลังกดรันแล้วโปรแกรมจะอยู่ในบอร์ดจริง ถอดสาย USB
+           แล้วจ่ายไฟจากแบตเตอรี่ รถก็ทำงานเองได้เลย ไม่ต้องต่อคอมพิวเตอร์ค้างไว้</p>
+    </div>
+</section>
+
+<!-- ================= 3 ================= -->
+<section id="ch3" class="container">
+    <h2><span class="num">บทที่ 3</span> โปรแกรมแรก — แค่ 3 บล็อก</h2>
+    <p class="lead">ทั้งโปรเจกต์เริ่มจากสคริปต์สั้น ๆ ชุดเดียวนี้เท่านั้น</p>
+
+    <figure>
+        <img src="images/blocks-main-loop.png" alt="สคริปต์หลักในลูป forever">
+        <figcaption>สคริปต์หลักของ <code>RoboCar.ubp</code> — เริ่มเว็บควบคุม แล้ววนอ่านคำสั่งไปเรื่อย ๆ</figcaption>
+    </figure>
+
+    <h3>อธิบายทีละบรรทัด</h3>
+    <div class="tw">
+        <table>
+            <thead><tr><th>บล็อก</th><th>ทำอะไร</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><span class="blk">KSU start web control name <span class="slot">RoboCar</span> password <span class="slot">robocar123</span></span></td>
+                    <td>เปิดจุดปล่อย WiFi ชื่อ <code>RoboCar</code> ตั้งความเร็วเริ่มต้น 70% หมุนเซอร์โวทั้งสี่ตัวไปที่ 90&deg;
+                        ตั้งค่าเซนเซอร์ระยะที่ trig 33 / echo 32 และหยุดมอเตอร์ให้เรียบร้อย
+                        <br><strong>รหัสผ่านต้องยาวอย่างน้อย 8 ตัวอักษร</strong></td>
+                </tr>
+                <tr>
+                    <td><span class="var">command</span> = <span class="rep">KSU web command</span></td>
+                    <td>ถามว่า "ตอนนี้มีใครกดปุ่มบนหน้าเว็บไหม" ถ้ามีจะได้คำสั่งกลับมาเป็นคำเดียว เช่น <code>Forward</code>
+                        ถ้ายังไม่มีจะได้ข้อความว่าง</td>
+                </tr>
+                <tr>
+                    <td><span class="blk">KSU do command <span class="var">command</span></span></td>
+                    <td>บล็อกอัตโนมัติ — รับคำนั้นไปทำให้ครบทุกคำสั่งที่หน้าเว็บส่งได้ (21 คำสั่ง)</td>
+                </tr>
+                <tr>
+                    <td><span class="blk">wait <span class="slot">10</span> millisecs</span></td>
+                    <td>พักสั้น ๆ ให้บอร์ดได้หายใจ ไม่ให้ลูปกินซีพียูจนงานอื่นไม่ได้ทำ</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>ขั้นตอนใช้งานจริง</h3>
+    <ol>
+        <li>กดปุ่ม <strong>Start</strong> (ธงเขียว) ใน MicroBlocks หรือกดปุ่มรีเซ็ตบนบอร์ด</li>
+        <li>ที่โทรศัพท์ เข้าตั้งค่า WiFi เลือกเครือข่ายชื่อ <code>RoboCar</code> ใส่รหัส <code>robocar123</code></li>
+        <li>เปิดเบราว์เซอร์ พิมพ์ <code>http://192.168.4.1</code></li>
+        <li><strong>ถือโทรศัพท์แนวนอน</strong> — ถ้าถือแนวตั้งหน้าจอจะขึ้นว่า "ROTATE TO LANDSCAPE"</li>
+    </ol>
+
+    <div class="tip">
+        <p>อยากรู้เลข IP ให้แน่ใจ? คลิกบล็อก <span class="rep">KSU IP address</span> ใน MicroBlocks
+           แล้วจะมีป้ายบอกเลขขึ้นมา (ปกติคือ <code>192.168.4.1</code> เสมอเมื่อบอร์ดเป็นตัวปล่อย WiFi เอง)</p>
+    </div>
+</section>
+
+<!-- ================= 4 ================= -->
+<section id="ch4" class="container">
+    <h2><span class="num">บทที่ 4</span> หลักการทำงานเบื้องหลัง</h2>
+    <p class="lead">เข้าใจสองเรื่องนี้แล้ว จะแก้โปรแกรมต่อเองได้ทั้งหมด</p>
+
+    <h3>1. ทุกอย่างเกิดในลูปเดียว</h3>
+    <p>บล็อก <span class="rep">KSU web command</span> ถูกเรียกหนึ่งครั้งต่อการวนหนึ่งรอบ และในหนึ่งครั้งนั้นมันทำ 4 อย่าง:</p>
+    <ol>
+        <li>เช็กว่ามีคำขอ HTTP ค้างอยู่ไหม — ถ้าไม่มี ตอบกลับเป็นข้อความว่างทันที</li>
+        <li>ถ้าโทรศัพท์เพิ่งเปิดหน้าเว็บครั้งแรก (ที่อยู่ว่าง) → <strong>ส่งหน้าเว็บควบคุมกลับไป</strong> แล้วตอบเป็นค่าว่าง</li>
+        <li>ถ้าเป็นการถามสถานะ <code>/Status</code> → <strong>ตอบเองเงียบ ๆ</strong> แล้วตอบเป็นค่าว่าง (คำนี้ไม่มีวันหลุดถึงโปรแกรมนักเรียน)</li>
+        <li>นอกนั้น → ตอบ <code>200 OK</code> ให้เบราว์เซอร์ก่อน แล้วคืน<strong>คำสั่งคำเดียว</strong>ให้โปรแกรม</li>
+    </ol>
+
+    <div class="note">
+        <p><strong>ทำไมต้องตอบเบราว์เซอร์ก่อนแล้วค่อยทำงาน?</strong> เพราะหน้าเว็บจะยิงคำสั่งถัดไปได้ก็ต่อเมื่อคำสั่งก่อนหน้าตอบกลับแล้ว
+           การตอบทันทีทำให้รถรับคำสั่งใหม่ได้ลื่นไม่มีสะดุด</p>
+    </div>
+
+    <h3>2. รูปแบบคำสั่ง: ตัดด้วยขีดล่าง</h3>
+    <p>ที่อยู่ที่หน้าเว็บยิงมาจะถูกตัดด้วยเครื่องหมาย <code>_</code> ช่องแรกคือ<strong>คำสั่ง</strong> ช่องที่เหลือคือ<strong>ตัวเลข</strong></p>
+
+    <div class="tw">
+        <table>
+            <thead><tr><th>หน้าเว็บส่ง</th><th>คำสั่งที่ได้</th><th>ตัวเลขที่ได้</th><th>อ่านด้วย</th></tr></thead>
+            <tbody>
+                <tr><td><code>/Forward</code></td><td><code>Forward</code></td><td>ไม่มี</td><td>—</td></tr>
+                <tr><td><code>/Speed_70</code></td><td><code>Speed</code></td><td>70</td><td><span class="rep">KSU command value</span></td></tr>
+                <tr><td><code>/Rgb_2_255_120_0</code></td><td><code>Rgb</code></td><td>2, 255, 120, 0</td><td><span class="rep">KSU command value # <span class="slot">1..4</span></span></td></tr>
+                <tr><td><code>/Light1</code></td><td><code>Light1</code></td><td>ไม่มี</td><td>—</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <p><strong>ทำไม <code>Light1</code> ถึงไม่เขียนเป็น <code>Light_1</code>?</strong> ตั้งใจไว้อย่างนั้น
+           เพื่อให้นักเรียนได้เรียนแนวคิด "คำต่างกัน → ทำงานต่างกัน" ให้เข้าใจก่อน แล้วค่อยเรียนเรื่องการส่งค่าตัวเลขทีหลัง</p>
+    </div>
+
+    <div class="warn">
+        <p><strong>ต้องอ่านตัวเลขในรอบเดียวกัน</strong> — <span class="rep">KSU command value</span> เก็บค่าของคำสั่งล่าสุดเท่านั้น
+           พอมีคำสั่งใหม่เข้ามาค่าเก่าจะถูกทับ และถ้าคำสั่งล่าสุดไม่มีตัวเลขมาด้วย บล็อกนี้จะรายงาน <strong>90</strong>
+           (มุมกลางของเซอร์โว) ไม่ใช่ 0</p>
+    </div>
+</section>
+
+<!-- ================= 5 ================= -->
+<section id="ch5" class="container">
+    <h2><span class="num">บทที่ 5</span> แบบยาว (if) กับแบบบล็อกเดียว</h2>
+    <p class="lead">สองแบบนี้ทำงานเหมือนกัน ต่างกันที่แบบหนึ่งสอนตรรกะ อีกแบบสอนความสะดวก</p>
+
+    <h3>แบบยาว — สำหรับสอนเงื่อนไข</h3>
+    <p>ในไฟล์เฉลยมีสคริปต์ชุด <code>if</code> สิบอันวางแยกไว้ข้าง ๆ ลูปหลัก (ไม่ได้ต่อกับอะไร ไม่มีอะไรรันมัน)
+       ตั้งใจวางไว้ให้ห้องเรียนเห็นว่า <em>บล็อกลัดไม่ใช่เวทมนตร์</em> ข้างในมันก็คือ <code>if</code> ธรรมดา ๆ นี่เอง</p>
+    <pre><code><span class="c-key">set</span> command <span class="c-key">to</span> (KSU web command)
+
+<span class="c-key">if</span> (command) = <span class="c-str">'Forward'</span>  &rarr; KSU forward
+<span class="c-key">if</span> (command) = <span class="c-str">'Backward'</span> &rarr; KSU backward
+<span class="c-key">if</span> (command) = <span class="c-str">'Left'</span>     &rarr; KSU turn left
+<span class="c-key">if</span> (command) = <span class="c-str">'Right'</span>    &rarr; KSU turn right
+<span class="c-key">if</span> (command) = <span class="c-str">'Stop'</span>     &rarr; KSU stop
+<span class="c-key">if</span> (command) = <span class="c-str">'Light1'</span>   &rarr; KSU light (on)
+<span class="c-key">if</span> (command) = <span class="c-str">'Light0'</span>   &rarr; KSU light (off)
+<span class="c-key">if</span> (command) = <span class="c-str">'Horn'</span>     &rarr; KSU horn
+<span class="c-key">if</span> (command) = <span class="c-str">'Speed'</span>    &rarr; KSU set speed (KSU command value) %
+<span class="c-key">if</span> (command) = <span class="c-str">'Servo'</span>    &rarr; KSU set servo (D4) to (KSU command value) degrees</code></pre>
+
+    <h3>แบบบล็อกเดียว — สำหรับใช้งานจริง</h3>
+    <pre><code><span class="c-key">set</span> command <span class="c-key">to</span> (KSU web command)
+KSU do command (command)</code></pre>
+    <p>ครอบคลุมครบทั้ง 21 คำสั่ง รวมของแท็บ LIGHT และ MORE ที่แบบยาวข้างบนยังไม่ได้เขียนถึง</p>
+
+    <div class="note">
+        <p><strong>เกร็ดเบื้องหลัง:</strong> ภายในไลบรารี <span class="blk">KSU do command</span> รับผิดชอบ 10 คำสั่งของแท็บ DRIVE
+           แล้วโยนที่เหลืออีก 11 คำสั่งไปให้บล็อกลับชื่อ <code>_do2</code> ที่ต้องแยกเพราะ
+           <strong>หนึ่งสคริปต์ของ MicroBlocks คอมไพล์ได้ไม่เกิน 1000 ไบต์</strong> ไม่ได้แยกเพราะเหตุผลอื่น</p>
+    </div>
+
+    <h3>ลำดับการสอนที่แนะนำ</h3>
+    <div class="grid">
+        <div class="panel"><h4 style="color:#F87171;">คาบ 1 · ขับได้ก่อน</h4>
+            <p style="color:var(--text-muted);margin:0;">ใช้ 3 บล็อกในบทที่ 3 ให้รถวิ่งได้ทันที เห็นผลลัพธ์เร็ว นักเรียนตื่นเต้น</p></div>
+        <div class="panel"><h4 style="color:#FBBF24;">คาบ 2 · แกะว่ามันทำงานยังไง</h4>
+            <p style="color:var(--text-muted);margin:0;">ถอด <span class="blk">KSU do command</span> ออก แล้วให้นักเรียนต่อ <code>if</code> เองทีละอัน จนขับได้เหมือนเดิม</p></div>
+        <div class="panel"><h4 style="color:#34D399;">คาบ 3 · ต่อยอด</h4>
+            <p style="color:var(--text-muted);margin:0;">ใส่บล็อกอัตโนมัติกลับเข้าไป แล้วเพิ่มเซนเซอร์ระยะ / เขียนคำสั่งใหม่ของตัวเอง</p></div>
+    </div>
+</section>
+
+<!-- ================= 6 ================= -->
+<section id="ch6" class="container">
+    <h2><span class="num">บทที่ 6</span> คู่มือบล็อกทั้งหมด</h2>
+    <p class="lead">ตัวเลขในวงเล็บคือค่าเริ่มต้นของช่องกรอก · ชื่อในตารางเป็นแบบสั้นตาม <code>RoboCar.ubp</code></p>
+
+    <h3>🌐 เว็บควบคุม</h3>
+    <div class="tw">
+        <table>
+            <thead><tr><th>บล็อก</th><th>ความหมาย</th></tr></thead>
+            <tbody>
+                <tr><td><span class="blk">KSU start web control name <span class="slot">_</span> password <span class="slot">_</span></span></td><td>เปิด WiFi + เว็บเซิร์ฟเวอร์ และตั้งค่าเริ่มต้นทุกอย่าง (รหัสผ่าน &ge; 8 ตัว)</td></tr>
+                <tr><td><span class="rep">KSU web command</span></td><td>รายงานคำสั่งล่าสุดจากหน้าเว็บ หรือข้อความว่างถ้ายังไม่มี</td></tr>
+                <tr><td><span class="rep">KSU command value</span></td><td>ตัวเลขตัวแรกที่มากับคำสั่ง (รายงาน <strong>90</strong> เมื่อไม่มีตัวเลข)</td></tr>
+                <tr><td><span class="rep">KSU command value # <span class="slot">1</span></span></td><td>ตัวเลขลำดับที่ i (รายงาน 0 ถ้าไม่มี) ใช้กับคำสั่งที่ส่งหลายค่า เช่น <code>Rgb</code></td></tr>
+                <tr><td><span class="blk">KSU do command <span class="slot">_</span></span></td><td>ทำตามคำสั่งให้อัตโนมัติ ครบทุกคำที่หน้าเว็บส่งได้</td></tr>
+                <tr><td><span class="rep">KSU IP address</span></td><td>เลข IP ของบอร์ด (ปกติ <code>192.168.4.1</code>)</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>🚗 การขับเคลื่อน</h3>
+    <div class="tw">
+        <table>
+            <thead><tr><th>บล็อก</th><th>ความหมาย</th></tr></thead>
+            <tbody>
+                <tr><td><span class="blk">KSU forward</span> / <span class="blk">KSU backward</span></td><td>เดินหน้า / ถอยหลัง ด้วยความเร็วที่ตั้งไว้</td></tr>
+                <tr><td><span class="blk">KSU turn left</span> / <span class="blk">KSU turn right</span></td><td>หมุนซ้าย / ขวา อยู่กับที่ (ล้อสองข้างหมุนสวนกัน)</td></tr>
+                <tr><td><span class="blk">KSU stop</span></td><td>หยุดมอเตอร์ทั้งสองตัว</td></tr>
+                <tr><td><span class="blk">KSU set speed <span class="slot">70</span> %</span></td><td>ตั้งความเร็วที่ใช้กับทุกบล็อกข้างบน (หน้าเว็บเลื่อนได้ 20–100)</td></tr>
+                <tr><td><span class="blk">KSU drive <span class="slot">forward</span> for <span class="slot">500</span> ms</span></td><td>วิ่งไปทางที่เลือกตามเวลาที่กำหนด แล้ว<strong>หยุดเอง</strong> เหมาะกับงานวิ่งตามเส้นทางที่วางไว้</td></tr>
+                <tr><td><span class="blk">KSU steer <span class="slot">0</span></span></td><td>เลี้ยวแบบนุ่มนวล: −100 หมุนซ้ายสุด, 0 ตรง, 100 หมุนขวาสุด ล้อด้านในโค้งจะช้าลง (และถอยได้) ส่วนล้อด้านนอกคงความเร็วเดิม</td></tr>
+                <tr><td><span class="blk">KSU set motor <span class="slot">M1</span> power <span class="slot">70</span></span></td><td>สั่งมอเตอร์ทีละตัว −100 ถึง 100 (ยังคิดค่าปรับทิศให้อยู่)</td></tr>
+                <tr><td><span class="blk">KSU set motor trim M1 <span class="slot">-1</span> M2 <span class="slot">-1</span></span></td><td>ปรับทิศมอเตอร์: ใช้ 1 ถ้าหมุนถูกทาง, −1 ถ้าหมุนกลับทาง</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tip">
+        <p><strong>รถวิ่งผิดทาง แก้ตรงนี้:</strong> รถถอยหลังและเลี้ยวสลับข้าง → ตั้ง trim เป็น <code>-1 -1</code> ทั้งคู่ ·
+           รถหมุนอยู่กับที่แทนที่จะเดินหน้า → สลับแค่ตัวใดตัวหนึ่ง เช่น <code>1 -1</code></p>
+    </div>
+
+    <h3>🦾 เซอร์โว</h3>
+    <div class="tw">
+        <table>
+            <thead><tr><th>บล็อก</th><th>ความหมาย</th></tr></thead>
+            <tbody>
+                <tr><td><span class="blk">KSU set arm angle <span class="slot">90</span> degrees</span></td><td>ทางลัดของเซอร์โวช่อง D4 (แขนกล)</td></tr>
+                <tr><td><span class="blk">KSU set servo <span class="slot">D4</span> to <span class="slot">90</span> degrees</span></td><td>เลือกช่องได้ 4 ช่อง: D4, D5, D18, D19 · มุม 0–180 องศา</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="note"><p>ไลบรารีใช้มุม <strong>0–180</strong> ทุกที่ ส่วนบล็อกของ Cytron เองใช้ −90 ถึง 90
+        ไลบรารีแปลงให้ตรงนี้จุดเดียว นักเรียนจึงไม่ต้องคิดเลขติดลบเลย</p></div>
+
+    <h3>💡 ไฟ</h3>
+    <div class="tw">
+        <table>
+            <thead><tr><th>บล็อก</th><th>ความหมาย</th></tr></thead>
+            <tbody>
+                <tr><td><span class="blk">KSU light <span class="slot">on</span></span></td><td>เปิด/ปิดไฟหน้าสีขาวนวลทั้งสองดวง</td></tr>
+                <tr><td><span class="blk">KSU set RGB <span class="slot">all</span> color <span class="slot">■</span></span></td><td>เลือกสีจากจานสีของ MicroBlocks · เป้าหมายเลือกได้ 0, 1 หรือ all</td></tr>
+                <tr><td><span class="blk">KSU set RGB <span class="slot">all</span> red <span class="slot">255</span> green <span class="slot">240</span> blue <span class="slot">200</span></span></td><td>ผสมสีเอง ค่าละ 0–255</td></tr>
+                <tr><td><span class="blk">KSU change RGB brightness by <span class="slot">25</span> %</span></td><td>บวกเพิ่มความสว่าง / ใส่เลขติดลบเพื่อหรี่ลง</td></tr>
+                <tr><td><span class="blk">KSU LED <span class="slot">D16</span> <span class="slot">on</span></span></td><td>เปิด/ปิด LED ตามชื่อขา หรือเลือก all เพื่อสั่งทั้ง 8 ดวงพร้อมกัน</td></tr>
+                <tr><td><span class="blk">KSU LED number <span class="slot">1</span> <span class="slot">on</span></span></td><td>สั่ง LED ด้วยเลข 1–8 ตามลำดับที่พิมพ์บนบอร์ด (เลขนอกช่วงจะถูกเมิน ไม่ทำให้โปรแกรมพัง)</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>🔊 เสียง</h3>
+    <div class="tw">
+        <table>
+            <thead><tr><th>บล็อก</th><th>ความหมาย</th></tr></thead>
+            <tbody>
+                <tr><td><span class="blk">KSU horn</span></td><td>เสียงแตร สองโน้ตต่อกัน</td></tr>
+                <tr><td><span class="blk">KSU beep</span></td><td>เสียงติ๊ดสั้น ๆ เหมาะกับใช้เตือน</td></tr>
+                <tr><td><span class="blk">KSU play tone <span class="slot">440</span> Hz for <span class="slot">300</span> ms</span></td><td>กำหนดความถี่เอง</td></tr>
+                <tr><td><span class="blk">KSU play note <span class="slot">c</span> octave <span class="slot">0</span> for <span class="slot">400</span> ms</span></td><td>เล่นเป็นตัวโน้ตดนตรี</td></tr>
+                <tr><td><span class="blk">KSU play Happy Birthday</span></td><td>เล่นเพลงสำเร็จรูปที่มากับบอร์ด</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>📡 การรับค่า (เซนเซอร์)</h3>
+    <div class="tw">
+        <table>
+            <thead><tr><th>บล็อก</th><th>ความหมาย</th></tr></thead>
+            <tbody>
+                <tr><td><span class="rep">KSU button <span class="slot">D34</span> is pressed</span></td><td>ปุ่มบนบอร์ดถูกกดอยู่ไหม (มีสองปุ่ม D34 และ D35)</td></tr>
+                <tr><td><span class="rep">KSU read analog pin <span class="slot">_</span></span></td><td>อ่านค่าแอนะล็อกจากขาที่ระบุ ใช้กับเซนเซอร์เสริมที่ต่อเพิ่ม</td></tr>
+                <tr><td><span class="rep">KSU distance cm</span></td><td>ระยะห่างจากสิ่งกีดขวางด้านหน้า หน่วยเซนติเมตร (ดูบทที่ 9)</td></tr>
+                <tr><td><span class="blk">KSU set ultrasonic trig <span class="slot">33</span> echo <span class="slot">32</span></span></td><td>ย้ายขาของเซนเซอร์ ปกติไม่ต้องใช้เพราะบล็อกเริ่มต้นตั้งให้แล้ว</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ================= 7 ================= -->
+<section id="ch7" class="container">
+    <h2><span class="num">บทที่ 7</span> คำสั่งที่หน้าเว็บส่งมา</h2>
+    <p class="lead">ทั้งหมด 21 คำสั่ง — <span class="blk">KSU do command</span> รองรับครบทุกคำในตารางนี้</p>
+
+    <div class="warn">
+        <p><strong>คำสั่งแยกตัวพิมพ์เล็ก-ใหญ่</strong> ต้องขึ้นต้นด้วยตัวใหญ่ตัวเดียวเท่านั้น
+           <code>Forward</code> ใช้ได้ · <code>forward</code> และ <code>FORWARD</code> ใช้ไม่ได้</p>
+    </div>
+
+    <div class="tw">
+        <table>
+            <thead><tr><th>คำสั่ง</th><th>ที่อยู่ที่ส่งจริง</th><th>ผลลัพธ์</th><th>แท็บ</th></tr></thead>
+            <tbody>
+                <tr><td><code>Forward</code></td><td><code>/Forward</code></td><td>เดินหน้า</td><td>DRIVE</td></tr>
+                <tr><td><code>Backward</code></td><td><code>/Backward</code></td><td>ถอยหลัง</td><td>DRIVE</td></tr>
+                <tr><td><code>Left</code></td><td><code>/Left</code></td><td>เลี้ยวซ้าย</td><td>DRIVE</td></tr>
+                <tr><td><code>Right</code></td><td><code>/Right</code></td><td>เลี้ยวขวา</td><td>DRIVE</td></tr>
+                <tr><td><code>Stop</code></td><td><code>/Stop</code></td><td>หยุด</td><td>DRIVE</td></tr>
+                <tr><td><code>Light1</code></td><td><code>/Light1</code></td><td>เปิดไฟหน้า</td><td>DRIVE</td></tr>
+                <tr><td><code>Light0</code></td><td><code>/Light0</code></td><td>ปิดไฟหน้า</td><td>DRIVE</td></tr>
+                <tr><td><code>Horn</code></td><td><code>/Horn</code></td><td>บีบแตร</td><td>DRIVE</td></tr>
+                <tr><td><code>Speed</code></td><td><code>/Speed_70</code></td><td>ตั้งความเร็ว 20–100%</td><td>DRIVE</td></tr>
+                <tr><td><code>Servo</code></td><td><code>/Servo_90</code></td><td>หมุนเซอร์โว D4 ไป 0–180&deg;</td><td>DRIVE</td></tr>
+                <tr><td><code>ServoB</code></td><td><code>/ServoB_90</code></td><td>เซอร์โว D5</td><td>MORE</td></tr>
+                <tr><td><code>ServoC</code></td><td><code>/ServoC_90</code></td><td>เซอร์โว D18</td><td>MORE</td></tr>
+                <tr><td><code>ServoD</code></td><td><code>/ServoD_90</code></td><td>เซอร์โว D19</td><td>MORE</td></tr>
+                <tr><td><code>Rgb</code></td><td><code>/Rgb_2_255_120_0</code></td><td>ตั้งสี RGB — ค่าแรกคือเป้าหมาย (0, 1, 2=ทั้งหมด) ตามด้วย r g b</td><td>LIGHT</td></tr>
+                <tr><td><code>Dim</code></td><td><code>/Dim_25</code></td><td>เพิ่ม/ลดความสว่าง (ติดลบได้)</td><td>LIGHT</td></tr>
+                <tr><td><code>Led</code></td><td><code>/Led_3_1</code></td><td>LED ดวงที่ 1–8, ตามด้วย 1=เปิด 0=ปิด</td><td>LIGHT</td></tr>
+                <tr><td><code>Leds</code></td><td><code>/Leds_1</code></td><td>เปิด/ปิด LED ทั้ง 8 ดวงพร้อมกัน</td><td>LIGHT</td></tr>
+                <tr><td><code>Motor</code></td><td><code>/Motor_1_70</code></td><td>สั่งมอเตอร์ตัวที่ 1 หรือ 2 แรง −100 ถึง 100</td><td>MORE</td></tr>
+                <tr><td><code>Tone</code></td><td><code>/Tone_440_300</code></td><td>เล่นเสียงตามความถี่และระยะเวลา</td><td>MORE</td></tr>
+                <tr><td><code>Song</code></td><td><code>/Song</code></td><td>เล่นเพลง Happy Birthday</td><td>MORE</td></tr>
+                <tr><td><code>Beep</code></td><td><code>/Beep</code></td><td>เสียงติ๊ด</td><td>MORE</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <p><strong><code>/Status</code> ไม่ใช่คำสั่ง</strong> แต่เป็นการที่หน้าเว็บถามข้อมูลกลับ ไลบรารีตอบเองเป็นข้อความ
+           <code>b1,b2,speed,value,cm</code> เช่น <code>1,0,70,90,23</code> = ปุ่ม D34 ถูกกด, D35 ไม่ถูกกด, ความเร็ว 70%,
+           ค่าล่าสุด 90 และวัดระยะได้ 23 ซม. คำนี้ไม่มีวันหลุดไปถึงโปรแกรมของนักเรียน</p>
+    </div>
+</section>
+
+<!-- ================= 8 ================= -->
+<section id="ch8" class="container">
+    <h2><span class="num">บทที่ 8</span> หน้าเว็บควบคุม 3 แท็บ</h2>
+    <p class="lead">หน้าเว็บถูกฝังอยู่ในไลบรารีแล้ว ไม่ต้องติดตั้งอะไรเพิ่ม ไม่ต้องต่ออินเทอร์เน็ต</p>
+
+    <figure>
+        <img src="images/control-drive.png" alt="แท็บ DRIVE">
+        <figcaption><strong>DRIVE</strong> — แป้นทิศทาง 4 ปุ่มพร้อมปุ่มหยุดตรงกลาง แถบเลื่อนความเร็วและเซอร์โว
+            ปุ่มไฟหน้าและแตร พร้อมตัวเลขระยะทางสด ๆ จากเซนเซอร์ · บนคอมพิวเตอร์กดปุ่มลูกศรหรือ W A S D ได้ด้วย</figcaption>
+    </figure>
+
+    <div class="grid">
+        <figure style="margin:0;">
+            <img src="images/control-light.png" alt="แท็บ LIGHT">
+            <figcaption><strong>LIGHT</strong> — จานสี 8 สี, เลือกเป้าหมาย 0/1/ALL, ปุ่มเพิ่ม-ลดความสว่าง และปุ่มสลับ LED ทั้ง 8 ดวง</figcaption>
+        </figure>
+        <figure style="margin:0;">
+            <img src="images/control-more.png" alt="แท็บ MORE">
+            <figcaption><strong>MORE</strong> — แถบเลื่อนเซอร์โวครบทั้งสี่ตัว, แถบเลื่อนมอเตอร์แยกซ้าย-ขวา, ปุ่มเสียง และแถวแสดงสถานะปุ่ม + ระยะทาง</figcaption>
+        </figure>
+    </div>
+
+    <h3>กลไกสำคัญ: ส่งทีละคำสั่ง</h3>
+    <p>หน้าเว็บจะปล่อยคำสั่งออกไป<strong>ครั้งละหนึ่งคำสั่งเท่านั้น</strong> ถ้ามีการกดปุ่มใหม่ระหว่างที่ยังรอคำตอบอยู่
+       คำสั่งใหม่จะไป<strong>ทับ</strong>คำสั่งที่รออยู่ ไม่ใช่ต่อคิว รถจึงทำตามสิ่งที่นิ้วสั่งล่าสุดเสมอ ไม่ใช่ตามคำสั่งเก่าค้างท่อ</p>
+
+    <div class="warn">
+        <p><strong>ถ้าจะแก้หน้าเว็บ:</strong> ปุ่มใหม่ทุกปุ่มต้องส่งผ่านฟังก์ชัน <code>s()</code> เท่านั้น
+           การเรียก <code>fetch</code> ตรง ๆ จะข้ามกลไกนี้ และทำให้การบังคับรถหน่วงหรือค้างได้</p>
+    </div>
+
+    <div class="note">
+        <p><strong>แก้หน้าเว็บอย่างถูกวิธี:</strong> ให้แก้ที่ <code>RoboCar-Control.html</code> ก่อนเสมอ
+           แล้วค่อยตัดเป็นชิ้น ๆ ไปใส่ในไลบรารี (ตัวหน้าเว็บถูกเก็บเป็นข้อความ 8 ก้อนเพราะหนึ่งสคริปต์เก็บได้ไม่เกิน 1000 ไบต์)
+           และต้องคัดลอกไปใส่ทั้งสองไฟล์ คือ <code>.ubl</code> และสำเนาที่ฝังใน <code>.ubp</code></p>
+    </div>
+</section>
+
+<!-- ================= 9 ================= -->
+<section id="ch9" class="container">
+    <h2><span class="num">บทที่ 9</span> เซนเซอร์วัดระยะ HC-SR04 (อุปกรณ์เสริม)</h2>
+    <p class="lead">ไม่ต่อก็ใช้งานรถได้ปกติ — บล็อกจะรายงาน 0 เฉย ๆ ไม่มีอะไรพัง</p>
+
+    <h3>การต่อสาย</h3>
+    <div class="tw">
+        <table>
+            <thead><tr><th>ขาเซนเซอร์</th><th>ต่อเข้ากับ</th></tr></thead>
+            <tbody>
+                <tr><td>VCC</td><td>5V</td></tr>
+                <tr><td>GND</td><td>GND</td></tr>
+                <tr><td>Trig</td><td>ขา 33</td></tr>
+                <tr><td>Echo</td><td>ขา 32</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p>ต่อแบบนี้แล้วไม่ต้องเพิ่มบล็อกอะไรเลย เพราะ <span class="blk">KSU start web control</span> ตั้งค่านี้ไว้ให้ตั้งแต่ต้น</p>
+
+    <div class="warn">
+        <p><strong>ขา 33 และ 32 คือ LED ดวงที่ 8 และ 7</strong> — ไฟสองดวงนี้จะกะพริบตามจังหวะยิงคลื่น ซึ่งไม่เป็นไร
+           แต่<strong>ห้ามสั่งเปิด LED 7 หรือ LED 8 จากแท็บ LIGHT</strong> ขณะเสียบเซนเซอร์อยู่
+           เพราะบอร์ดกับเซนเซอร์จะแย่งกันคุมสายเส้นเดียวกัน</p>
+    </div>
+
+    <h3>บล็อกทำงานอย่างไร</h3>
+    <p>ยิงสัญญาณสั้น ๆ 10 ไมโครวินาทีออกทางขา trig แล้วจับเวลาว่าเสียงสะท้อนกลับมาเมื่อไร
+       เสียงเดินทางไป-กลับ 1 เซนติเมตรใช้เวลาราว 58 ไมโครวินาที จึงหารด้วย 58 ออกมาเป็นเซนติเมตร</p>
+    <ul>
+        <li><strong>รายงาน 0 เมื่อ</strong> ไม่มีเสียงสะท้อนกลับ คือไม่ได้เสียบเซนเซอร์, ไม่มีอะไรอยู่ในระยะราว 4 เมตร,
+            หรือพื้นผิวนุ่ม/เอียงจนไม่สะท้อนกลับ</li>
+        <li><strong>บล็อกนี้หยุดรอคำตอบ</strong> นานได้ถึง 25 มิลลิวินาทีเมื่อไม่มีอะไรตอบกลับ</li>
+    </ul>
+
+    <div class="warn">
+        <p><strong>อ่านครั้งเดียวต่อหนึ่งรอบลูปเท่านั้น</strong> การเรียกบล็อกนี้ซ้ำ ๆ ติดกันจะทำให้ลูปช้าลงมาก
+           จนรถตอบสนองต่อโทรศัพท์ช้าอย่างสังเกตได้ วิธีที่ถูกคืออ่านเก็บใส่ตัวแปรครั้งเดียว แล้วเอาตัวแปรไปเทียบหลาย ๆ ครั้ง</p>
+    </div>
+
+    <h3>ตัวอย่าง: หยุดอัตโนมัติเมื่อเจอสิ่งกีดขวาง</h3>
+    <p>วางบล็อกชุดนี้ในลูป <code>forever</code> ต่อจาก <span class="blk">KSU do command</span> รถจะหยุดและร้องเตือนเมื่อมีอะไรเข้ามาใกล้กว่า 20 ซม.</p>
+    <pre><code><span class="c-key">set</span> cm <span class="c-key">to</span> (KSU distance cm)
+<span class="c-key">if</span> (cm &gt; <span class="c-num">0</span>) <span class="c-key">and</span> (cm &lt; <span class="c-num">20</span>) {
+    KSU stop
+    KSU beep
+}</code></pre>
+
+    <div class="tip">
+        <p><strong>ทำไมต้องมีเงื่อนไข <code>cm &gt; 0</code> ด้วย?</strong> เพราะ 0 แปลว่า "ไม่มีเสียงสะท้อนกลับ"
+           ถ้าไม่ใส่เงื่อนไขนี้ รถจะหยุดทันทีที่<strong>ไม่มีอะไรอยู่ข้างหน้าเลย</strong> ซึ่งตรงข้ามกับที่เราต้องการ
+           — ข้อนี้เป็นคำถามชวนคิดที่ดีมากสำหรับในห้องเรียน</p>
+    </div>
+</section>
+
+<!-- ================= 10 ================= -->
+<section id="ch10" class="container">
+    <h2><span class="num">บทที่ 10</span> ตารางขา GPIO</h2>
+    <p class="lead">ก่อนต่ออะไรเพิ่มเข้าบอร์ด เช็กตารางนี้ก่อนเสมอ</p>
+
+    <div class="tw">
+        <table>
+            <thead><tr><th>ขา</th><th>ใช้ทำอะไรอยู่</th></tr></thead>
+            <tbody>
+                <tr><td><code>12, 13, 14, 27</code></td><td>มอเตอร์ทั้งสองตัว (M1, M2)</td></tr>
+                <tr><td><code>15</code></td><td>ไฟ RGB บนบอร์ด</td></tr>
+                <tr><td><code>23</code></td><td>ลำโพง/บัซเซอร์</td></tr>
+                <tr><td><code>4, 5, 18, 19</code></td><td>ช่องเสียบเซอร์โว D4, D5, D18, D19</td></tr>
+                <tr><td><code>16, 17, 21, 22, 25, 26, 32, 33</code></td><td>LED ดวงที่ 1 ถึง 8 ตามลำดับ</td></tr>
+                <tr><td><code>33, 32</code></td><td>trig / echo ของเซนเซอร์ระยะ — <strong>ขาเดียวกับ LED 8 และ LED 7</strong></td></tr>
+                <tr><td><code>34, 35</code></td><td>ปุ่มกดบนบอร์ด</td></tr>
+                <tr><td><code>34, 35, 36, 39</code></td><td><span class="pill p-in">รับค่าได้อย่างเดียว</span> สั่งจ่ายไฟออกไม่ได้</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="warn">
+        <p><strong>ขา 34, 35, 36, 39 เป็นขารับค่าอย่างเดียว</strong> ไม่มีวงจรขับสัญญาณออก
+           ถ้าเอา trig ของเซนเซอร์ไปต่อขาพวกนี้ มันจะไม่มีวันยิงคลื่นออกไปได้เลย และบล็อกวัดระยะจะรายงาน 0 ตลอดกาล
+           (ส่วน echo ต่อขาพวกนี้ได้)</p>
+    </div>
+
+    <div class="note">
+        <p><strong>บนบอร์ดนี้ไม่มีขาไหน "ว่างจริง ๆ"</strong> ที่ว่าง่ายคือช่องเซอร์โวที่ยังไม่ได้เสียบอะไร (4, 5, 18, 19)
+           หรือขา LED ที่ยอมปิดไฟดวงนั้นทิ้ง (16, 17, 21, 22, 25, 26) — ถ้าจะยึดขาไหนไปใช้ ควรจดไว้ด้วยว่าแลกมาด้วยการเสียอะไรไป</p>
+    </div>
+</section>
+
+<!-- ================= 11 ================= -->
+<section id="ch11" class="container">
+    <h2><span class="num">บทที่ 11</span> เพิ่มคำสั่งใหม่ด้วยตัวเอง</h2>
+    <p class="lead">สำหรับนักเรียนที่อยากไปต่อ หรือคุณครูที่อยากดัดแปลงโปรเจกต์</p>
+
+    <p>การเพิ่มคำสั่งหนึ่งคำ ต้องแตะ <strong>3 จุดพร้อมกัน</strong> ขาดจุดใดจุดหนึ่งคำสั่งจะเงียบหายไปเฉย ๆ โดยไม่มีข้อความแจ้งเตือน</p>
+
+    <div class="grid">
+        <div class="panel">
+            <h4 style="color:#60A5FA;">1. หน้าเว็บต้องส่งคำนั้น</h4>
+            <p style="color:var(--text-muted);margin:0;">เพิ่มปุ่มใน <code>RoboCar-Control.html</code> โดยเรียกผ่าน <code>s("ชื่อคำสั่ง")</code></p>
+        </div>
+        <div class="panel">
+            <h4 style="color:#FBBF24;">2. ไลบรารีต้องรู้จักคำนั้น</h4>
+            <p style="color:var(--text-muted);margin:0;">เพิ่มเงื่อนไขใน <code>_do2</code> เท่านั้น <strong>ห้ามเพิ่มใน <code>KSU do command</code></strong> เพราะจะเกินขีดจำกัด 1000 ไบต์</p>
+        </div>
+        <div class="panel">
+            <h4 style="color:#34D399;">3. ถ้าต้องมีบล็อกใหม่</h4>
+            <p style="color:var(--text-muted);margin:0;">เพิ่มบรรทัด <code>spec</code> เพื่อให้บล็อกโผล่ในแถบเครื่องมือ</p>
+        </div>
+    </div>
+
+    <div class="warn">
+        <p><strong>อย่าลืมสองไฟล์!</strong> การแก้ไลบรารีจะถือว่าเสร็จก็ต่อเมื่อลงทั้งใน <code>KSU_RoBoESP32.ubl</code>
+           <em>และ</em> สำเนาที่ฝังอยู่ใน <code>RoboCar.ubp</code> โดยเปลี่ยนชื่อให้ตรงรูปแบบของแต่ละไฟล์
+           เพราะ <code>RoboCar.ubp</code> คือไฟล์ที่นักเรียนโหลดลงบอร์ดจริง แก้แค่ <code>.ubl</code> นักเรียนจะไม่เห็นความเปลี่ยนแปลงใด ๆ</p>
+    </div>
+
+    <div class="note">
+        <p><strong>เซนเซอร์ไม่ใช่คำสั่ง</strong> ถ้าอยากให้หน้าเว็บ<em>แสดงค่า</em>จากเซนเซอร์ตัวใหม่ ให้เพิ่มค่านั้น
+           <strong>ต่อท้าย</strong>ข้อความของ <code>/Status</code> (ห้ามสลับลำดับของเดิม เพราะหน้าเว็บอ่านค่าตามตำแหน่ง)
+           วิธีนี้ทำให้ค่าจากเซนเซอร์ขึ้นหน้าจอได้โดยไม่กระทบรูปแบบ <code>if (command) = ...</code> ที่ใช้สอน</p>
+    </div>
+
+    <h3>ข้อควรระวังเรื่องตัวเลข</h3>
+    <p>บอร์ดนี้คิดเลข<strong>เฉพาะจำนวนเต็ม</strong> เศษทศนิยมถูกตัดทิ้งทันที
+       เวลาเขียนสูตรให้<strong>คูณก่อนแล้วค่อยหาร</strong> เสมอ เช่นเขียน <code>(a * b) / c</code> ไม่ใช่ <code>a * (b / c)</code>
+       ไม่อย่างนั้นผลลัพธ์จะกลายเป็น 0 หรือกระโดดเป็นขั้น ๆ อย่างน่าประหลาด</p>
+</section>
+
+<!-- ================= 12 ================= -->
+<section id="ch12" class="container">
+    <h2><span class="num">บทที่ 12</span> ปัญหาที่พบบ่อย</h2>
+    <p class="lead">อาการที่มักเจอในห้องเรียน พร้อมจุดที่ควรไปตรวจก่อน</p>
+
+    <div class="tw">
+        <table>
+            <thead><tr><th>อาการ</th><th>ตรวจตรงนี้</th></tr></thead>
+            <tbody>
+                <tr><td>คอมพิวเตอร์ไม่เห็นบอร์ด</td><td>ยังไม่ได้ติดตั้งไดรเวอร์ CP210x หรือใช้สาย USB แบบชาร์จไฟอย่างเดียว (ต้องเป็นสายที่ส่งข้อมูลได้)</td></tr>
+                <tr><td>หาสัญญาณ WiFi ชื่อ RoboCar ไม่เจอ</td><td>ยังไม่ได้กด Start · หรือรหัสผ่านที่ตั้งสั้นกว่า 8 ตัวอักษร ทำให้เปิดฮอตสปอตไม่สำเร็จ</td></tr>
+                <tr><td>เข้าหน้าเว็บไม่ได้</td><td>โทรศัพท์ยังต่อเน็ตมือถืออยู่ ลองปิดเน็ตมือถือชั่วคราว · พิมพ์ <code>http://</code> นำหน้าเสมอ อย่าให้เบราว์เซอร์เอาไปค้นหา</td></tr>
+                <tr><td>หน้าจอขึ้นว่า ROTATE TO LANDSCAPE</td><td>ถือโทรศัพท์แนวนอน หน้าเว็บออกแบบมาสำหรับแนวนอนอย่างเดียว</td></tr>
+                <tr><td>รถเดินหน้ากลายเป็นถอยหลัง</td><td>ปรับค่า trim ทั้งสองตัวเป็น <code>-1 -1</code> (ดูบทที่ 6)</td></tr>
+                <tr><td>รถหมุนอยู่กับที่แทนที่จะเดินหน้า</td><td>มอเตอร์ตัวหนึ่งกลับทาง ให้สลับค่า trim แค่ตัวเดียว เช่น <code>1 -1</code></td></tr>
+                <tr><td>กดปุ่มแล้วรถตอบช้า/กระตุก</td><td>มีการอ่านบล็อกวัดระยะหลายครั้งในลูปเดียว หรือลืมใส่ <code>wait 10 millisecs</code></td></tr>
+                <tr><td>ระยะทางขึ้น 0 ตลอด</td><td>ยังไม่ได้เสียบเซนเซอร์ · ต่อ trig ผิดขาไปที่ขารับค่าอย่างเดียว (34/35/36/39) · หรือสลับสาย trig กับ echo</td></tr>
+                <tr><td>กดปุ่มบางปุ่มแล้วไม่มีอะไรเกิดขึ้น</td><td>สะกดคำสั่งไม่ตรงตัวพิมพ์ใหญ่-เล็ก หรือคำสั่งนั้นยังไม่มีใน <code>_do2</code></td></tr>
+                <tr><td>แก้ไลบรารีแล้วแต่ไม่มีอะไรเปลี่ยน</td><td>แก้เฉพาะไฟล์ <code>.ubl</code> แต่นักเรียนโหลด <code>RoboCar.ubp</code> ที่มีสำเนาของตัวเอง (ดูบทที่ 1)</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ================= 13 ================= -->
+<section id="ch13" class="container">
+    <h2><span class="num">บทที่ 13</span> ใบงานสำหรับห้องเรียน</h2>
+    <p class="lead">เรียงจากง่ายไปยาก ใช้ต่อจากบทที่ 3 ได้ทันที</p>
+
+    <div class="grid">
+        <div class="panel">
+            <h4 style="color:#7EE2B8;">ใบงาน 1 · ขับให้ได้</h4>
+            <p style="color:var(--text-muted);margin:0;">โหลดโปรแกรมลงบอร์ด เชื่อมต่อโทรศัพท์ แล้วขับรถให้ครบทั้งสี่ทิศ
+               จากนั้นลองปรับความเร็วจาก 20% ถึง 100% แล้วสังเกตความต่าง</p>
+        </div>
+        <div class="panel">
+            <h4 style="color:#7EE2B8;">ใบงาน 2 · ต่อ if เอง</h4>
+            <p style="color:var(--text-muted);margin:0;">ถอด <span class="blk">KSU do command</span> ออก แล้วต่อ <code>if</code> ขึ้นมาเองให้ครบทั้งสิบคำสั่ง
+               จนขับได้เหมือนเดิมทุกอย่าง</p>
+        </div>
+        <div class="panel">
+            <h4 style="color:#7EE2B8;">ใบงาน 3 · ไฟและเสียง</h4>
+            <p style="color:var(--text-muted);margin:0;">เขียนสคริปต์ให้ไฟ RGB เปลี่ยนสีเมื่อกดปุ่ม D34 และให้บอร์ดร้องเพลงเมื่อกดปุ่ม D35</p>
+        </div>
+        <div class="panel">
+            <h4 style="color:#7EE2B8;">ใบงาน 4 · หยุดเองเมื่อเจอสิ่งกีดขวาง</h4>
+            <p style="color:var(--text-muted);margin:0;">ต่อเซนเซอร์ HC-SR04 แล้วใส่ชุดบล็อกในบทที่ 9 ลองเปลี่ยนตัวเลข 20 ซม.
+               เป็นค่าอื่นแล้วดูว่ารถเบรกทันไหมที่ความเร็วต่าง ๆ</p>
+        </div>
+        <div class="panel">
+            <h4 style="color:#7EE2B8;">ใบงาน 5 · วิ่งตามเส้นทางที่วางไว้</h4>
+            <p style="color:var(--text-muted);margin:0;">ใช้ <span class="blk">KSU drive</span> ต่อกันหลาย ๆ อัน
+               ให้รถวิ่งเป็นรูปสี่เหลี่ยมจัตุรัสแล้วกลับมาที่จุดเดิม</p>
+        </div>
+        <div class="panel">
+            <h4 style="color:#7EE2B8;">ใบงาน 6 · คำสั่งของฉันเอง</h4>
+            <p style="color:var(--text-muted);margin:0;">ออกแบบคำสั่งใหม่หนึ่งคำ เช่น <code>Dance</code> ให้รถหมุนสามรอบพร้อมไฟกะพริบ
+               แล้วเพิ่มให้ครบทั้ง 3 จุดตามบทที่ 11</p>
+        </div>
+    </div>
+</section>
+
+<!-- ================= Downloads ================= -->
+<section class="container">
+    <div class="card" style="background: rgba(79, 70, 229, 0.1); border-color: rgba(79, 70, 229, 0.3); text-align:center;">
+        <h2 style="justify-content:center; margin-bottom:20px;">ดาวน์โหลดไฟล์</h2>
+        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+            <a href="https://github.com/alfaXphoori/RoboESP32/blob/main/RoboCar.ubp" class="btn">RoboCar.ubp</a>
+            <a href="https://github.com/alfaXphoori/RoboESP32/blob/main/KSU_RoBoESP32.ubl" class="btn ghost">KSU_RoBoESP32.ubl</a>
+            <a href="https://github.com/alfaXphoori/RoboESP32/blob/main/CP210x_Windows_Drivers.zip" class="btn ghost">CP210x Drivers</a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p>คู่มือไลบรารี KSU_RoBoESP32 · มหาวิทยาลัยกาฬสินธุ์</p>
+        <p style="margin-top:8px;"><a href="index.html" style="color:#34D399; text-decoration:none;">&larr; กลับหน้าแรก</a></p>
+    </div>
+</footer>
+
+</body>
+</html>
