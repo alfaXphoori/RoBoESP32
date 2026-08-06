@@ -1,3 +1,0 @@
-# Local backup snapshots of .ubp files — kept on disk, not in git.
-# Old versions are already recoverable from git history.
-backup_*/
