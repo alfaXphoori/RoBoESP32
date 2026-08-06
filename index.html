@@ -235,6 +235,34 @@
         </div>
     </section>
 
+    <section id="library-usage" class="container" style="margin-top: 80px;">
+        <h2 style="text-align: center; margin-bottom: 48px; font-size: 2rem;">การใช้งานไลบรารี (Library Blocks)</h2>
+        <div style="background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 40px; backdrop-filter: blur(16px);">
+            <p style="margin-bottom: 24px; font-size: 1.1rem; color: #fff;">ไลบรารี <code>KSU_RoBoESP32.ubl</code> ที่รวมอยู่ใน <code>RoboCar.ubp</code> ถูกออกแบบมาให้ใช้งานง่ายในรูปแบบบล็อก (Block-based) สำหรับโปรแกรม <strong>MicroBlocks</strong> ประกอบด้วยคำสั่งหลักๆ ดังนี้:</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                <div style="background: rgba(0,0,0,0.2); padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
+                    <h4 style="color: #60A5FA; font-size: 1.2rem; margin-bottom: 12px;">🚗 การควบคุมการเคลื่อนที่</h4>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">ใช้บล็อกเช่น <code>KSU forward</code>, <code>KSU backward</code>, <code>KSU left</code>, <code>KSU right</code> และ <code>KSU stop</code> เพื่อสั่งให้รถเคลื่อนที่ หรือใช้ <code>KSU set speed</code> เพื่อปรับความเร็วมอเตอร์</p>
+                </div>
+                
+                <div style="background: rgba(0,0,0,0.2); padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
+                    <h4 style="color: #34D399; font-size: 1.2rem; margin-bottom: 12px;">💡 การควบคุมแสงและเสียง</h4>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">ควบคุมไฟและเสียงอย่างง่ายด้วยบล็อก <code>KSU light</code>, <code>KSU rgb</code> (ควบคุมไฟเปลี่ยนสีได้อิสระ), และใช้คำสั่ง <code>KSU horn</code> หรือ <code>KSU tone</code> สำหรับสร้างเสียงเตือนหรือดนตรี</p>
+                </div>
+                
+                <div style="background: rgba(0,0,0,0.2); padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
+                    <h4 style="color: #FBBF24; font-size: 1.2rem; margin-bottom: 12px;">🌐 การรับคำสั่งผ่านหน้าเว็บ</h4>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">ในลูป <code>forever</code> หลัก เพียงใช้ <code>set command to (KSU web command)</code> คู่กับ <code>KSU do command (command)</code> รถจะสามารถอ่านข้อมูลและทำงานตามปุ่มที่ถูกกดผ่านหน้าเว็บได้ทันที ครอบคลุมทุกคำสั่งในบล็อกเดียว!</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 32px; padding: 24px; background: rgba(79, 70, 229, 0.15); border-left: 4px solid var(--primary); border-radius: 8px;">
+                <p style="color: #fff;"><strong>💡 เคล็ดลับสำหรับคุณครูและนักเรียน:</strong> ไฟล์โปรเจกต์ <code>RoboCar.ubp</code> ได้รวมการตั้งค่าขาบอร์ด (Pin Mapping) และโค้ดหน้าเว็บควบคุม (HTML/JS) ไว้ให้เสร็จสรรพแล้ว สามารถเรียนรู้การทำงานของลูปเงื่อนไข และปรับเปลี่ยนต่อยอดโปรเจกต์ได้อย่างอิสระ!</p>
+            </div>
+        </div>
+    </section>
+
     <section class="container" style="margin-top: 80px; text-align: center;">
         <div class="card" style="background: rgba(79, 70, 229, 0.1); border-color: rgba(79, 70, 229, 0.3);">
             <h2 style="margin-bottom: 24px;">เอกสารและไฟล์ที่จำเป็น</h2>
