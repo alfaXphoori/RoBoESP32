@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือสอนใช้งานบอร์ด RoboESP32</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Prompt:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --secondary: #10B981;
+            --dark: #0F172A;
+            --light: #F8FAFC;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #F1F5F9;
+            --text-muted: #94A3B8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Prompt', 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navbar */
+        nav {
+            padding: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #60A5FA, #34D399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            animation: fadeUp 0.8s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            animation: fadeUp 1s ease-out;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+            animation: fadeUp 1.2s ease-out;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.6);
+        }
+
+        /* Cards Section */
+        .features {
+            padding: 80px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 40px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .step-num {
+            font-size: 3rem;
+            font-weight: 800;
+            color: rgba(255,255,255,0.1);
+            position: absolute;
+            top: 20px;
+            right: 30px;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            margin-top: 80px;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="logo">RoboESP32</div>
+        </div>
+    </nav>
+
+    <header class="hero container">
+        <h1>สอนใช้งานบอร์ด<br>RoboESP32</h1>
+        <p>เริ่มต้นเขียนโปรแกรมควบคุมหุ่นยนต์ด้วย MicroBlocks และสร้างหน้าเว็บควบคุมผ่าน WiFi ได้ง่ายๆ ด้วยตัวคุณเอง</p>
+        <a href="#getting-started" class="btn">เริ่มเรียนรู้กันเลย</a>
+    </header>
+
+    <section id="getting-started" class="container">
+        <h2 style="text-align: center; margin-bottom: 48px; font-size: 2rem;">ขั้นตอนการใช้งานเบื้องต้น</h2>
+        <div class="features">
+            <!-- Step 1 -->
+            <div class="card">
+                <div class="step-num">01</div>
+                <h3>เชื่อมต่อบอร์ด</h3>
+                <p>เสียบสาย USB จากบอร์ด RoboESP32 เข้ากับคอมพิวเตอร์ของคุณ (หากเพิ่งเคยใช้งานครั้งแรก อย่าลืมติดตั้ง CP210x Drivers)</p>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="card">
+                <div class="step-num">02</div>
+                <h3>เปิด MicroBlocks</h3>
+                <p>เปิดโปรแกรม MicroBlocks และทำการโหลดไฟล์โปรเจกต์ <code>RoboCar.ubp</code> ลงในบอร์ดเพื่อให้บอร์ดพร้อมรับคำสั่ง</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="card">
+                <div class="step-num">03</div>
+                <h3>เชื่อมต่อ WiFi & ควบคุม</h3>
+                <p>ใช้โทรศัพท์หรือคอมพิวเตอร์เชื่อมต่อ WiFi ที่หุ่นยนต์ปล่อยออกมา จากนั้นเปิดเบราว์เซอร์เพื่อเข้าสู่หน้าจอควบคุม (Control Page)</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" style="margin-top: 80px; text-align: center;">
+        <div class="card" style="background: rgba(79, 70, 229, 0.1); border-color: rgba(79, 70, 229, 0.3);">
+            <h2 style="margin-bottom: 24px;">เอกสารและไฟล์ที่จำเป็น</h2>
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <a href="https://github.com/alfaXphoori/RoboESP32/blob/main/RoboCar.ubp" class="btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">ดาวน์โหลด RoboCar.ubp</a>
+                <a href="https://github.com/alfaXphoori/RoboESP32/blob/main/CP210x_Windows_Drivers.zip" class="btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">ดาวน์โหลด Drivers</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 RoboESP32 Project. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
