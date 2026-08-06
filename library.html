@@ -161,6 +161,45 @@
         .hero h1 { font-size: 3rem; font-weight: 800; line-height: 1.25; margin-bottom: 16px; }
         .hero p { color: var(--text-muted); max-width: 720px; margin: 0 auto; font-size: 1.1rem; }
 
+        /* ---------- Shell: sidebar + content ---------- */
+        .shell { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 44px; align-items: start; margin-top: 40px; }
+
+        .side {
+            position: sticky; top: 84px; align-self: start;
+            max-height: calc(100vh - 110px); overflow-y: auto;
+            background: var(--card-bg); border: 1px solid var(--line);
+            border-radius: 18px; padding: 20px 18px;
+        }
+        .side h4 {
+            font-size: .78rem; letter-spacing: 1.5px; color: var(--text-muted);
+            text-transform: uppercase; margin-bottom: 14px; font-weight: 700;
+        }
+        .side ol { list-style: none; margin: 0; }
+        .side li { margin: 0 0 3px; }
+        .side a {
+            display: flex; gap: 10px; align-items: baseline;
+            padding: 7px 10px; border-radius: 10px; text-decoration: none;
+            color: var(--text-muted); font-size: .9rem; line-height: 1.45;
+            border-left: 3px solid transparent; transition: all .2s ease;
+        }
+        .side a:hover { background: var(--panel-bg); color: var(--text-strong); }
+        .side a .n {
+            font-family: 'JetBrains Mono', monospace; font-size: .78rem;
+            font-weight: 700; color: var(--acc-green); flex: none;
+        }
+        .side a.active {
+            background: color-mix(in srgb, var(--primary) 14%, transparent);
+            color: var(--text-strong); font-weight: 600;
+            border-left-color: var(--primary);
+        }
+        .side .side-foot { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+        .side .side-foot a { color: var(--primary-ink); font-weight: 600; border: 0; }
+
+        @media (max-width: 1000px) {
+            .shell { grid-template-columns: minmax(0, 1fr); gap: 0; }
+            .side { display: none; }
+        }
+
         /* ---------- Sections ---------- */
         section { margin-top: 72px; scroll-margin-top: 90px; }
         h2 {
@@ -303,30 +342,36 @@
        และวิธีต่อยอดเขียนคำสั่งของตัวเอง — สำหรับบอร์ด Cytron ROBO ESP32 บน MicroBlocks</p>
 </header>
 
-<!-- ================= TOC ================= -->
-<div class="container toc">
-    <div class="card">
-        <h4 style="color:var(--text-strong);">สารบัญ</h4>
-        <ol>
-            <li><a href="#ch1">ไลบรารีนี้คืออะไร</a></li>
-            <li><a href="#ch2">ติดตั้งและเปิดใช้ไลบรารี</a></li>
-            <li><a href="#ch3">โปรแกรมแรก 3 บล็อก</a></li>
-            <li><a href="#ch4">หลักการทำงานเบื้องหลัง</a></li>
-            <li><a href="#ch5">แบบยาว (if) กับแบบบล็อกเดียว</a></li>
-            <li><a href="#ch6">คู่มือบล็อกทั้งหมด</a></li>
-            <li><a href="#ch7">คำสั่งที่หน้าเว็บส่งมา</a></li>
-            <li><a href="#ch8">หน้าเว็บควบคุม 3 แท็บ</a></li>
-            <li><a href="#ch9">เซนเซอร์วัดระยะ HC-SR04</a></li>
-            <li><a href="#ch10">ตารางขา GPIO</a></li>
-            <li><a href="#ch11">เพิ่มคำสั่งใหม่ด้วยตัวเอง</a></li>
-            <li><a href="#ch12">ปัญหาที่พบบ่อย</a></li>
-            <li><a href="#ch13">ใบงานสำหรับห้องเรียน</a></li>
-        </ol>
+<div class="container shell">
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="side">
+    <h4>สารบัญ</h4>
+    <ol>
+        <li><a href="#ch1"><span class="n">01</span><span>ไลบรารีนี้คืออะไร</span></a></li>
+        <li><a href="#ch2"><span class="n">02</span><span>ติดตั้งและเปิดใช้</span></a></li>
+        <li><a href="#ch3"><span class="n">03</span><span>โปรแกรมแรก 3 บล็อก</span></a></li>
+        <li><a href="#ch4"><span class="n">04</span><span>หลักการเบื้องหลัง</span></a></li>
+        <li><a href="#ch5"><span class="n">05</span><span>if ยาว vs บล็อกเดียว</span></a></li>
+        <li><a href="#ch6"><span class="n">06</span><span>คู่มือบล็อกทั้งหมด</span></a></li>
+        <li><a href="#ch7"><span class="n">07</span><span>คำสั่งจากหน้าเว็บ</span></a></li>
+        <li><a href="#ch8"><span class="n">08</span><span>หน้าเว็บ 3 แท็บ</span></a></li>
+        <li><a href="#ch9"><span class="n">09</span><span>เซนเซอร์ HC-SR04</span></a></li>
+        <li><a href="#ch10"><span class="n">10</span><span>ตารางขา GPIO</span></a></li>
+        <li><a href="#ch11"><span class="n">11</span><span>เพิ่มคำสั่งใหม่</span></a></li>
+        <li><a href="#ch12"><span class="n">12</span><span>ปัญหาที่พบบ่อย</span></a></li>
+        <li><a href="#ch13"><span class="n">13</span><span>ใบงานห้องเรียน</span></a></li>
+    </ol>
+    <div class="side-foot">
+        <a href="index.html">🎓 คอร์ส Zero to Hero</a>
+        <a href="#downloads">⬇ ดาวน์โหลดไฟล์</a>
     </div>
-</div>
+</aside>
+
+<main>
 
 <!-- ================= 1 ================= -->
-<section id="ch1" class="container">
+<section id="ch1">
     <h2><span class="num">บทที่ 1</span> ไลบรารีนี้คืออะไร</h2>
     <p class="lead">ก่อนจะเขียนโปรแกรมสักบรรทัด ต้องเข้าใจก่อนว่าไฟล์ในโปรเจกต์นี้แต่ละไฟล์ทำหน้าที่อะไร</p>
 
@@ -380,7 +425,7 @@
 </section>
 
 <!-- ================= 2 ================= -->
-<section id="ch2" class="container">
+<section id="ch2">
     <h2><span class="num">บทที่ 2</span> ติดตั้งและเปิดใช้ไลบรารี</h2>
     <p class="lead">มีสองทาง เลือกตามว่าจะสอนแบบ "เปิดเฉลยมาดู" หรือ "เริ่มจากโปรเจกต์เปล่า"</p>
 
@@ -417,7 +462,7 @@
 </section>
 
 <!-- ================= 3 ================= -->
-<section id="ch3" class="container">
+<section id="ch3">
     <h2><span class="num">บทที่ 3</span> โปรแกรมแรก — แค่ 3 บล็อก</h2>
     <p class="lead">ทั้งโปรเจกต์เริ่มจากสคริปต์สั้น ๆ ชุดเดียวนี้เท่านั้น</p>
 
@@ -469,7 +514,7 @@
 </section>
 
 <!-- ================= 4 ================= -->
-<section id="ch4" class="container">
+<section id="ch4">
     <h2><span class="num">บทที่ 4</span> หลักการทำงานเบื้องหลัง</h2>
     <p class="lead">เข้าใจสองเรื่องนี้แล้ว จะแก้โปรแกรมต่อเองได้ทั้งหมด</p>
 
@@ -515,7 +560,7 @@
 </section>
 
 <!-- ================= 5 ================= -->
-<section id="ch5" class="container">
+<section id="ch5">
     <h2><span class="num">บทที่ 5</span> แบบยาว (if) กับแบบบล็อกเดียว</h2>
     <p class="lead">สองแบบนี้ทำงานเหมือนกัน ต่างกันที่แบบหนึ่งสอนตรรกะ อีกแบบสอนความสะดวก</p>
 
@@ -558,7 +603,7 @@ KSU do command (command)</code></pre>
 </section>
 
 <!-- ================= 6 ================= -->
-<section id="ch6" class="container">
+<section id="ch6">
     <h2><span class="num">บทที่ 6</span> คู่มือบล็อกทั้งหมด</h2>
     <p class="lead">ตัวเลขในวงเล็บคือค่าเริ่มต้นของช่องกรอก · ชื่อในตารางเป็นแบบสั้นตาม <code>RoboCar.ubp</code></p>
 
@@ -656,7 +701,7 @@ KSU do command (command)</code></pre>
 </section>
 
 <!-- ================= 7 ================= -->
-<section id="ch7" class="container">
+<section id="ch7">
     <h2><span class="num">บทที่ 7</span> คำสั่งที่หน้าเว็บส่งมา</h2>
     <p class="lead">ทั้งหมด 21 คำสั่ง — <span class="blk">KSU do command</span> รองรับครบทุกคำในตารางนี้</p>
 
@@ -702,7 +747,7 @@ KSU do command (command)</code></pre>
 </section>
 
 <!-- ================= 8 ================= -->
-<section id="ch8" class="container">
+<section id="ch8">
     <h2><span class="num">บทที่ 8</span> หน้าเว็บควบคุม 3 แท็บ</h2>
     <p class="lead">หน้าเว็บถูกฝังอยู่ในไลบรารีแล้ว ไม่ต้องติดตั้งอะไรเพิ่ม ไม่ต้องต่ออินเทอร์เน็ต</p>
 
@@ -740,7 +785,7 @@ KSU do command (command)</code></pre>
 </section>
 
 <!-- ================= 9 ================= -->
-<section id="ch9" class="container">
+<section id="ch9">
     <h2><span class="num">บทที่ 9</span> เซนเซอร์วัดระยะ HC-SR04 (อุปกรณ์เสริม)</h2>
     <p class="lead">ไม่ต่อก็ใช้งานรถได้ปกติ — บล็อกจะรายงาน 0 เฉย ๆ ไม่มีอะไรพัง</p>
 
@@ -794,7 +839,7 @@ KSU do command (command)</code></pre>
 </section>
 
 <!-- ================= 10 ================= -->
-<section id="ch10" class="container">
+<section id="ch10">
     <h2><span class="num">บทที่ 10</span> ตารางขา GPIO</h2>
     <p class="lead">ก่อนต่ออะไรเพิ่มเข้าบอร์ด เช็กตารางนี้ก่อนเสมอ</p>
 
@@ -827,7 +872,7 @@ KSU do command (command)</code></pre>
 </section>
 
 <!-- ================= 11 ================= -->
-<section id="ch11" class="container">
+<section id="ch11">
     <h2><span class="num">บทที่ 11</span> เพิ่มคำสั่งใหม่ด้วยตัวเอง</h2>
     <p class="lead">สำหรับนักเรียนที่อยากไปต่อ หรือคุณครูที่อยากดัดแปลงโปรเจกต์</p>
 
@@ -867,7 +912,7 @@ KSU do command (command)</code></pre>
 </section>
 
 <!-- ================= 12 ================= -->
-<section id="ch12" class="container">
+<section id="ch12">
     <h2><span class="num">บทที่ 12</span> ปัญหาที่พบบ่อย</h2>
     <p class="lead">อาการที่มักเจอในห้องเรียน พร้อมจุดที่ควรไปตรวจก่อน</p>
 
@@ -891,7 +936,7 @@ KSU do command (command)</code></pre>
 </section>
 
 <!-- ================= 13 ================= -->
-<section id="ch13" class="container">
+<section id="ch13">
     <h2><span class="num">บทที่ 13</span> ใบงานสำหรับห้องเรียน</h2>
     <p class="lead">เรียงจากง่ายไปยาก ใช้ต่อจากบทที่ 3 ได้ทันที</p>
 
@@ -929,7 +974,7 @@ KSU do command (command)</code></pre>
 </section>
 
 <!-- ================= Downloads ================= -->
-<section class="container">
+<section id="downloads">
     <div class="card" style="background: color-mix(in srgb, var(--primary) 10%, var(--card-bg)); border-color: color-mix(in srgb, var(--primary) 30%, transparent); text-align:center;">
         <h2 style="justify-content:center; margin-bottom:20px;">ดาวน์โหลดไฟล์</h2>
         <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
@@ -939,6 +984,9 @@ KSU do command (command)</code></pre>
         </div>
     </div>
 </section>
+
+</main>
+</div>
 
 <footer>
     <div class="container">
@@ -963,6 +1011,21 @@ KSU do command (command)</code></pre>
             paint();
         });
         paint();
+
+        /* ไฮไลต์หัวข้อปัจจุบันใน sidebar */
+        var links = {}, all = document.querySelectorAll('.side a[href^="#"]');
+        Array.prototype.forEach.call(all, function (a) { links[a.getAttribute('href').slice(1)] = a; });
+        if (window.IntersectionObserver) {
+            var obs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (!e.isIntersecting) return;
+                    Array.prototype.forEach.call(all, function (a) { a.classList.remove('active'); });
+                    var hit = links[e.target.id];
+                    if (hit) hit.classList.add('active');
+                });
+            }, { rootMargin: '-90px 0px -65% 0px' });
+            Array.prototype.forEach.call(document.querySelectorAll('main section[id]'), function (s) { obs.observe(s); });
+        }
     })();
 </script>
 

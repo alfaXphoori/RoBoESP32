@@ -38,6 +38,9 @@
             --chip-bg: rgba(255, 255, 255, 0.08);
             --chip-fg: #A5F3D0;
             --blk: #7C3AED;
+            --bk-ctrl: #B45309;
+            --bk-var: #C2410C;
+            --bk-op: #047857;
             --acc-blue: #60A5FA;
             --acc-green: #34D399;
             --acc-amber: #FBBF24;
@@ -67,6 +70,9 @@
             --chip-bg: rgba(15, 23, 42, 0.06);
             --chip-fg: #0F6E4F;
             --blk: #7C3AED;
+            --bk-ctrl: #B45309;
+            --bk-var: #C2410C;
+            --bk-op: #047857;
             --acc-blue: #1D4ED8;
             --acc-green: #047857;
             --acc-amber: #A16207;
@@ -84,7 +90,7 @@
                 --text: #17233A; --text-strong: #0B1220; --muted: #4A5B72;
                 --primary: #4F46E5; --primary-hover: #4338CA; --primary-ink: #4F46E5;
                 --nav-bg: rgba(246,248,252,.85); --th-bg: rgba(15,23,42,.05);
-                --chip-bg: rgba(15,23,42,.06); --chip-fg: #0F6E4F; --blk: #7C3AED;
+                --chip-bg: rgba(15,23,42,.06); --chip-fg: #0F6E4F;
                 --acc-blue: #1D4ED8; --acc-green: #047857; --acc-amber: #A16207;
                 --acc-red: #B91C1C; --acc-mint: #0F766E;
                 --shadow: 0 16px 32px rgba(15,23,42,.12);
@@ -106,7 +112,7 @@
             transition: background-color .25s ease, color .25s ease;
         }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
 
         /* ---------- Navbar ---------- */
         nav {
@@ -120,9 +126,9 @@
             background: linear-gradient(to right, var(--acc-blue), var(--acc-green));
             -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .nav-right { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
-        .nav-right a { color: var(--muted); text-decoration: none; font-size: .95rem; transition: color .2s; }
-        .nav-right a:hover { color: var(--text-strong); }
+        .nav-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .nav-right > a { color: var(--muted); text-decoration: none; font-size: .95rem; transition: color .2s; }
+        .nav-right > a:hover { color: var(--text-strong); }
 
         #themeBtn {
             width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
@@ -137,20 +143,20 @@
             padding: 8px 18px; border-radius: 50px; font-size: .9rem; font-weight: 600;
             background: var(--primary); color: var(--primary-fg) !important;
             box-shadow: 0 3px 12px color-mix(in srgb, var(--primary) 38%, transparent);
-            transition: all .25s ease;
+            transition: all .25s ease; text-decoration: none;
         }
         .nav-dl:hover { background: var(--primary-hover); transform: translateY(-2px); }
 
         /* ---------- Hero ---------- */
-        .hero { padding: 90px 0 50px; text-align: center; }
+        .hero { padding: 80px 0 40px; text-align: center; }
         .kicker {
             display: inline-block; padding: 6px 18px; border-radius: 50px; margin-bottom: 22px;
             background: color-mix(in srgb, var(--primary) 18%, transparent);
             border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
             color: var(--primary-ink); font-size: .85rem; letter-spacing: 1px; font-weight: 600;
         }
-        .hero h1 { font-size: 3.4rem; font-weight: 800; line-height: 1.2; margin-bottom: 20px; color: var(--text-strong); }
-        .hero p { color: var(--muted); max-width: 700px; margin: 0 auto 34px; font-size: 1.15rem; }
+        .hero h1 { font-size: 3.2rem; font-weight: 800; line-height: 1.2; margin-bottom: 20px; color: var(--text-strong); }
+        .hero p { color: var(--muted); max-width: 720px; margin: 0 auto 32px; font-size: 1.12rem; }
         .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
         .btn {
@@ -159,66 +165,107 @@
             transition: all .3s ease; box-shadow: 0 4px 15px color-mix(in srgb, var(--primary) 40%, transparent);
         }
         .btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
-        .btn.ghost {
-            background: var(--surface); color: var(--text);
-            border: 1px solid var(--line-strong); box-shadow: none;
-        }
+        .btn.ghost { background: var(--surface); color: var(--text); border: 1px solid var(--line-strong); box-shadow: none; }
         .btn.ghost:hover { border-color: var(--primary); }
 
-        /* ---------- Roadmap ---------- */
-        .roadmap { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
-        .rm {
-            display: block; text-decoration: none; color: inherit;
+        /* ---------- Shell: sidebar + content ---------- */
+        .shell { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 44px; align-items: start; }
+
+        .side {
+            position: sticky; top: 84px; align-self: start;
+            max-height: calc(100vh - 110px); overflow-y: auto;
             background: var(--surface); border: 1px solid var(--line);
-            border-radius: 16px; padding: 18px 20px; transition: all .3s ease;
+            border-radius: 18px; padding: 20px 18px;
         }
-        .rm:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: var(--shadow); }
-        .rm b { display: block; color: var(--text-strong); font-size: 1.02rem; }
-        .rm span { color: var(--muted); font-size: .88rem; }
-        .lv {
-            display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: 1px;
-            padding: 2px 10px; border-radius: 50px; margin-bottom: 8px;
-            background: color-mix(in srgb, var(--acc-green) 18%, transparent);
-            color: var(--acc-green); border: 1px solid color-mix(in srgb, var(--acc-green) 40%, transparent);
+        .side h4 {
+            font-size: .78rem; letter-spacing: 1.5px; color: var(--muted);
+            text-transform: uppercase; margin-bottom: 14px; font-weight: 700;
+        }
+        .side ol { list-style: none; margin: 0; counter-reset: sv; }
+        .side li { margin: 0 0 3px; }
+        .side a {
+            display: flex; gap: 10px; align-items: baseline;
+            padding: 7px 10px; border-radius: 10px; text-decoration: none;
+            color: var(--muted); font-size: .9rem; line-height: 1.45;
+            border-left: 3px solid transparent; transition: all .2s ease;
+        }
+        .side a:hover { background: var(--surface-2); color: var(--text-strong); }
+        .side a .n {
+            font-family: 'JetBrains Mono', monospace; font-size: .78rem;
+            font-weight: 700; color: var(--acc-green); flex: none;
+        }
+        .side a.active {
+            background: color-mix(in srgb, var(--primary) 14%, transparent);
+            color: var(--text-strong); font-weight: 600;
+            border-left-color: var(--primary);
+        }
+        .side .side-foot { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+        .side .side-foot a { color: var(--primary-ink); font-weight: 600; border: 0; }
+
+        @media (max-width: 1000px) {
+            .shell { grid-template-columns: minmax(0, 1fr); gap: 0; }
+            .side { display: none; }
         }
 
         /* ---------- Sections ---------- */
-        section { margin-top: 76px; scroll-margin-top: 84px; }
-        h2 { font-size: 1.9rem; font-weight: 800; color: var(--text-strong); margin-bottom: 10px; }
-        h2 .lv { vertical-align: middle; margin: 0 12px 0 0; }
+        section { margin-bottom: 76px; scroll-margin-top: 84px; }
+        h2 { font-size: 1.85rem; font-weight: 800; color: var(--text-strong); margin-bottom: 10px; }
+        h2 .lv {
+            display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: 1px;
+            padding: 2px 10px; border-radius: 50px; margin-right: 12px; vertical-align: middle;
+            background: color-mix(in srgb, var(--acc-green) 18%, transparent);
+            color: var(--acc-green); border: 1px solid color-mix(in srgb, var(--acc-green) 40%, transparent);
+        }
         h3 { font-size: 1.2rem; margin: 28px 0 12px; color: var(--text-strong); }
         h4 { font-size: 1.05rem; margin-bottom: 10px; }
         p { margin-bottom: 14px; }
         ul, ol { margin: 0 0 16px 22px; }
         li { margin-bottom: 8px; }
-        .goal { color: var(--muted); font-size: 1.05rem; margin-bottom: 26px; }
+        .goal { color: var(--muted); font-size: 1.03rem; margin-bottom: 26px; }
 
-        .card {
-            background: var(--surface); border: 1px solid var(--line);
-            backdrop-filter: blur(16px); border-radius: 20px; padding: 28px;
-        }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; }
-        .panel {
-            background: var(--surface-2); border: 1px solid var(--line);
-            border-radius: 14px; padding: 22px;
-        }
+        .card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 26px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .panel { background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
         .panel p:last-child, .card p:last-child { margin-bottom: 0; }
 
         /* ---------- Step list ---------- */
-        .steps { list-style: none; margin: 0; counter-reset: st; }
-        .steps > li {
-            position: relative; padding-left: 52px; margin-bottom: 22px; counter-increment: st;
-        }
+        .steps { list-style: none; margin: 0 0 16px; counter-reset: st; }
+        .steps > li { position: relative; padding-left: 50px; margin-bottom: 20px; counter-increment: st; }
         .steps > li::before {
             content: counter(st); position: absolute; left: 0; top: 2px;
-            width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+            width: 33px; height: 33px; border-radius: 50%; display: grid; place-items: center;
             background: color-mix(in srgb, var(--primary) 20%, transparent);
             border: 1px solid color-mix(in srgb, var(--primary) 50%, transparent);
-            color: var(--primary-ink); font-weight: 700; font-size: .95rem;
+            color: var(--primary-ink); font-weight: 700; font-size: .92rem;
         }
         .steps b { color: var(--text-strong); }
 
-        /* ---------- Blocks / code ---------- */
+        /* ---------- ภาพจำลองบล็อก MicroBlocks ---------- */
+        .script {
+            background: var(--surface-2); border: 1px solid var(--line);
+            border-radius: 14px; padding: 18px 20px; margin: 18px 0;
+            overflow-x: auto;
+        }
+        .script .cap {
+            display: block; font-size: .78rem; letter-spacing: 1px; text-transform: uppercase;
+            color: var(--muted); margin-bottom: 12px; font-weight: 600;
+        }
+        .bk {
+            display: table; font-family: 'JetBrains Mono', monospace; font-size: .84rem;
+            font-weight: 600; color: #fff; background: var(--blk);
+            padding: 7px 13px; border-radius: 6px; margin-bottom: 4px; white-space: nowrap;
+        }
+        .bk.hat { background: var(--bk-ctrl); border-radius: 14px 14px 6px 6px; }
+        .bk.ctrl { background: var(--bk-ctrl); }
+        .bk.vr { background: var(--bk-var); }
+        .bk.op { background: var(--bk-op); }
+        .bk i { font-style: normal; background: #fff; color: #111; border-radius: 50px; padding: 1px 9px; margin: 0 3px; }
+        .bk s { text-decoration: none; background: rgba(0,0,0,.25); border-radius: 50px; padding: 1px 9px; margin: 0 3px; }
+        .cbody { margin-left: 16px; padding-left: 12px; border-left: 6px solid var(--bk-ctrl); }
+        .cbody.op { border-left-color: var(--bk-op); }
+        .script .note-in { font-size: .82rem; color: var(--muted); margin: 10px 0 0; font-family: 'Prompt', sans-serif; }
+
+        /* ---------- Blocks inline ---------- */
         .blk, .rep, .var {
             display: inline-block; font-family: 'JetBrains Mono', monospace;
             font-size: .85em; font-weight: 600; color: #fff;
@@ -226,7 +273,7 @@
         }
         .blk { background: var(--blk); border-radius: 5px; }
         .rep { background: var(--blk); border-radius: 50px; }
-        .var { background: #B45309; border-radius: 50px; }
+        .var { background: var(--bk-var); border-radius: 50px; }
         .slot { background: #fff; color: #111; border-radius: 50px; padding: 0 7px; margin: 0 2px; font-weight: 700; }
 
         code {
@@ -234,16 +281,13 @@
             background: var(--chip-bg); color: var(--chip-fg);
             padding: 2px 7px; border-radius: 6px; white-space: nowrap;
         }
-        pre {
-            background: #060a12; border: 1px solid rgba(255,255,255,.12);
-            border-radius: 14px; padding: 20px; overflow-x: auto; margin-bottom: 16px;
-        }
+        pre { background: #060a12; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 20px; overflow-x: auto; margin-bottom: 16px; }
         pre code { background: none; padding: 0; color: #C9D6E4; white-space: pre; font-size: .9rem; line-height: 1.8; }
         .c-key { color: #C084FC; } .c-str { color: #7EE2B8; } .c-num { color: #FBBF24; } .c-com { color: #7C8BA1; }
 
         /* ---------- Tables ---------- */
         .tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; margin-bottom: 20px; }
-        table { border-collapse: collapse; width: 100%; min-width: 540px; font-size: .95rem; background: var(--surface); }
+        table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: .94rem; background: var(--surface); }
         th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
         th { background: var(--th-bg); font-weight: 600; color: var(--text-strong); white-space: nowrap; }
         tr:last-child td { border-bottom: none; }
@@ -251,8 +295,8 @@
 
         /* ---------- Callouts ---------- */
         .note, .warn, .tip, .win {
-            border-radius: 12px; padding: 18px 22px; margin: 20px 0;
-            border-left: 4px solid; font-size: .98rem;
+            border-radius: 12px; padding: 17px 21px; margin: 20px 0;
+            border-left: 4px solid; font-size: .97rem;
         }
         .note { background: color-mix(in srgb, var(--primary) 12%, transparent); border-color: var(--primary); }
         .warn { background: color-mix(in srgb, var(--acc-red) 14%, transparent); border-color: var(--acc-red); }
@@ -266,17 +310,19 @@
         figcaption { color: var(--muted); font-size: .9rem; margin-top: 12px; }
 
         footer {
-            text-align: center; padding: 40px 0; margin-top: 90px;
+            text-align: center; padding: 40px 0; margin-top: 40px;
             border-top: 1px solid var(--line); color: var(--muted);
         }
         footer a { color: var(--acc-green); text-decoration: none; }
 
         @media (max-width: 768px) {
-            .hero { padding: 60px 0 30px; }
-            .hero h1 { font-size: 2.2rem; }
+            .hero { padding: 50px 0 24px; }
+            .hero h1 { font-size: 2.1rem; }
             .hero p { font-size: 1rem; }
-            h2 { font-size: 1.5rem; }
-            .card { padding: 20px; }
+            h2 { font-size: 1.45rem; }
+            .card { padding: 18px; }
+            .nav-right { gap: 12px; }
+            .nav-right > a { font-size: .88rem; }
         }
     </style>
 </head>
@@ -286,224 +332,542 @@
     <div class="container">
         <a href="index.html" class="logo">RoboESP32</a>
         <div class="nav-right">
-            <a href="#roadmap">แผนการเรียน</a>
             <a href="#lv0">เริ่มที่นี่</a>
             <a href="library.html">คู่มือไลบรารี</a>
-            <a class="nav-dl" href="https://github.com/alfaXphoori/RoboESP32/raw/main/RoboCar.ubp" download
-               title="ดาวน์โหลดไฟล์โปรเจกต์ RoboCar.ubp">⬇ ดาวน์โหลด</a>
+            <a class="nav-dl" href="https://github.com/alfaXphoori/RoboESP32/raw/main/KSU_RoBoESP32.ubl" download
+               title="ดาวน์โหลดไลบรารี KSU_RoBoESP32.ubl">⬇ ดาวน์โหลด</a>
             <button id="themeBtn" type="button" aria-label="สลับโหมดสว่าง/มืด" title="สลับโหมดสว่าง/มืด">🌙</button>
         </div>
     </div>
 </nav>
 
 <header class="hero container">
-    <div class="kicker">ZERO TO HERO · เริ่มจากศูนย์</div>
+    <div class="kicker">ZERO TO HERO · ประกอบทีละชิ้น</div>
     <h1>สอนใช้งานบอร์ด<br>RoboESP32</h1>
-    <p>ตั้งแต่แกะกล่อง ลงไดรเวอร์ ต่อสาย USB ครั้งแรก ไปจนถึงเขียนคำสั่งของตัวเองให้รถทำท่าใหม่ได้
-       ทั้งหมด 9 ด่าน ไม่ต้องมีพื้นฐานเขียนโปรแกรมมาก่อน</p>
+    <p>เริ่มจากบอร์ดเปล่ากับโปรเจกต์ว่าง แล้วค่อย ๆ ต่อทีละส่วน — ไฟ เสียง มอเตอร์ แขนกล เซนเซอร์
+       จนครบแล้วค่อยเปิด WiFi คุมจากมือถือ และจบด้วยไฟล์ <code>RoboCar.ubp</code> ที่รวมทุกอย่างไว้</p>
     <div class="hero-btns">
         <a href="#lv0" class="btn">เริ่มด่านแรก</a>
         <a href="library.html" class="btn ghost">คู่มือไลบรารีฉบับเต็ม</a>
     </div>
 </header>
 
-<!-- ============ ROADMAP ============ -->
-<section id="roadmap" class="container">
-    <h2>แผนการเรียน 9 ด่าน</h2>
-    <p class="goal">แต่ละด่านมีเงื่อนไขผ่านชัดเจน ทำให้ได้ก่อนแล้วค่อยไปด่านถัดไป ไม่ต้องรีบ</p>
-    <div class="roadmap">
-        <a class="rm" href="#lv0"><span class="lv">ด่าน 0</span><b>เตรียมพร้อม</b><span>อุปกรณ์ ไดรเวอร์ และโปรแกรมที่ต้องลง</span></a>
-        <a class="rm" href="#lv1"><span class="lv">ด่าน 1</span><b>เชื่อมต่อบอร์ด</b><span>ต่อ USB ครั้งแรก ให้ไฟติดตามสั่ง</span></a>
-        <a class="rm" href="#lv2"><span class="lv">ด่าน 2</span><b>โปรแกรมแรก</b><span>สามบล็อก แล้วรถพร้อมรับคำสั่ง</span></a>
-        <a class="rm" href="#lv3"><span class="lv">ด่าน 3</span><b>ขับจากมือถือ</b><span>ต่อ WiFi เปิดหน้าเว็บ แล้วขับจริง</span></a>
-        <a class="rm" href="#lv4"><span class="lv">ด่าน 4</span><b>อ่านโค้ดให้ออก</b><span>ตัวแปรกับ if ทำงานอย่างไร</span></a>
-        <a class="rm" href="#lv5"><span class="lv">ด่าน 5</span><b>ส่งตัวเลข</b><span>ปรับความเร็วและมุมเซอร์โว</span></a>
-        <a class="rm" href="#lv6"><span class="lv">ด่าน 6</span><b>เซอร์โวและแขนกล</b><span>สั่งเป็นมุม ให้แขนไปหยุดตรงที่ต้องการ</span></a>
-        <a class="rm" href="#lv7"><span class="lv">ด่าน 7</span><b>ใส่เซนเซอร์</b><span>ให้รถหยุดเองก่อนชน</span></a>
-        <a class="rm" href="#lv8"><span class="lv">ด่าน 8</span><b>เป็น Hero</b><span>สร้างคำสั่งใหม่ของตัวเอง</span></a>
-    </div>
-</section>
+<div class="container shell">
 
-<!-- ============ LV0 ============ -->
-<section id="lv0" class="container">
-    <h2><span class="lv">ด่าน 0</span>เตรียมพร้อม</h2>
-    <p class="goal">เป้าหมาย: มีของครบและลงโปรแกรมเสร็จ ยังไม่ต้องต่อบอร์ด</p>
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="side">
+        <h4>แผนการเรียน</h4>
+        <ol>
+            <li><a href="#lv0"><span class="n">00</span><span>เตรียมพร้อม</span></a></li>
+            <li><a href="#lv1"><span class="n">01</span><span>ต่อบอร์ด + เพิ่มไลบรารี</span></a></li>
+            <li><a href="#lv2"><span class="n">02</span><span>ไฟ LED และ RGB</span></a></li>
+            <li><a href="#lv3"><span class="n">03</span><span>เสียงและดนตรี</span></a></li>
+            <li><a href="#lv4"><span class="n">04</span><span>มอเตอร์และการขับ</span></a></li>
+            <li><a href="#lv5"><span class="n">05</span><span>เซอร์โวและแขนกล</span></a></li>
+            <li><a href="#lv6"><span class="n">06</span><span>เซนเซอร์และเงื่อนไข</span></a></li>
+            <li><a href="#lv7"><span class="n">07</span><span>WiFi + เปิดเบราว์เซอร์</span></a></li>
+            <li><a href="#lv8"><span class="n">08</span><span>ประกอบร่าง RoboCar.ubp</span></a></li>
+        </ol>
+        <div class="side-foot">
+            <a href="library.html">📘 คู่มือไลบรารี 13 บท</a>
+            <a href="#downloads">⬇ ดาวน์โหลดไฟล์</a>
+        </div>
+    </aside>
 
-    <h3>ของที่ต้องมี</h3>
-    <div class="tw">
-        <table>
-            <thead><tr><th>สิ่งของ</th><th>รายละเอียด</th></tr></thead>
-            <tbody>
-                <tr><td>บอร์ด Cytron ROBO ESP32</td><td>พร้อมมอเตอร์สองตัวประกอบเป็นรถแล้ว</td></tr>
-                <tr><td>สาย USB</td><td><strong>ต้องเป็นสายที่ส่งข้อมูลได้</strong> สายชาร์จไฟอย่างเดียวใช้ไม่ได้ (เป็นปัญหาที่เจอบ่อยที่สุด)</td></tr>
-                <tr><td>แบตเตอรี่</td><td>ใส่เมื่อจะปล่อยรถวิ่งจริง ตอนเขียนโปรแกรมใช้ไฟจาก USB ได้</td></tr>
-                <tr><td>โทรศัพท์มือถือ</td><td>เครื่องไหนก็ได้ที่ต่อ WiFi และเปิดเบราว์เซอร์ได้</td></tr>
-                <tr><td>เซอร์โว / เซนเซอร์ HC-SR04</td><td><em>ไม่บังคับ</em> — ไม่มีก็เรียนถึงด่าน 5 ได้ครบ</td></tr>
-            </tbody>
-        </table>
-    </div>
+    <main>
 
-    <h3>ลงสองอย่างนี้ก่อน</h3>
-    <ol class="steps">
-        <li><b>ไดรเวอร์ CP210x</b> — ตัวแปลง USB บนบอร์ดต้องมีไดรเวอร์ ไม่งั้นคอมพิวเตอร์จะมองไม่เห็นบอร์ดเลย
-            แตกไฟล์ <code>CP210x_Windows_Drivers.zip</code> แล้วติดตั้ง จากนั้น<strong>รีสตาร์ตเครื่องหนึ่งครั้ง</strong>
-            (ลงครั้งเดียวต่อเครื่อง)</li>
-        <li><b>โปรแกรม MicroBlocks</b> — ดาวน์โหลดจาก <a href="https://microblocks.fun" style="color:var(--acc-green);">microblocks.fun</a>
-            เลือกรุ่นที่ตรงกับระบบปฏิบัติการ ใช้ได้ทั้ง Windows, macOS, Linux, Chromebook และมีแบบเปิดผ่านเบราว์เซอร์</li>
-        <li><b>ไฟล์โปรเจกต์</b> — ดาวน์โหลด <code>RoboCar.ubp</code> เก็บไว้ในเครื่อง ไฟล์นี้มีทั้งโปรแกรมและไลบรารีครบในตัว</li>
-    </ol>
+    <!-- ============ LV0 ============ -->
+    <section id="lv0">
+        <h2><span class="lv">ด่าน 0</span>เตรียมพร้อม</h2>
+        <p class="goal">เป้าหมาย: มีของครบและลงโปรแกรมเสร็จ ยังไม่ต้องต่อบอร์ด</p>
 
-    <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> เปิดโปรแกรม MicroBlocks ขึ้นมาได้ และมีไฟล์ <code>RoboCar.ubp</code> อยู่ในเครื่องแล้ว</p></div>
-</section>
+        <h3>ของที่ต้องมี</h3>
+        <div class="tw">
+            <table>
+                <thead><tr><th>สิ่งของ</th><th>รายละเอียด</th></tr></thead>
+                <tbody>
+                    <tr><td>บอร์ด Cytron ROBO ESP32</td><td>พร้อมมอเตอร์สองตัวประกอบเป็นรถแล้ว</td></tr>
+                    <tr><td>สาย USB</td><td><strong>ต้องเป็นสายที่ส่งข้อมูลได้</strong> สายชาร์จไฟอย่างเดียวใช้ไม่ได้ — เป็นปัญหาที่เจอบ่อยที่สุด</td></tr>
+                    <tr><td>แบตเตอรี่</td><td>ใส่ตอนจะให้รถวิ่งจริง ระหว่างเขียนโปรแกรมใช้ไฟจาก USB ได้</td></tr>
+                    <tr><td>โทรศัพท์มือถือ</td><td>ใช้ในด่าน 7 เครื่องไหนก็ได้ที่ต่อ WiFi และเปิดเบราว์เซอร์ได้</td></tr>
+                    <tr><td>เซอร์โว · เซนเซอร์ HC-SR04</td><td><em>ไม่บังคับ</em> — ไม่มีก็ข้ามด่าน 5 กับ 6 ไปได้</td></tr>
+                </tbody>
+            </table>
+        </div>
 
-<!-- ============ LV1 ============ -->
-<section id="lv1" class="container">
-    <h2><span class="lv">ด่าน 1</span>เชื่อมต่อบอร์ดครั้งแรก</h2>
-    <p class="goal">เป้าหมาย: สั่งให้ไฟบนบอร์ดติดได้ด้วยการคลิกบล็อกเดียว — ยังไม่ต้องเขียนโปรแกรม</p>
+        <h3>ลงสามอย่างนี้ก่อน</h3>
+        <ol class="steps">
+            <li><b>ไดรเวอร์ CP210x</b> — ตัวแปลง USB บนบอร์ดต้องมีไดรเวอร์ ไม่งั้นคอมพิวเตอร์มองไม่เห็นบอร์ดเลย
+                แตกไฟล์ <code>CP210x_Windows_Drivers.zip</code> ติดตั้ง แล้ว<strong>รีสตาร์ตเครื่องหนึ่งครั้ง</strong> (ทำครั้งเดียวต่อเครื่อง)</li>
+            <li><b>โปรแกรม MicroBlocks</b> — โหลดจาก <a href="https://microblocks.fun" style="color:var(--acc-green);">microblocks.fun</a>
+                มีทั้ง Windows, macOS, Linux, Chromebook และแบบเปิดผ่านเบราว์เซอร์</li>
+            <li><b>ไฟล์ไลบรารี</b> <code>KSU_RoBoESP32.ubl</code> — เก็บไว้ในเครื่อง จะได้ใช้ในด่านถัดไป
+                <br><span style="color:var(--muted);font-size:.92rem;">ยังไม่ต้องโหลด <code>RoboCar.ubp</code> ตอนนี้ ไฟล์นั้นคือเฉลยที่รวมทุกอย่างไว้แล้ว เก็บไว้เปิดตอนจบคอร์สในด่าน 8</span></li>
+        </ol>
 
-    <ol class="steps">
-        <li><b>เสียบสาย USB</b> จากบอร์ดเข้าคอมพิวเตอร์ แล้วเปิดสวิตช์บอร์ด ไฟเล็ก ๆ บนบอร์ดควรติด</li>
-        <li><b>เปิดไฟล์</b> <code>RoboCar.ubp</code> ด้วยเมนู <strong>File → Open</strong> ในโปรแกรม MicroBlocks</li>
-        <li><b>กดปุ่มรูปสาย USB</b> ที่แถบเครื่องมือด้านบน แล้วเลือกพอร์ตของบอร์ด (มักขึ้นชื่อว่า <code>COM</code> ตามด้วยตัวเลขบน Windows)
-            เมื่อเชื่อมต่อสำเร็จจะมีวงกลมสีเขียวขึ้นข้าง ๆ</li>
-        <li><b>ทดสอบ</b> — ลากบล็อก <span class="blk">KSU LED number <span class="slot">3</span> <span class="slot">on</span></span>
-            มาวางบนพื้นที่ทำงาน แล้ว<strong>คลิกที่ตัวบล็อกโดยตรง</strong> ไฟดวงที่ 3 ต้องติดทันที</li>
-    </ol>
+        <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> เปิด MicroBlocks ขึ้นมาได้ และมีไฟล์ <code>KSU_RoBoESP32.ubl</code> อยู่ในเครื่อง</p></div>
+    </section>
 
-    <div class="tip">
-        <p><strong>เทคนิคสำคัญของ MicroBlocks:</strong> คลิกบล็อกไหนบล็อกนั้นทำงานทันที ไม่ต้องกดรันทั้งโปรแกรม
-           ใช้ลองของทีละชิ้นได้เร็วมาก ลองคลิก <span class="blk">KSU horn</span> ดูก็ได้ ต้องมีเสียงแตรออกลำโพงบนบอร์ด</p>
-    </div>
+    <!-- ============ LV1 ============ -->
+    <section id="lv1">
+        <h2><span class="lv">ด่าน 1</span>ต่อบอร์ดและเพิ่มไลบรารี</h2>
+        <p class="goal">เป้าหมาย: มีบล็อก KSU โผล่มาในแถบเครื่องมือ และคลิกแล้วบอร์ดตอบสนอง</p>
 
-    <div class="warn">
-        <p><strong>ถ้าหาพอร์ตไม่เจอ:</strong> ยังไม่ได้ลงไดรเวอร์ CP210x · ยังไม่ได้รีสตาร์ตหลังลงไดรเวอร์ ·
-           หรือใช้สาย USB แบบชาร์จไฟอย่างเดียว ลองเปลี่ยนสายก่อนเป็นอันดับแรก</p>
-    </div>
+        <ol class="steps">
+            <li><b>เสียบสาย USB</b> จากบอร์ดเข้าคอมพิวเตอร์ แล้วเปิดสวิตช์บอร์ด</li>
+            <li><b>เปิด MicroBlocks</b> ขึ้นมาเป็นโปรเจกต์เปล่า ยังไม่ต้องเปิดไฟล์อะไร</li>
+            <li><b>กดปุ่มรูปสาย USB</b> ที่แถบเครื่องมือ แล้วเลือกพอร์ตของบอร์ด (บน Windows มักขึ้นเป็น <code>COM</code> ตามด้วยตัวเลข)
+                เมื่อต่อติดจะมีสัญลักษณ์บอกสถานะเปลี่ยนไป</li>
+            <li><b>เพิ่มไลบรารี</b> — ที่แถบบล็อกด้านซ้าย กด <strong>+ Add Library</strong> แล้วเลือกไฟล์ <code>KSU_RoBoESP32.ubl</code>
+                จะได้หมวดบล็อกใหม่โผล่ขึ้นมาทั้งชุด</li>
+        </ol>
 
-    <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> คลิกบล็อกแล้วไฟติดหรือมีเสียงออกจากบอร์ดได้</p></div>
-</section>
+        <div class="note">
+            <p><strong>ชื่อบล็อกที่เห็นจะยาวกว่าที่เขียนในคู่มือนี้</strong> — เมื่อเพิ่มจากไฟล์ <code>.ubl</code>
+               บล็อกจะชื่อ <span class="blk">KSU_RoBoESP32 forward</span> แต่คู่มือนี้เขียนย่อว่า <span class="blk">KSU forward</span>
+               เพื่อให้อ่านง่าย <strong>เป็นบล็อกตัวเดียวกัน</strong> และเมื่อถึงด่าน 8 ที่เปิดไฟล์ <code>RoboCar.ubp</code>
+               ชื่อในนั้นจะสั้นแบบเดียวกับในคู่มือพอดี</p>
+        </div>
 
-<!-- ============ LV2 ============ -->
-<section id="lv2" class="container">
-    <h2><span class="lv">ด่าน 2</span>โปรแกรมแรก — สามบล็อก</h2>
-    <p class="goal">เป้าหมาย: ทำให้บอร์ดปล่อยสัญญาณ WiFi ของตัวเองและพร้อมรับคำสั่ง</p>
+        <h3>ทดสอบว่าบอร์ดตอบสนองจริง</h3>
+        <p>ลากบล็อกนี้มาวางบนพื้นที่ทำงาน แล้ว<strong>คลิกที่ตัวบล็อกโดยตรง</strong> — ไฟดวงที่ 3 ต้องติดทันที</p>
 
-    <figure>
-        <img src="images/blocks-main-loop.png" alt="สคริปต์หลักของโปรเจกต์">
-        <figcaption>สคริปต์ทั้งหมดของโปรเจกต์นี้มีเท่านี้จริง ๆ</figcaption>
-    </figure>
+        <div class="script">
+            <span class="cap">คลิกบล็อกเดียว ไม่ต้องกดรันทั้งโปรแกรม</span>
+            <div class="bk">KSU LED number <i>3</i> <i>on</i></div>
+        </div>
 
-    <h3>แต่ละบล็อกทำอะไร</h3>
-    <div class="tw">
-        <table>
-            <thead><tr><th>บล็อก</th><th>หน้าที่</th></tr></thead>
-            <tbody>
-                <tr><td><span class="blk">when started</span></td><td>เริ่มทำงานเมื่อกดปุ่มเริ่ม หรือเมื่อบอร์ดเปิดเครื่องขึ้นมาใหม่</td></tr>
-                <tr><td><span class="blk">KSU start web control</span></td><td>เปิดสัญญาณ WiFi ชื่อ <code>RoboCar</code> พร้อมเว็บเซิร์ฟเวอร์ และตั้งค่าเริ่มต้นให้ทุกอย่าง</td></tr>
-                <tr><td><span class="blk">forever</span></td><td>วนทำสิ่งที่อยู่ข้างในซ้ำไปเรื่อย ๆ ไม่มีวันจบ</td></tr>
-                <tr><td><span class="var">command</span> = <span class="rep">KSU web command</span></td><td>ถามว่ามีใครกดปุ่มบนหน้าเว็บไหม ถ้ามีจะได้คำสั่งกลับมาหนึ่งคำ</td></tr>
-                <tr><td><span class="blk">KSU do command</span></td><td>เอาคำนั้นไปทำให้จริง</td></tr>
-                <tr><td><span class="blk">wait <span class="slot">10</span> millisecs</span></td><td>พักสั้น ๆ ให้บอร์ดได้ทำงานอื่นบ้าง</td></tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="tip">
+            <p><strong>นี่คือท่าไม้ตายของ MicroBlocks:</strong> คลิกบล็อกไหน บล็อกนั้นทำงานทันที
+               ไม่ต้องกดรันทั้งโปรแกรมและไม่ต้องรอคอมไพล์ ใช้ลองของทีละชิ้นได้เร็วมาก — ทั้งคอร์สนี้จะใช้วิธีนี้ตลอด</p>
+        </div>
 
-    <div class="note">
-        <p><strong>ทำไมต้องมี <span class="blk">forever</span>?</strong> เพราะบอร์ดไม่รู้ว่าเราจะกดปุ่มเมื่อไร
-           มันจึงต้อง<strong>ถามซ้ำ ๆ ตลอดเวลา</strong>ว่า "มีคำสั่งเข้ามาหรือยัง" วินาทีละหลายสิบครั้ง
-           ถ้าถามครั้งเดียวแล้วจบ กดปุ่มทีหลังก็จะไม่มีอะไรเกิดขึ้น</p>
-    </div>
+        <div class="warn">
+            <p><strong>ถ้าหาพอร์ตไม่เจอ:</strong> ยังไม่ได้ลงไดรเวอร์ CP210x · ยังไม่ได้รีสตาร์ตหลังลงไดรเวอร์ ·
+               หรือใช้สาย USB แบบชาร์จไฟอย่างเดียว ลองเปลี่ยนสายเป็นอันดับแรก</p>
+        </div>
 
-    <h3>สั่งให้ทำงาน</h3>
-    <ol class="steps">
-        <li>กด<b>ปุ่มเริ่มทำงาน</b> ▶ ที่แถบเครื่องมือ (หรือคลิกที่สคริปต์ตรง ๆ ก็ได้)</li>
-        <li>โปรแกรมถูกเก็บลงบอร์ดแล้ว <b>ถอดสาย USB ได้เลย</b> ใส่แบตเตอรี่แล้วเปิดสวิตช์ โปรแกรมจะเริ่มเองทุกครั้งที่เปิดเครื่อง</li>
-    </ol>
+        <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> คลิกบล็อกแล้วไฟบนบอร์ดติดได้</p></div>
+    </section>
 
-    <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> เอาโทรศัพท์ไปค้นหา WiFi แล้ว<strong>เห็นชื่อ <code>RoboCar</code></strong> ขึ้นมาในรายการ</p></div>
-</section>
+    <!-- ============ LV2 ============ -->
+    <section id="lv2">
+        <h2><span class="lv">ด่าน 2</span>ไฟ LED และ RGB</h2>
+        <p class="goal">เป้าหมาย: สั่งไฟทุกดวงบนบอร์ดได้ และเขียนไฟวิ่งเป็นลูปแรกของคอร์ส</p>
 
-<!-- ============ LV3 ============ -->
-<section id="lv3" class="container">
-    <h2><span class="lv">ด่าน 3</span>ขับรถจากมือถือ</h2>
-    <p class="goal">เป้าหมาย: บังคับรถให้วิ่งได้ครบสี่ทิศ</p>
+        <h3>ไฟบนบอร์ดมีสองชุด</h3>
+        <div class="tw">
+            <table>
+                <thead><tr><th>ชุด</th><th>คำอธิบาย</th><th>บล็อกที่ใช้</th></tr></thead>
+                <tbody>
+                    <tr><td>LED เดี่ยว 8 ดวง</td><td>ไฟดวงเล็กเรียงกัน สั่งได้แค่ติด/ดับ</td><td><span class="blk">KSU LED number</span></td></tr>
+                    <tr><td>ไฟ RGB 2 ดวง</td><td>ไฟหน้ารถ เปลี่ยนสีได้อิสระ ผสมสีเองได้</td><td><span class="blk">KSU set RGB</span></td></tr>
+                </tbody>
+            </table>
+        </div>
 
-    <ol class="steps">
-        <li><b>ต่อ WiFi</b> — ที่โทรศัพท์เลือกเครือข่าย <code>RoboCar</code> ใส่รหัสผ่าน <code>robocar123</code></li>
-        <li><b>เปิดเบราว์เซอร์</b> พิมพ์ <code>http://192.168.4.1</code> ให้ครบทั้งบรรทัด อย่าให้เบราว์เซอร์เอาไปค้นหาใน Google</li>
-        <li><b>หมุนโทรศัพท์เป็นแนวนอน</b> — หน้าเว็บออกแบบมาสำหรับแนวนอนเท่านั้น ถ้าถือแนวตั้งจะขึ้นข้อความให้หมุนเครื่อง</li>
-        <li><b>กดปุ่มลูกศร</b> รถต้องวิ่งตามทันที ปล่อยนิ้วเมื่อไรรถหยุดเอง</li>
-    </ol>
+        <h3>ลองทีละบล็อก</h3>
+        <div class="script">
+            <span class="cap">คลิกทีละอัน ดูว่าอะไรเกิดขึ้น</span>
+            <div class="bk">KSU LED number <i>1</i> <i>on</i></div>
+            <div class="bk">KSU LED <i>all</i> <i>off</i></div>
+            <div class="bk">KSU light <i>on</i></div>
+            <div class="bk">KSU set RGB <i>all</i> red <i>255</i> green <i>0</i> blue <i>0</i></div>
+            <div class="bk">KSU change RGB brightness by <i>-25</i> %</div>
+        </div>
 
-    <figure>
-        <img src="images/control-drive.png" alt="หน้าจอควบคุมแท็บ DRIVE">
-        <figcaption>แท็บ DRIVE — แป้นทิศทาง ปุ่มหยุดตรงกลาง แถบความเร็วและมุมเซอร์โว ปุ่มไฟหน้าและแตร</figcaption>
-    </figure>
+        <p><span class="blk">KSU light <span class="slot">on</span></span> คือทางลัดของไฟหน้าสีขาวนวล
+           ส่วน <span class="blk">KSU set RGB</span> ผสมสีเองได้ทั้งสามค่า ค่าละ <code>0</code> ถึง <code>255</code>
+           ช่องแรกเลือกได้ว่าจะสั่งดวง <code>0</code>, ดวง <code>1</code> หรือ <code>all</code> ทั้งสองดวง</p>
 
-    <div class="note">
-        <p><strong>เปิดจากคอมพิวเตอร์ก็ได้</strong> ต่อ WiFi ชื่อเดียวกันแล้วเปิดหน้าเว็บ จากนั้นใช้ปุ่มลูกศรหรือปุ่ม
-           <code>W</code> <code>A</code> <code>S</code> <code>D</code> บนแป้นพิมพ์บังคับรถได้เลย</p>
-    </div>
+        <h3>ลูปแรก: ไฟวิ่ง</h3>
+        <p>ประกอบบล็อกตามนี้แล้วคลิกที่สคริปต์ ไฟทั้งแปดดวงจะวิ่งไล่กันสามรอบ</p>
 
-    <h3>รถวิ่งผิดทาง? แก้ตรงนี้</h3>
-    <p>มอเตอร์แต่ละคันประกอบมาไม่เหมือนกัน ถ้าทิศทางไม่ตรง ให้คลิกบล็อก
-       <span class="blk">KSU set motor trim M1 <span class="slot">-1</span> M2 <span class="slot">-1</span></span>
-       ด้วยค่าตามตารางนี้ (ค่าเริ่มต้นคือ <code>-1 -1</code>)</p>
-    <div class="tw">
-        <table>
-            <thead><tr><th>อาการ</th><th>ใส่ค่า</th></tr></thead>
-            <tbody>
-                <tr><td>กดเดินหน้าแล้วรถถอยหลัง และเลี้ยวสลับข้าง</td><td><code>1</code> และ <code>1</code></td></tr>
-                <tr><td>กดเดินหน้าแล้วรถหมุนอยู่กับที่</td><td>สลับแค่ตัวเดียว เช่น <code>1</code> กับ <code>-1</code></td></tr>
-                <tr><td>เลี้ยวซ้ายกลายเป็นเลี้ยวขวา</td><td>สลับทั้งสองตัว</td></tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="tip"><p>ค่านี้จำได้จนกว่าจะปิดเครื่อง ถ้าเจอค่าที่ถูกแล้วให้ใส่บล็อกนี้ไว้ใต้
-        <span class="blk">KSU start web control</span> รถจะได้ถูกทิศทุกครั้งที่เปิด</p></div>
+        <div class="script">
+            <span class="cap">ไฟวิ่ง 8 ดวง</span>
+            <div class="bk ctrl">repeat <i>3</i></div>
+            <div class="cbody">
+                <div class="bk ctrl">for <s>i</s> in <i>8</i></div>
+                <div class="cbody">
+                    <div class="bk">KSU LED number <s>i</s> <i>on</i></div>
+                    <div class="bk ctrl">wait <i>80</i> millisecs</div>
+                    <div class="bk">KSU LED number <s>i</s> <i>off</i></div>
+                </div>
+            </div>
+            <p class="note-in">บล็อก <strong>repeat</strong> และ <strong>for</strong> อยู่ในหมวด Control ส่วนบล็อกสีม่วงมาจากไลบรารี KSU</p>
+        </div>
 
-    <h3>ลองแท็บอื่นด้วย</h3>
-    <div class="grid">
-        <figure style="margin:0;">
-            <img src="images/control-light.png" alt="แท็บ LIGHT">
-            <figcaption><strong>LIGHT</strong> — เปลี่ยนสีไฟ ปรับความสว่าง และสลับไฟ LED ทั้ง 8 ดวง</figcaption>
+        <div class="note">
+            <p><strong>อ่านออกเสียงได้ว่า</strong> "ทำซ้ำ 3 รอบ: ให้ i ไล่จาก 1 ถึง 8 แล้วแต่ละครั้งเปิดไฟดวงที่ i รอ 80 มิลลิวินาที แล้วปิด"
+               — ตัวแปร <s style="text-decoration:none;background:var(--bk-var);color:#fff;border-radius:50px;padding:1px 8px;font-family:monospace;font-size:.85em;">i</s>
+               คือกล่องที่เปลี่ยนค่าไปเรื่อย ๆ ทุกรอบ</p>
+        </div>
+
+        <div class="tip"><p>ลองเปลี่ยนเลข <code>80</code> เป็น <code>300</code> แล้วเป็น <code>20</code> ดู จะเห็นชัดว่าเลขนี้คุมความเร็วของไฟวิ่ง</p></div>
+
+        <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> ทำไฟวิ่งได้ และเปลี่ยนสีไฟหน้าเป็นสีที่ตัวเองชอบได้</p></div>
+    </section>
+
+    <!-- ============ LV3 ============ -->
+    <section id="lv3">
+        <h2><span class="lv">ด่าน 3</span>เสียงและดนตรี</h2>
+        <p class="goal">เป้าหมาย: ทำให้บอร์ดส่งเสียงได้ตั้งแต่ติ๊ดเดียวจนถึงเล่นเพลง</p>
+
+        <p>บนบอร์ดมีลำโพงเล็ก ๆ ติดมาแล้ว ไม่ต้องต่ออะไรเพิ่ม สั่งได้เลย</p>
+
+        <div class="script">
+            <span class="cap">คลิกทีละอัน ฟังความต่าง</span>
+            <div class="bk">KSU beep</div>
+            <div class="bk">KSU horn</div>
+            <div class="bk">KSU play tone <i>440</i> Hz for <i>300</i> ms</div>
+            <div class="bk">KSU play note <i>c</i> octave <i>0</i> for <i>400</i> ms</div>
+            <div class="bk">KSU play Happy Birthday</div>
+        </div>
+
+        <div class="tw">
+            <table>
+                <thead><tr><th>บล็อก</th><th>ใช้ตอนไหน</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="blk">KSU beep</span></td><td>เสียงติ๊ดสั้น ๆ เหมาะกับเตือนหรือยืนยันว่าโปรแกรมมาถึงจุดนี้แล้ว</td></tr>
+                    <tr><td><span class="blk">KSU horn</span></td><td>เสียงแตรรถ สองโน้ตต่อกัน</td></tr>
+                    <tr><td><span class="blk">KSU play tone</span></td><td>กำหนดความถี่เอง ตัวเลขมากเสียงแหลม ตัวเลขน้อยเสียงทุ้ม</td></tr>
+                    <tr><td><span class="blk">KSU play note</span></td><td>สั่งเป็นตัวโน้ตดนตรี แต่งเพลงเองได้</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>แต่งเพลงสั้น ๆ</h3>
+        <div class="script">
+            <span class="cap">โด เร มี</span>
+            <div class="bk">KSU play note <i>c</i> octave <i>0</i> for <i>300</i> ms</div>
+            <div class="bk">KSU play note <i>d</i> octave <i>0</i> for <i>300</i> ms</div>
+            <div class="bk">KSU play note <i>e</i> octave <i>0</i> for <i>300</i> ms</div>
+        </div>
+
+        <div class="tip">
+            <p><strong>ผสมกับด่านที่แล้ว:</strong> ลองให้ไฟเปลี่ยนสีพร้อมกับเสียงแต่ละโน้ต
+               จะได้ของเล่นชิ้นแรกที่มีทั้งภาพและเสียง</p>
+        </div>
+
+        <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> เล่นโน้ตต่อกันได้เป็นทำนองสั้น ๆ ที่ตัวเองแต่ง</p></div>
+    </section>
+
+    <!-- ============ LV4 ============ -->
+    <section id="lv4">
+        <h2><span class="lv">ด่าน 4</span>มอเตอร์และการขับเคลื่อน</h2>
+        <p class="goal">เป้าหมาย: ให้รถวิ่งได้ถูกทิศ และวิ่งตามเส้นทางที่วางไว้เอง</p>
+
+        <div class="warn">
+            <p><strong>ยกรถขึ้นจากพื้นก่อน</strong> เอาอะไรหนุนใต้ท้องให้ล้อลอย จะได้ทดสอบโดยที่รถไม่วิ่งตกโต๊ะ
+               และ<strong>ใส่แบตเตอรี่ด้วย</strong> เพราะมอเตอร์กินไฟมากกว่าที่สาย USB จ่ายไหว</p>
+        </div>
+
+        <h3>ลองสั่งทีละทิศ</h3>
+        <div class="script">
+            <span class="cap">คลิกทีละอัน — อย่าลืมคลิก stop ปิดท้าย</span>
+            <div class="bk">KSU set speed <i>70</i> %</div>
+            <div class="bk">KSU forward</div>
+            <div class="bk">KSU backward</div>
+            <div class="bk">KSU turn left</div>
+            <div class="bk">KSU turn right</div>
+            <div class="bk">KSU stop</div>
+            <p class="note-in">บล็อกเดินหน้า/ถอยหลังไม่มีการหยุดในตัว มันจะหมุนไปเรื่อย ๆ จนกว่าจะสั่ง <strong>KSU stop</strong></p>
+        </div>
+
+        <h3>รถวิ่งผิดทาง? แก้ตรงนี้</h3>
+        <p>มอเตอร์แต่ละคันประกอบมาไม่เหมือนกัน ถ้าทิศไม่ตรงให้คลิกบล็อกนี้ด้วยค่าตามตาราง (ค่าเริ่มต้นคือ <code>-1 -1</code>)</p>
+        <div class="script">
+            <div class="bk">KSU set motor trim M1 <i>-1</i> M2 <i>-1</i></div>
+        </div>
+        <div class="tw">
+            <table>
+                <thead><tr><th>อาการ</th><th>ใส่ค่า</th></tr></thead>
+                <tbody>
+                    <tr><td>สั่งเดินหน้าแล้วถอยหลัง และเลี้ยวสลับข้าง</td><td><code>1</code> และ <code>1</code></td></tr>
+                    <tr><td>สั่งเดินหน้าแล้วหมุนอยู่กับที่</td><td>สลับตัวเดียว เช่น <code>1</code> กับ <code>-1</code></td></tr>
+                    <tr><td>เลี้ยวซ้ายกลายเป็นเลี้ยวขวา</td><td>สลับทั้งสองตัว</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tip"><p>ค่านี้จำไว้จนกว่าจะปิดเครื่อง เจอค่าที่ถูกแล้วให้จดไว้ เดี๋ยวด่าน 7 จะเอาไปใส่ในโปรแกรมจริง</p></div>
+
+        <h3>วิ่งตามเส้นทางที่วางไว้</h3>
+        <p>บล็อก <span class="blk">KSU drive</span> ต่างจากบล็อกข้างบน ตรงที่มันวิ่งตามเวลาที่กำหนดแล้ว<strong>หยุดเอง</strong>
+           เอามาต่อกันเป็นเส้นทางได้ สคริปต์นี้ทำให้รถวิ่งเป็นรูปสี่เหลี่ยม</p>
+
+        <div class="script">
+            <span class="cap">วิ่งเป็นสี่เหลี่ยม</span>
+            <div class="bk ctrl">repeat <i>4</i></div>
+            <div class="cbody">
+                <div class="bk">KSU drive <i>forward</i> for <i>1000</i> ms</div>
+                <div class="bk">KSU drive <i>right</i> for <i>500</i> ms</div>
+            </div>
+            <p class="note-in">เลข 500 คือเวลาที่ใช้เลี้ยวให้ครบ 90 องศา — พื้นแต่ละแบบไม่เท่ากัน ต้องลองปรับเอง</p>
+        </div>
+
+        <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> รถวิ่งถูกทิศทุกทิศ และวิ่งกลับมาใกล้จุดเดิมได้หลังวิ่งครบสี่เหลี่ยม</p></div>
+    </section>
+
+    <!-- ============ LV5 ============ -->
+    <section id="lv5">
+        <h2><span class="lv">ด่าน 5</span>เซอร์โวและแขนกล</h2>
+        <p class="goal">เป้าหมาย: สั่งให้แขนหมุนไปหยุดที่มุมที่ต้องการได้ · <em>ต้องมีเซอร์โวอย่างน้อยหนึ่งตัว</em></p>
+
+        <h3>เซอร์โวต่างจากมอเตอร์ยังไง</h3>
+        <p><strong>มอเตอร์</strong>ในด่านที่แล้วสั่งได้แค่ "หมุนแรงเท่าไร ทางไหน" มันหมุนวนไปเรื่อย ๆ โดยไม่รู้ว่าตัวเองอยู่ตรงไหน
+           ส่วน<strong>เซอร์โว</strong>สั่งเป็น<strong>มุม</strong>ได้เลยว่าให้ไปหยุดที่กี่องศา แล้วมันจะไปที่มุมนั้นและ<strong>ค้างอยู่อย่างนั้น</strong>
+           จึงเหมาะกับแขนกล ก้ามคีบของ หรือหัวส่ายไปมา</p>
+
+        <div class="tw">
+            <table>
+                <thead><tr><th>มุมที่สั่ง</th><th>ผลลัพธ์</th></tr></thead>
+                <tbody>
+                    <tr><td><code>0</code></td><td>หมุนสุดไปทางหนึ่ง</td></tr>
+                    <tr><td><code>90</code></td><td>อยู่ตรงกลาง</td></tr>
+                    <tr><td><code>180</code></td><td>หมุนสุดไปอีกทางหนึ่ง</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>เสียบตรงไหน</h3>
+        <p>บอร์ดมีช่องเสียบเซอร์โว <strong>4 ช่อง</strong> คือ <code>D4</code> <code>D5</code> <code>D18</code> <code>D19</code>
+           ใช้พร้อมกันได้ทั้งสี่ ถ้ามีตัวเดียวให้เสียบ <code>D4</code> เพราะเป็นช่องที่บล็อกทางลัดและแถบเลื่อนหลักในด่าน 7 สั่งงาน</p>
+
+        <div class="warn">
+            <p><strong>ระวังเสียบกลับด้าน</strong> — สายเซอร์โวมีสามเส้น ให้เทียบกับที่พิมพ์ไว้บนบอร์ด
+               โดยทั่วไป<strong>สีน้ำตาลหรือดำคือ GND</strong> · สีแดงคือไฟ · สีส้มหรือเหลืองคือสายสัญญาณ เสียบสลับขั้วอาจทำให้เซอร์โวเสีย</p>
+        </div>
+
+        <div class="tip">
+            <p><strong>ใส่แบตเตอรี่</strong> เซอร์โวกินไฟมากโดยเฉพาะตอนยกของหรือถูกฝืน ถ้าใช้ไฟจาก USB อย่างเดียวแล้วบอร์ดรีเซ็ตเอง ให้ใส่แบตแล้วลองใหม่</p>
+        </div>
+
+        <h3>ทดสอบ</h3>
+        <div class="script">
+            <span class="cap">เปลี่ยนเลขเป็น 0 / 90 / 180 สลับกันดู</span>
+            <div class="bk">KSU set servo <i>D4</i> to <i>90</i> degrees</div>
+            <div class="bk">KSU set arm angle <i>90</i> degrees</div>
+            <p class="note-in">สองบล็อกนี้ทำงานเหมือนกันเมื่อใช้ช่อง D4 — อันล่างเป็นทางลัดที่พิมพ์สั้นกว่า</p>
+        </div>
+
+        <div class="note">
+            <p><strong>ทำไมเป็น 0 ถึง 180?</strong> บล็อกดั้งเดิมของ Cytron ใช้ −90 ถึง 90 ซึ่งมีเลขติดลบให้สับสน
+               ไลบรารีนี้แปลงให้เหลือ 0–180 ที่จุดเดียว ทุกบล็อกและทุกแถบเลื่อนจึงใช้ 0–180 เหมือนกันหมด</p>
+        </div>
+
+        <h3>ให้แขนกวาดไปมา</h3>
+        <div class="script">
+            <span class="cap">กวาดสามรอบแล้วกลับมาตรงกลาง</span>
+            <div class="bk ctrl">repeat <i>3</i></div>
+            <div class="cbody">
+                <div class="bk">KSU set arm angle <i>30</i> degrees</div>
+                <div class="bk ctrl">wait <i>400</i> millisecs</div>
+                <div class="bk">KSU set arm angle <i>150</i> degrees</div>
+                <div class="bk ctrl">wait <i>400</i> millisecs</div>
+            </div>
+            <div class="bk">KSU set arm angle <i>90</i> degrees</div>
+        </div>
+
+        <div class="note">
+            <p><strong>ทำไมต้องมี wait คั่น?</strong> การสั่งมุมใช้เวลาเสี้ยววินาที แต่แขนต้องใช้เวลา<em>เดินทาง</em>จริง
+               ถ้าสั่งมุมใหม่ทันทีโดยไม่รอ แขนจะยังไปไม่ถึงมุมเดิมแล้วถูกสั่งให้กลับ ผลคือมันสั่นอยู่กับที่แทนที่จะกวาด</p>
+        </div>
+
+        <div class="warn">
+            <p><strong>อย่าฝืนเซอร์โว</strong> ถ้าได้ยินเสียงครืดคราดค้างอยู่ แปลว่าแขนไปชนอะไรหรือถูกสั่งเกินมุมที่กลไกไปได้
+               ให้รีบสั่งกลับมาที่ 90 องศา ปล่อยค้างไว้นาน ๆ เฟืองข้างในหักได้</p>
+        </div>
+
+        <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> แขนกวาดไปมาได้โดยไม่สั่น และกลับมาหยุดที่ 90 องศาได้</p></div>
+    </section>
+
+    <!-- ============ LV6 ============ -->
+    <section id="lv6">
+        <h2><span class="lv">ด่าน 6</span>เซนเซอร์และเงื่อนไข</h2>
+        <p class="goal">เป้าหมาย: ให้รถ<strong>ตัดสินใจเองได้</strong> · <em>ต้องมีเซนเซอร์ HC-SR04</em></p>
+
+        <h3>ต่อสายแบบนี้</h3>
+        <div class="tw">
+            <table>
+                <thead><tr><th>ขาเซนเซอร์</th><th>ต่อเข้ากับ</th></tr></thead>
+                <tbody>
+                    <tr><td>VCC</td><td>5V</td></tr>
+                    <tr><td>GND</td><td>GND</td></tr>
+                    <tr><td>Trig</td><td>ขา 33</td></tr>
+                    <tr><td>Echo</td><td>ขา 32</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="script">
+            <span class="cap">บอกไลบรารีว่าเสียบขาไหน แล้วคลิกอ่านค่า</span>
+            <div class="bk">KSU set ultrasonic trig <i>33</i> echo <i>32</i></div>
+            <div class="bk">KSU distance cm</div>
+            <p class="note-in">คลิกบล็อกอ่านค่า จะมีป้ายบอกระยะเป็นเซนติเมตรโผล่ขึ้นมา ลองเอามือบังหน้าเซนเซอร์แล้วคลิกใหม่</p>
+        </div>
+
+        <div class="warn">
+            <p><strong>ขา 33 กับ 32 คือ LED ดวงที่ 8 และ 7</strong> ไฟสองดวงนี้จะกะพริบตามจังหวะยิงคลื่นซึ่งไม่เป็นไร
+               แต่<strong>อย่าสั่งเปิด LED 7 หรือ 8</strong> ขณะเสียบเซนเซอร์ เพราะจะแย่งกันคุมสายเส้นเดียวกัน</p>
+        </div>
+
+        <h3>ตัวแปรกับเงื่อนไข — สองอย่างที่ทำให้รถมีสมอง</h3>
+        <p><strong>ตัวแปร</strong>คือกล่องใส่ของที่มีชื่อ เราเก็บค่าที่วัดได้ใส่กล่องไว้ก่อน แล้ว<strong>เงื่อนไข</strong> (<code>if</code>)
+           คือการเปิดกล่องมาดูแล้วตัดสินใจว่าจะทำอะไรต่อ</p>
+
+        <div class="script">
+            <span class="cap">หยุดเองก่อนชน</span>
+            <div class="bk vr">set <s>cm</s> to <span style="background:var(--blk);border-radius:50px;padding:2px 9px;">KSU distance cm</span></div>
+            <div class="bk op">if <s>cm</s> &gt; <i>0</i> and <s>cm</s> &lt; <i>20</i></div>
+            <div class="cbody op">
+                <div class="bk">KSU stop</div>
+                <div class="bk">KSU beep</div>
+            </div>
+        </div>
+
+        <div class="note">
+            <p><strong>ทำไมต้องเช็ก <code>cm &gt; 0</code> ด้วย?</strong> เพราะเลข 0 แปลว่า "ไม่มีเสียงสะท้อนกลับมา"
+               ซึ่งเกิดตอนที่<strong>ข้างหน้าโล่งไม่มีอะไรเลย</strong> ถ้าไม่ใส่เงื่อนไขนี้ รถจะหยุดตอนทางโล่ง
+               แต่กลับวิ่งชนตอนมีสิ่งกีดขวาง — ตรงข้ามกับที่ต้องการทุกประการ</p>
+        </div>
+
+        <div class="warn">
+            <p><strong>อ่านค่าครั้งเดียวแล้วเก็บใส่ตัวแปร</strong> อย่าเรียกบล็อกวัดระยะซ้ำ ๆ ในรอบเดียว
+               เพราะการยิงคลื่นแต่ละครั้งหน่วงโปรแกรมได้ถึง 25 มิลลิวินาที ยิ่งเรียกซ้ำยิ่งช้า</p>
+        </div>
+
+        <h3>รวมกับด่าน 4: รถวิ่งเองแล้วหยุดเองได้</h3>
+        <div class="script">
+            <span class="cap">วิ่งไปเรื่อย ๆ จนกว่าจะเจอสิ่งกีดขวาง</span>
+            <div class="bk hat">when started</div>
+            <div class="bk">KSU set speed <i>60</i> %</div>
+            <div class="bk ctrl">forever</div>
+            <div class="cbody">
+                <div class="bk vr">set <s>cm</s> to <span style="background:var(--blk);border-radius:50px;padding:2px 9px;">KSU distance cm</span></div>
+                <div class="bk op">if <s>cm</s> &gt; <i>0</i> and <s>cm</s> &lt; <i>20</i></div>
+                <div class="cbody op">
+                    <div class="bk">KSU stop</div>
+                    <div class="bk">KSU beep</div>
+                </div>
+                <div class="bk op">else</div>
+                <div class="cbody op">
+                    <div class="bk">KSU forward</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> รถวิ่งเองแล้วหยุดพร้อมส่งเสียงเมื่อเอามือไปบังหน้า</p></div>
+    </section>
+
+    <!-- ============ LV7 ============ -->
+    <section id="lv7">
+        <h2><span class="lv">ด่าน 7</span>เปิด WiFi แล้วคุมจากเบราว์เซอร์</h2>
+        <p class="goal">เป้าหมาย: บอร์ดปล่อย WiFi ของตัวเอง แล้วบังคับรถจากมือถือได้</p>
+
+        <p>ถึงตรงนี้ทุกส่วนของรถทำงานได้หมดแล้ว เหลืออย่างเดียวคือ<strong>วิธีสั่งจากระยะไกล</strong>
+           ไลบรารีมีเว็บเซิร์ฟเวอร์ในตัว ใช้แค่สามบล็อกก็ได้หน้าจอควบคุมเต็มรูปแบบ ไม่ต้องเขียน HTML เลยสักบรรทัด</p>
+
+        <h3>สคริปต์ทั้งหมดที่ต้องใช้</h3>
+        <figure>
+            <img src="images/blocks-main-loop.png" alt="สคริปต์หลักในลูป forever">
+            <figcaption>ภาพจาก MicroBlocks จริง — ชื่อบล็อกในภาพเป็นแบบสั้นเพราะถ่ายจากไฟล์ <code>RoboCar.ubp</code> ในด่าน 8</figcaption>
         </figure>
-        <figure style="margin:0;">
-            <img src="images/control-more.png" alt="แท็บ MORE">
-            <figcaption><strong>MORE</strong> — เซอร์โวสี่ตัว มอเตอร์แยกซ้ายขวา และปุ่มเสียงต่าง ๆ</figcaption>
+
+        <div class="tw">
+            <table>
+                <thead><tr><th>บล็อก</th><th>หน้าที่</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="blk">when started</span></td><td>เริ่มทำงานเมื่อกดปุ่มเริ่ม หรือเมื่อบอร์ดเปิดเครื่องใหม่</td></tr>
+                    <tr><td><span class="blk">KSU start web control</span></td><td>เปิด WiFi ชื่อ <code>RoboCar</code> พร้อมเว็บเซิร์ฟเวอร์ ตั้งความเร็วเริ่มต้น 70% หมุนเซอร์โวทุกตัวไป 90&deg; และตั้งขาเซนเซอร์ให้เสร็จ</td></tr>
+                    <tr><td><span class="blk">forever</span></td><td>วนถามซ้ำ ๆ ว่ามีคำสั่งเข้ามาหรือยัง</td></tr>
+                    <tr><td><span class="var">command</span> = <span class="rep">KSU web command</span></td><td>รับคำสั่งที่กดมาจากหน้าเว็บ ได้มาเป็นคำเดียว เช่น <code>Forward</code></td></tr>
+                    <tr><td><span class="blk">KSU do command</span></td><td>เอาคำนั้นไปทำให้จริง ครบทุกปุ่มที่หน้าเว็บมี</td></tr>
+                    <tr><td><span class="blk">wait <span class="slot">10</span> millisecs</span></td><td>พักสั้น ๆ ให้บอร์ดได้ทำงานอื่น</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="note">
+            <p><strong>ทำไมต้องมี forever?</strong> เพราะบอร์ดไม่รู้ว่าเราจะกดปุ่มเมื่อไร มันจึงต้อง<strong>ถามซ้ำ ๆ ตลอดเวลา</strong>
+               วินาทีละหลายสิบครั้ง ถ้าถามครั้งเดียวแล้วจบ กดปุ่มทีหลังจะไม่มีอะไรเกิดขึ้น</p>
+        </div>
+
+        <div class="tip">
+            <p><strong>เจอค่า trim ที่ถูกในด่าน 4 แล้วใช่ไหม</strong> เอาบล็อก <span class="blk">KSU set motor trim</span>
+               มาวางต่อใต้ <span class="blk">KSU start web control</span> รถจะได้ถูกทิศทุกครั้งที่เปิดเครื่อง</p>
+        </div>
+
+        <h3>เปิดเบราว์เซอร์ควบคุม</h3>
+        <ol class="steps">
+            <li><b>กดปุ่มเริ่มทำงาน ▶</b> ที่แถบเครื่องมือ — โปรแกรมถูกเก็บลงบอร์ดแล้ว ถอดสาย USB ใส่แบตเตอรี่ได้เลย</li>
+            <li><b>ต่อ WiFi</b> — ที่โทรศัพท์เลือกเครือข่ายชื่อ <code>RoboCar</code> ใส่รหัสผ่าน <code>robocar123</code></li>
+            <li><b>เปิดเบราว์เซอร์</b> พิมพ์ <code>http://192.168.4.1</code> ให้ครบทั้งบรรทัด อย่าให้เบราว์เซอร์เอาไปค้นใน Google</li>
+            <li><b>หมุนโทรศัพท์เป็นแนวนอน</b> — หน้าเว็บออกแบบมาสำหรับแนวนอนเท่านั้น ถ้าถือแนวตั้งจะขึ้นข้อความให้หมุนเครื่อง</li>
+        </ol>
+
+        <div class="warn">
+            <p><strong>รหัสผ่านต้องยาวอย่างน้อย 8 ตัวอักษร</strong> ถ้าตั้งสั้นกว่านั้นบอร์ดจะเปิดฮอตสปอตไม่สำเร็จ และจะหาชื่อ WiFi ไม่เจอเลย</p>
+        </div>
+
+        <figure>
+            <img src="images/control-drive.png" alt="หน้าจอควบคุมแท็บ DRIVE">
+            <figcaption><strong>DRIVE</strong> — แป้นทิศทาง ปุ่มหยุดตรงกลาง แถบความเร็วและมุมเซอร์โว ปุ่มไฟหน้าและแตร<br>
+                บนคอมพิวเตอร์ใช้ปุ่มลูกศรหรือ W A S D บังคับได้ด้วย</figcaption>
         </figure>
-    </div>
 
-    <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> ขับรถได้ครบสี่ทิศ เปิดปิดไฟได้ และบีบแตรได้</p></div>
-</section>
+        <div class="grid">
+            <figure style="margin:0;">
+                <img src="images/control-light.png" alt="แท็บ LIGHT">
+                <figcaption><strong>LIGHT</strong> — จานสี 8 สี เลือกเป้าหมาย 0/1/ALL ปรับความสว่าง และสลับ LED ทั้ง 8 ดวง<br>คือของจากด่าน 2 ทั้งหมด</figcaption>
+            </figure>
+            <figure style="margin:0;">
+                <img src="images/control-more.png" alt="แท็บ MORE">
+                <figcaption><strong>MORE</strong> — เซอร์โวครบสี่ตัวจากด่าน 5 มอเตอร์แยกซ้ายขวาจากด่าน 4 และปุ่มเสียงจากด่าน 3</figcaption>
+            </figure>
+        </div>
 
-<!-- ============ LV4 ============ -->
-<section id="lv4" class="container">
-    <h2><span class="lv">ด่าน 4</span>อ่านโค้ดให้ออก</h2>
-    <p class="goal">เป้าหมาย: เข้าใจว่าการกดปุ่มบนมือถือกลายเป็นการหมุนล้อได้อย่างไร</p>
+        <div class="note">
+            <p><strong>สังเกตไหมว่าไม่มีอะไรใหม่เลย</strong> ทุกปุ่มบนหน้าเว็บคือบล็อกที่เราเล่นมาแล้วทั้งนั้น
+               ด่านนี้แค่เพิ่ม<em>ช่องทางสั่ง</em>จากระยะไกลเข้าไป</p>
+        </div>
 
-    <h3>เส้นทางของหนึ่งการกดปุ่ม</h3>
-    <div class="tw">
-        <table>
-            <thead><tr><th>ขั้น</th><th>เกิดอะไรขึ้น</th></tr></thead>
-            <tbody>
-                <tr><td>1. นิ้วกด</td><td>กดปุ่มลูกศรขึ้นบนหน้าเว็บ</td></tr>
-                <tr><td>2. มือถือส่ง</td><td>ส่งข้อความสั้น ๆ ไปที่บอร์ดว่า <code>/Forward</code></td></tr>
-                <tr><td>3. บอร์ดรับ</td><td><span class="rep">KSU web command</span> อ่านได้คำว่า <code>Forward</code></td></tr>
-                <tr><td>4. เก็บใส่กล่อง</td><td>คำนั้นถูกเก็บในตัวแปรชื่อ <span class="var">command</span></td></tr>
-                <tr><td>5. ตัดสินใจ</td><td>โปรแกรมเทียบว่าคำนี้ตรงกับอะไร แล้วสั่งมอเตอร์ให้หมุน</td></tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> ขับรถจากมือถือได้ครบสี่ทิศ เปิดปิดไฟได้ และบีบแตรได้</p></div>
+    </section>
 
-    <h3>ตัวแปรคืออะไร</h3>
-    <p><span class="var">command</span> คือ<strong>กล่องใส่ของหนึ่งใบที่มีชื่อ</strong> เราหยิบคำที่ได้จากหน้าเว็บใส่ลงกล่องนี้
-       แล้วค่อยเปิดกล่องดูทีหลังว่าข้างในเป็นคำว่าอะไร ทุกรอบของลูป กล่องนี้จะถูกใส่ของใหม่ทับของเก่าเสมอ</p>
+    <!-- ============ LV8 ============ -->
+    <section id="lv8">
+        <h2><span class="lv">ด่าน 8</span>ประกอบร่าง — RoboCar.ubp</h2>
+        <p class="goal">เป้าหมาย: เปิดไฟล์ฉบับเต็ม อ่านให้เข้าใจทั้งหมด แล้วต่อยอดเป็นของตัวเอง</p>
 
-    <h3>ลองแกะบล็อกอัตโนมัติออก</h3>
-    <p>ในไฟล์เฉลยมีสคริปต์ชุด <code>if</code> วางแยกไว้ข้าง ๆ ที่<strong>ไม่ได้ต่อกับอะไร</strong> วางไว้ให้ดูโดยเฉพาะ
-       ลองเอา <span class="blk">KSU do command</span> ออกจากลูป แล้วเอาชุด <code>if</code> นี้ใส่แทน จะได้ผลเหมือนเดิมทุกอย่าง</p>
-    <pre><code><span class="c-key">set</span> command <span class="c-key">to</span> (KSU web command)
+        <p>ตอนนี้คุณต่อทุกชิ้นมาด้วยมือตัวเองแล้ว ถึงเวลาเปิด <code>RoboCar.ubp</code>
+           ซึ่งคือทุกอย่างที่ผ่านมา<strong>ประกอบไว้ให้เรียบร้อยในไฟล์เดียว</strong> พร้อมสคริปต์ตัวอย่างและโน้ตอธิบายวางไว้รอบ ๆ</p>
+
+        <div style="text-align:center; margin: 26px 0;">
+            <a class="btn" href="https://github.com/alfaXphoori/RoboESP32/raw/main/RoboCar.ubp" download>⬇ ดาวน์โหลด RoboCar.ubp</a>
+        </div>
+
+        <h3>ข้างในมีอะไรบ้าง</h3>
+        <div class="tw">
+            <table>
+                <thead><tr><th>สิ่งที่เห็น</th><th>คืออะไร</th></tr></thead>
+                <tbody>
+                    <tr><td>สคริปต์หลัก</td><td>สามบล็อกจากด่าน 7 ที่ต่อกับ <span class="blk">when started</span> เรียบร้อยแล้ว</td></tr>
+                    <tr><td>ชุด <code>if</code> สิบอันวางแยกไว้</td><td>ไม่ได้ต่อกับอะไร ไม่มีอะไรรันมัน วางไว้ให้ดูว่าบล็อกอัตโนมัติทำอะไรอยู่ข้างใน</td></tr>
+                    <tr><td>บล็อกเดโม่คลิกได้</td><td>คลิกทีละอันเพื่อลองของแต่ละชิ้น เหมือนที่ทำมาตลอดคอร์ส</td></tr>
+                    <tr><td>โน้ตสีเหลือง</td><td>คำอธิบายเรื่องเซนเซอร์และการปรับ trim ติดไว้ข้างสคริปต์</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="note">
+            <p><strong>ชื่อบล็อกจะสั้นลงแล้ว</strong> — ในไฟล์นี้บล็อกชื่อ <span class="blk">KSU forward</span> ตรงกับที่คู่มือเขียนมาตลอด
+               (ไม่ใช่ <span class="blk">KSU_RoBoESP32 forward</span> แบบที่เห็นตอนเพิ่มไลบรารีเองในด่าน 1) เป็นบล็อกตัวเดียวกัน แค่ตั้งชื่อไว้ต่างกัน</p>
+        </div>
+
+        <h3>บล็อกอัตโนมัติไม่ใช่เวทมนตร์</h3>
+        <p>ลองถอด <span class="blk">KSU do command</span> ออกจากลูป แล้วเอาชุด <code>if</code> ที่วางไว้ข้าง ๆ ใส่แทน
+           ผลลัพธ์จะเหมือนเดิมทุกอย่าง — นี่คือสิ่งที่บล็อกเดียวนั้นทำอยู่ข้างใน</p>
+        <pre><code><span class="c-key">set</span> command <span class="c-key">to</span> (KSU web command)
 
 <span class="c-key">if</span> (command) = <span class="c-str">'Forward'</span>  &rarr; KSU forward
 <span class="c-key">if</span> (command) = <span class="c-str">'Backward'</span> &rarr; KSU backward
@@ -511,290 +875,106 @@
 <span class="c-key">if</span> (command) = <span class="c-str">'Right'</span>    &rarr; KSU turn right
 <span class="c-key">if</span> (command) = <span class="c-str">'Stop'</span>     &rarr; KSU stop
 <span class="c-key">if</span> (command) = <span class="c-str">'Light1'</span>   &rarr; KSU light (on)
-<span class="c-key">if</span> (command) = <span class="c-str">'Light0'</span>   &rarr; KSU light (off)
-<span class="c-key">if</span> (command) = <span class="c-str">'Horn'</span>     &rarr; KSU horn</code></pre>
-    <p>อ่านออกเสียงได้ว่า "ถ้าในกล่องเป็นคำว่า Forward ก็ให้เดินหน้า" — แค่นั้นเอง ทั้งหมดคือเงื่อนไขเรียงกัน</p>
+<span class="c-key">if</span> (command) = <span class="c-str">'Horn'</span>     &rarr; KSU horn
+<span class="c-key">if</span> (command) = <span class="c-str">'Speed'</span>    &rarr; KSU set speed (KSU command value) %</code></pre>
 
-    <div class="warn">
-        <p><strong>ตัวพิมพ์ใหญ่-เล็กสำคัญมาก</strong> <code>Forward</code> ใช้ได้ แต่ <code>forward</code> กับ <code>FORWARD</code> ใช้ไม่ได้
-           คอมพิวเตอร์ถือว่าเป็นคนละคำกันคนละตัว</p>
-    </div>
-
-    <div class="tip">
-        <p><strong>ลองเปลี่ยนดู:</strong> สลับให้ <code>Forward</code> ไปเรียก <span class="blk">KSU backward</span> แทน
-           แล้วกดปุ่มขึ้นบนมือถือ — รถจะถอยหลัง นี่คือหลักฐานว่าปุ่มบนหน้าเว็บไม่ได้ผูกกับล้อโดยตรง
-           แต่ผ่าน <code>if</code> ที่เราเขียนเอง เปลี่ยนได้ตามใจ</p>
-    </div>
-
-    <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> ต่อ <code>if</code> ขึ้นมาเองจนขับรถได้ครบทุกทิศโดยไม่ใช้ <span class="blk">KSU do command</span></p></div>
-</section>
-
-<!-- ============ LV5 ============ -->
-<section id="lv5" class="container">
-    <h2><span class="lv">ด่าน 5</span>ส่งตัวเลขมาด้วย</h2>
-    <p class="goal">เป้าหมาย: เข้าใจว่าแถบเลื่อนความเร็วส่งค่ามาถึงบอร์ดได้อย่างไร</p>
-
-    <p>ปุ่มธรรมดาส่งมาแค่คำเดียว แต่แถบเลื่อนต้องส่ง<strong>ตัวเลข</strong>มาด้วย วิธีที่ใช้คือ
-       ต่อท้ายคำสั่งด้วยเครื่องหมาย <code>_</code> แล้วตามด้วยตัวเลข</p>
-
-    <div class="tw">
-        <table>
-            <thead><tr><th>หน้าเว็บส่ง</th><th>คำที่ได้</th><th>ตัวเลขที่ได้</th></tr></thead>
-            <tbody>
-                <tr><td><code>/Forward</code></td><td><code>Forward</code></td><td>ไม่มี</td></tr>
-                <tr><td><code>/Speed_70</code></td><td><code>Speed</code></td><td>70</td></tr>
-                <tr><td><code>/Servo_120</code></td><td><code>Servo</code></td><td>120</td></tr>
-                <tr><td><code>/Rgb_2_255_120_0</code></td><td><code>Rgb</code></td><td>2, 255, 120, 0</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <p>อ่านตัวเลขออกมาด้วยบล็อก <span class="rep">KSU command value</span> แบบนี้</p>
-    <pre><code><span class="c-key">if</span> (command) = <span class="c-str">'Speed'</span> &rarr; KSU set speed (KSU command value) %
-<span class="c-key">if</span> (command) = <span class="c-str">'Servo'</span> &rarr; KSU set servo (D4) to (KSU command value) degrees</code></pre>
-
-    <div class="warn">
-        <p><strong>จุดที่คนพลาดบ่อย:</strong> ถ้าคำสั่งล่าสุด<strong>ไม่มีตัวเลข</strong>มาด้วย
-           <span class="rep">KSU command value</span> จะรายงานเลข <strong>90</strong> ไม่ใช่ 0
-           (90 คือมุมกึ่งกลางของเซอร์โว) และต้องอ่านค่าใน<strong>รอบเดียวกัน</strong>กับที่คำสั่งเข้ามา
-           เพราะรอบถัดไปค่าจะถูกคำสั่งใหม่ทับ</p>
-    </div>
-
-    <div class="note">
-        <p><strong>คำสั่งที่ส่งหลายค่า</strong> เช่น <code>Rgb</code> ที่ส่งมาสี่ตัว ให้ใช้
-           <span class="rep">KSU command value # <span class="slot">1</span></span> โดยเปลี่ยนเลขในช่องเป็น 1, 2, 3, 4
-           เพื่อหยิบค่าทีละตัว</p>
-    </div>
-
-    <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> เลื่อนแถบความเร็วบนมือถือแล้วรถวิ่งเร็ว-ช้าต่างกันจริง</p></div>
-</section>
-
-<!-- ============ LV6 · SERVO ============ -->
-<section id="lv6" class="container">
-    <h2><span class="lv">ด่าน 6</span>เซอร์โวและแขนกล</h2>
-    <p class="goal">เป้าหมาย: สั่งให้แขนกลหมุนไปหยุดที่มุมที่ต้องการได้ · <em>ต้องมีเซอร์โวอย่างน้อยหนึ่งตัว</em></p>
-
-    <h3>เซอร์โวต่างจากมอเตอร์ยังไง</h3>
-    <p><strong>มอเตอร์</strong>ที่ขับล้อนั้นสั่งได้แค่ "หมุนแรงเท่าไร ทางไหน" มันหมุนวนไปเรื่อย ๆ ไม่รู้ว่าตัวเองอยู่ตรงไหน
-       ส่วน<strong>เซอร์โว</strong>สั่งเป็น<strong>มุม</strong>ได้เลยว่าให้ไปหยุดที่กี่องศา แล้วมันจะหมุนไปที่มุมนั้นและ<strong>ค้างอยู่อย่างนั้น</strong>
-       จึงเหมาะกับแขนกล ที่คีบของ หรือหัวส่ายไปมา</p>
-
-    <div class="tw">
-        <table>
-            <thead><tr><th>มุมที่สั่ง</th><th>ผลลัพธ์</th></tr></thead>
-            <tbody>
-                <tr><td><code>0</code></td><td>หมุนสุดไปทางหนึ่ง</td></tr>
-                <tr><td><code>90</code></td><td>อยู่ตรงกลาง — เป็นค่าที่บอร์ดตั้งให้ทุกตัวตอนเริ่มทำงาน</td></tr>
-                <tr><td><code>180</code></td><td>หมุนสุดไปอีกทางหนึ่ง</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <h3>เสียบเซอร์โวตรงไหน</h3>
-    <p>บอร์ดมีช่องเสียบเซอร์โว <strong>4 ช่อง</strong> คือ <code>D4</code> <code>D5</code> <code>D18</code> <code>D19</code>
-       ใช้พร้อมกันทั้งสี่ตัวได้ ถ้ามีตัวเดียวให้เสียบช่อง <code>D4</code> ก่อน เพราะเป็นช่องที่แถบเลื่อนบนแท็บ DRIVE สั่งงาน</p>
-
-    <div class="warn">
-        <p><strong>ระวังเสียบกลับด้าน</strong> — สายเซอร์โวมีสามเส้น ให้ดูสีเทียบกับที่พิมพ์ไว้บนบอร์ด
-           โดยทั่วไป<strong>สีน้ำตาลหรือดำคือ GND</strong> · สีแดงคือไฟ · สีส้มหรือเหลืองคือสายสัญญาณ
-           เสียบสลับขั้วอาจทำให้เซอร์โวเสียได้</p>
-    </div>
-
-    <div class="tip">
-        <p><strong>ใส่แบตเตอรี่ด้วย</strong> เซอร์โวกินไฟมากกว่าที่คิด โดยเฉพาะตอนยกของหรือถูกฝืน
-           ถ้าจ่ายไฟจากสาย USB อย่างเดียวแล้วบอร์ดรีเซ็ตตัวเองบ่อย ๆ ให้ใส่แบตเตอรี่แล้วลองใหม่</p>
-    </div>
-
-    <h3>ทดสอบด้วยการคลิกบล็อกเดียว</h3>
-    <p>ลากบล็อกนี้มาวางแล้วคลิกที่ตัวบล็อก เปลี่ยนตัวเลขเป็น 0, 90, 180 สลับกันดู แขนต้องขยับไปหยุดตามที่สั่ง</p>
-    <pre><code>KSU set servo (D4) to (<span class="c-num">90</span>) degrees</code></pre>
-    <p>ถ้ามีตัวเดียวที่ช่อง D4 ใช้บล็อกทางลัดชื่อ <span class="blk">KSU set arm angle <span class="slot">90</span> degrees</span>
-       ก็ได้ผลเหมือนกันทุกอย่าง แค่พิมพ์สั้นกว่า</p>
-
-    <div class="note">
-        <p><strong>ทำไมเป็น 0 ถึง 180?</strong> บล็อกดั้งเดิมของ Cytron ใช้ตัวเลข −90 ถึง 90 ซึ่งมีเลขติดลบให้สับสน
-           ไลบรารีนี้จึงแปลงให้เหลือ 0–180 ที่จุดเดียว ทั้งหน้าเว็บและทุกบล็อกในไลบรารีใช้ 0–180 เหมือนกันหมด</p>
-    </div>
-
-    <h3>สั่งจากมือถือ</h3>
-    <div class="tw">
-        <table>
-            <thead><tr><th>แถบเลื่อน</th><th>คำสั่งที่ส่ง</th><th>คุมเซอร์โวช่อง</th></tr></thead>
-            <tbody>
-                <tr><td>SERVO บนแท็บ DRIVE</td><td><code>/Servo_90</code></td><td>D4</td></tr>
-                <tr><td>D4 บนแท็บ MORE</td><td><code>/Servo_90</code></td><td>D4</td></tr>
-                <tr><td>D5 บนแท็บ MORE</td><td><code>/ServoB_90</code></td><td>D5</td></tr>
-                <tr><td>D18 บนแท็บ MORE</td><td><code>/ServoC_90</code></td><td>D18</td></tr>
-                <tr><td>D19 บนแท็บ MORE</td><td><code>/ServoD_90</code></td><td>D19</td></tr>
-            </tbody>
-        </table>
-    </div>
-    <p>ถ้าใช้ <span class="blk">KSU do command</span> อยู่แล้ว ทั้งห้าแถบนี้ทำงานได้เลยโดยไม่ต้องเขียนอะไรเพิ่ม
-       แต่ถ้าเขียน <code>if</code> เองต้องดักคำสั่งแบบนี้</p>
-    <pre><code><span class="c-key">if</span> (command) = <span class="c-str">'Servo'</span> &rarr; KSU set servo (D4) to (KSU command value) degrees</code></pre>
-
-    <h3>ให้แขนกวาดไปมาเอง</h3>
-    <p>คลิกสคริปต์นี้ดู แขนจะกวาดกลับไปกลับมาสามรอบ</p>
-    <pre><code><span class="c-key">repeat</span> <span class="c-num">3</span> {
-    KSU set arm angle (<span class="c-num">30</span>) degrees
-    <span class="c-key">wait</span> <span class="c-num">400</span> millisecs
-    KSU set arm angle (<span class="c-num">150</span>) degrees
-    <span class="c-key">wait</span> <span class="c-num">400</span> millisecs
-}
-KSU set arm angle (<span class="c-num">90</span>) degrees</code></pre>
-
-    <div class="note">
-        <p><strong>ทำไมต้องมี <span class="blk">wait</span> คั่น?</strong> เพราะการสั่งมุมใช้เวลาเสี้ยววินาที แต่แขนต้องใช้เวลา<em>เดินทาง</em>จริง
-           ถ้าสั่งมุมใหม่ทันทีโดยไม่รอ แขนจะยังไปไม่ถึงมุมเดิมแล้วถูกสั่งให้กลับ ผลคือมันสั่นอยู่กับที่แทนที่จะกวาด</p>
-    </div>
-
-    <div class="warn">
-        <p><strong>อย่าฝืนเซอร์โว</strong> ถ้าได้ยินเสียงครืดคราดค้างอยู่ แปลว่าแขนไปชนอะไรเข้าหรือถูกสั่งเกินมุมที่กลไกไปได้
-           ให้รีบสั่งกลับมาที่ 90 องศา ปล่อยค้างไว้นาน ๆ เฟืองข้างในจะหักได้</p>
-    </div>
-
-    <div class="tip">
-        <p><strong>ต่อยอด:</strong> ใช้เซอร์โวสองตัว ตัวหนึ่งเป็นข้อต่อยกขึ้นลง อีกตัวเป็นก้ามคีบ
-           แล้วเขียนคำสั่ง "คีบ" ที่สั่งสองตัวต่อกันเป็นลำดับ — เอาไปทำภารกิจเก็บของแข่งกันในห้องได้เลย</p>
-    </div>
-
-    <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> เลื่อนแถบ SERVO บนมือถือแล้วแขนขยับตามนิ้วได้</p></div>
-</section>
-
-<!-- ============ LV7 · SENSOR ============ -->
-<section id="lv7" class="container">
-    <h2><span class="lv">ด่าน 7</span>ใส่เซนเซอร์ให้รถหยุดเองก่อนชน</h2>
-    <p class="goal">เป้าหมาย: รถตัดสินใจเองได้โดยไม่ต้องรอคำสั่งจากมือถือ · <em>ต้องมีเซนเซอร์ HC-SR04</em></p>
-
-    <h3>ต่อสายแบบนี้</h3>
-    <div class="tw">
-        <table>
-            <thead><tr><th>ขาเซนเซอร์</th><th>ต่อเข้ากับ</th></tr></thead>
-            <tbody>
-                <tr><td>VCC</td><td>5V</td></tr>
-                <tr><td>GND</td><td>GND</td></tr>
-                <tr><td>Trig</td><td>ขา 33</td></tr>
-                <tr><td>Echo</td><td>ขา 32</td></tr>
-            </tbody>
-        </table>
-    </div>
-    <p>ต่อตามนี้แล้วไม่ต้องเพิ่มบล็อกตั้งค่าใด ๆ เพราะ <span class="blk">KSU start web control</span> ตั้งค่านี้ไว้ให้แล้ว
-       ลองคลิกบล็อก <span class="rep">KSU distance cm</span> ดู ต้องได้ตัวเลขระยะห่างเป็นเซนติเมตร</p>
-
-    <div class="warn">
-        <p><strong>ขา 33 กับ 32 คือ LED ดวงที่ 8 และ 7</strong> ไฟสองดวงนี้จะกะพริบตามจังหวะยิงคลื่นซึ่งไม่เป็นไร
-           แต่<strong>อย่าสั่งเปิด LED 7 หรือ 8 จากแท็บ LIGHT</strong> ขณะเสียบเซนเซอร์ เพราะจะแย่งกันคุมสายเส้นเดียวกัน</p>
-    </div>
-
-    <h3>ใส่สมองให้รถ</h3>
-    <p>วางชุดบล็อกนี้ในลูป <code>forever</code> ต่อจาก <span class="blk">KSU do command</span></p>
-    <pre><code><span class="c-key">set</span> cm <span class="c-key">to</span> (KSU distance cm)
-<span class="c-key">if</span> (cm &gt; <span class="c-num">0</span>) <span class="c-key">and</span> (cm &lt; <span class="c-num">20</span>) {
-    KSU stop
-    KSU beep
-}</code></pre>
-
-    <div class="note">
-        <p><strong>ทำไมต้องเช็ก <code>cm &gt; 0</code> ด้วย?</strong> เพราะเลข 0 แปลว่า "ไม่มีเสียงสะท้อนกลับมา"
-           ซึ่งเกิดตอนที่<strong>ข้างหน้าโล่งไม่มีอะไรเลย</strong> ถ้าไม่ใส่เงื่อนไขนี้ รถจะหยุดตอนที่ทางโล่ง
-           แต่กลับวิ่งชนตอนมีสิ่งกีดขวาง — ตรงข้ามกับที่ต้องการทุกประการ</p>
-    </div>
-
-    <div class="warn">
-        <p><strong>อ่านค่าครั้งเดียวต่อหนึ่งรอบ</strong> — เก็บใส่ตัวแปร <span class="var">cm</span> ก่อน แล้วค่อยเอาตัวแปรไปเทียบ
-           การเรียกบล็อกวัดระยะซ้ำ ๆ ในรอบเดียวจะทำให้รถตอบสนองช้าลงอย่างเห็นได้ชัด
-           เพราะการยิงคลื่นแต่ละครั้งหน่วงลูปได้ถึง 25 มิลลิวินาที</p>
-    </div>
-
-    <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> เอามือไปบังหน้ารถแล้วรถหยุดพร้อมส่งเสียงเตือน</p></div>
-</section>
-
-<!-- ============ LV7 ============ -->
-<section id="lv8" class="container">
-    <h2><span class="lv">ด่าน 8</span>เป็น Hero — สร้างคำสั่งของตัวเอง</h2>
-    <p class="goal">เป้าหมาย: เพิ่มปุ่มใหม่บนหน้าเว็บที่สั่งให้รถทำท่าที่เราออกแบบเอง</p>
-
-    <p>ถึงตรงนี้คุณใช้ของที่คนอื่นทำไว้ได้คล่องแล้ว ด่านสุดท้ายคือการ<strong>เพิ่มของใหม่เข้าไปเอง</strong>
-       ซึ่งต้องแก้ <strong>3 จุดพร้อมกัน</strong> ขาดจุดใดจุดหนึ่งคำสั่งจะเงียบหายไปโดยไม่มีข้อความแจ้งเตือนอะไรเลย</p>
-
-    <div class="grid">
-        <div class="panel">
-            <h4 style="color:var(--acc-blue);">จุดที่ 1 · หน้าเว็บต้องส่งคำนั้น</h4>
-            <p style="color:var(--muted);">เพิ่มปุ่มในไฟล์ <code>RoboCar-Control.html</code> โดยให้เรียกผ่านฟังก์ชัน <code>s("Dance")</code> เท่านั้น</p>
+        <div class="warn">
+            <p><strong>ตัวพิมพ์ใหญ่-เล็กสำคัญมาก</strong> <code>Forward</code> ใช้ได้ แต่ <code>forward</code> และ <code>FORWARD</code> ใช้ไม่ได้
+               คอมพิวเตอร์ถือว่าเป็นคนละคำกัน</p>
         </div>
-        <div class="panel">
-            <h4 style="color:var(--acc-amber);">จุดที่ 2 · ไลบรารีต้องรู้จักคำนั้น</h4>
-            <p style="color:var(--muted);">เพิ่มเงื่อนไขในบล็อกลับชื่อ <code>_do2</code> ห้ามเพิ่มใน <span class="blk">KSU do command</span> เพราะจะเกินขีดจำกัด 1000 ไบต์</p>
+
+        <h3>ตัวเลขที่ส่งมากับคำสั่ง</h3>
+        <p>ปุ่มธรรมดาส่งมาแค่คำเดียว แต่แถบเลื่อนต้องส่ง<strong>ตัวเลข</strong>มาด้วย โดยต่อท้ายด้วย <code>_</code></p>
+        <div class="tw">
+            <table>
+                <thead><tr><th>หน้าเว็บส่ง</th><th>คำที่ได้</th><th>ตัวเลขที่ได้</th></tr></thead>
+                <tbody>
+                    <tr><td><code>/Forward</code></td><td><code>Forward</code></td><td>ไม่มี</td></tr>
+                    <tr><td><code>/Speed_70</code></td><td><code>Speed</code></td><td>70</td></tr>
+                    <tr><td><code>/Servo_120</code></td><td><code>Servo</code></td><td>120</td></tr>
+                    <tr><td><code>/Rgb_2_255_120_0</code></td><td><code>Rgb</code></td><td>2, 255, 120, 0</td></tr>
+                </tbody>
+            </table>
         </div>
-        <div class="panel">
-            <h4 style="color:var(--acc-green);">จุดที่ 3 · ถ้าต้องมีบล็อกใหม่</h4>
-            <p style="color:var(--muted);">เพิ่มบรรทัด <code>spec</code> ในไลบรารี เพื่อให้บล็อกโผล่มาในแถบเครื่องมือให้ลากใช้ได้</p>
+        <p>อ่านออกมาด้วย <span class="rep">KSU command value</span> — ถ้าคำสั่งล่าสุด<strong>ไม่มีตัวเลข</strong>มาด้วย
+           บล็อกนี้จะรายงานเลข <strong>90</strong> ไม่ใช่ 0 และต้องอ่านใน<strong>รอบเดียวกัน</strong>กับที่คำสั่งเข้ามา</p>
+
+        <h3>🏆 ด่านสุดท้าย: สร้างคำสั่งของตัวเอง</h3>
+        <p>วิธีที่ง่ายที่สุดคือ<strong>ยึดปุ่มที่มีอยู่แล้วมาใช้ใหม่</strong> เช่นจับปุ่มแตรให้ทำท่าเต้นแทน
+           (ต้องถอด <span class="blk">KSU do command</span> ออกก่อน ไม่งั้นมันจะบีบแตรแข่งกับเรา)</p>
+
+        <div class="script">
+            <span class="cap">ท่าเต้นเมื่อกดปุ่มแตร</span>
+            <div class="bk op">if <s>command</s> = <i>Horn</i></div>
+            <div class="cbody op">
+                <div class="bk ctrl">repeat <i>3</i></div>
+                <div class="cbody">
+                    <div class="bk">KSU turn left</div>
+                    <div class="bk">KSU set RGB <i>all</i> red <i>255</i> green <i>0</i> blue <i>0</i></div>
+                    <div class="bk ctrl">wait <i>200</i> millisecs</div>
+                    <div class="bk">KSU turn right</div>
+                    <div class="bk">KSU set RGB <i>all</i> red <i>0</i> green <i>0</i> blue <i>255</i></div>
+                    <div class="bk ctrl">wait <i>200</i> millisecs</div>
+                </div>
+                <div class="bk">KSU stop</div>
+            </div>
         </div>
-    </div>
 
-    <div class="warn">
-        <p><strong>อย่าลืมว่าไลบรารีมีสองสำเนา</strong> — การแก้จะสมบูรณ์ก็ต่อเมื่อลงทั้งใน <code>KSU_RoBoESP32.ubl</code>
-           และสำเนาที่ฝังอยู่ใน <code>RoboCar.ubp</code> เพราะไฟล์หลังคือไฟล์ที่โหลดลงบอร์ดจริง
-           แก้แค่ไฟล์แรกไฟล์เดียวจะไม่มีอะไรเปลี่ยนเลย รายละเอียดอยู่ในคู่มือไลบรารี</p>
-    </div>
-
-    <h3>ทำแบบไม่ต้องแตะไลบรารีก็ได้</h3>
-    <p>ถ้ายังไม่อยากยุ่งกับไฟล์ไลบรารี ใช้วิธีง่ายกว่านี้ได้: เอาปุ่มที่มีอยู่แล้วมาใช้ใหม่
-       เช่น จับ <code>Horn</code> ให้ทำท่าเต้นแทนการบีบแตร โดยเขียน <code>if</code> ของตัวเองในสคริปต์หลัก</p>
-    <pre><code><span class="c-key">if</span> (command) = <span class="c-str">'Horn'</span> {
-    <span class="c-key">repeat</span> <span class="c-num">3</span> {
-        KSU turn left
-        KSU set RGB (all) red (<span class="c-num">255</span>) green (<span class="c-num">0</span>) blue (<span class="c-num">0</span>)
-        <span class="c-key">wait</span> <span class="c-num">200</span> millisecs
-        KSU turn right
-        KSU set RGB (all) red (<span class="c-num">0</span>) green (<span class="c-num">0</span>) blue (<span class="c-num">255</span>)
-        <span class="c-key">wait</span> <span class="c-num">200</span> millisecs
-    }
-    KSU stop
-}</code></pre>
-    <p>ต้องเอา <span class="blk">KSU do command</span> ออกก่อน ไม่งั้นมันจะบีบแตรแข่งกับท่าเต้นของเรา</p>
-
-    <div class="win"><p><strong>🏆 จบคอร์สเมื่อ:</strong> กดปุ่มบนมือถือแล้วรถทำท่าที่<strong>คุณออกแบบเอง</strong>ได้</p></div>
-</section>
-
-<!-- ============ NEXT ============ -->
-<section class="container">
-    <h2>เรียนจบแล้วไปต่อที่ไหน</h2>
-    <p class="goal">คอร์สนี้สอนแนวคิด ส่วนรายละเอียดของบล็อกทุกตัวอยู่ในคู่มือไลบรารี</p>
-
-    <div class="card">
+        <p>ส่วนการเพิ่ม<strong>ปุ่มใหม่จริง ๆ</strong>บนหน้าเว็บนั้นต้องแก้ 3 จุดพร้อมกัน ขาดจุดใดจุดหนึ่งคำสั่งจะเงียบหายไปเฉย ๆ
+           รายละเอียดทั้งหมดอยู่ในคู่มือไลบรารี</p>
         <div class="grid">
-            <div>
-                <h4 style="color:var(--acc-green);">📘 คู่มือไลบรารี 13 บท</h4>
-                <p style="color:var(--muted);">รายการบล็อกครบทุกตัวแยกตามหมวด ตารางคำสั่งครบ 21 คำ ตารางขา GPIO ทั้งบอร์ด
-                   วิธีเพิ่มคำสั่งใหม่ ตารางแก้ปัญหา และใบงานสำหรับห้องเรียนอีก 6 ชิ้น</p>
-                <p style="margin-top:18px;"><a href="library.html" class="btn">เปิดคู่มือไลบรารี</a></p>
-            </div>
-            <div>
-                <h4 style="color:var(--acc-blue);">🔧 อยากลองอะไรต่อ</h4>
-                <ul style="color:var(--muted); margin-left:20px;">
-                    <li>ให้รถวิ่งเป็นรูปสี่เหลี่ยมด้วย <span class="blk">KSU drive</span></li>
-                    <li>ใช้ปุ่มบนบอร์ด D34/D35 สั่งงานโดยไม่ต้องใช้มือถือ</li>
-                    <li>ต่อเซอร์โวเป็นแขนกลคีบของ</li>
-                    <li>เขียนไฟวิ่งด้วย <span class="blk">KSU LED number</span> กับลูป <code>repeat</code></li>
-                    <li>ทำโหมดหลบสิ่งกีดขวางอัตโนมัติเต็มรูปแบบ</li>
-                </ul>
-            </div>
+            <div class="panel"><h4 style="color:var(--acc-blue);">1 · หน้าเว็บต้องส่งคำนั้น</h4>
+                <p style="color:var(--muted);">เพิ่มปุ่มใน <code>RoboCar-Control.html</code> โดยเรียกผ่านฟังก์ชัน <code>s()</code> เท่านั้น</p></div>
+            <div class="panel"><h4 style="color:var(--acc-amber);">2 · ไลบรารีต้องรู้จักคำนั้น</h4>
+                <p style="color:var(--muted);">เพิ่มเงื่อนไขในบล็อกลับ <code>_do2</code> ไม่ใช่ใน <span class="blk">KSU do command</span></p></div>
+            <div class="panel"><h4 style="color:var(--acc-green);">3 · ถ้าต้องมีบล็อกใหม่</h4>
+                <p style="color:var(--muted);">เพิ่มบรรทัด <code>spec</code> ในไลบรารี บล็อกจึงจะโผล่ในแถบเครื่องมือ</p></div>
         </div>
-    </div>
-</section>
 
-<!-- ============ DOWNLOADS ============ -->
-<section class="container">
-    <div class="card" style="text-align:center;">
-        <h2 style="margin-bottom:20px;">ดาวน์โหลดไฟล์</h2>
-        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
-            <a href="https://github.com/alfaXphoori/RoboESP32/raw/main/RoboCar.ubp" class="btn">RoboCar.ubp</a>
-            <a href="https://github.com/alfaXphoori/RoboESP32/raw/main/KSU_RoBoESP32.ubl" class="btn ghost">KSU_RoBoESP32.ubl</a>
-            <a href="https://github.com/alfaXphoori/RoboESP32/raw/main/CP210x_Windows_Drivers.zip" class="btn ghost">CP210x Drivers</a>
+        <div class="win"><p><strong>🏆 จบคอร์สเมื่อ:</strong> กดปุ่มบนมือถือแล้วรถทำท่าที่<strong>คุณออกแบบเอง</strong>ได้</p></div>
+    </section>
+
+    <!-- ============ NEXT ============ -->
+    <section id="next">
+        <h2>ไปต่อที่ไหน</h2>
+        <div class="card">
+            <div class="grid">
+                <div>
+                    <h4 style="color:var(--acc-green);">📘 คู่มือไลบรารี 13 บท</h4>
+                    <p style="color:var(--muted);">รายการบล็อกครบทุกตัวแยกตามหมวด ตารางคำสั่งครบ 21 คำ ตารางขา GPIO ทั้งบอร์ด
+                       วิธีเพิ่มคำสั่งใหม่ ตารางแก้ปัญหา และใบงานอีก 6 ชิ้น</p>
+                    <p style="margin-top:16px;"><a href="library.html" class="btn">เปิดคู่มือไลบรารี</a></p>
+                </div>
+                <div>
+                    <h4 style="color:var(--acc-blue);">🔧 โจทย์ท้าทาย</h4>
+                    <ul style="color:var(--muted); margin-left:20px;">
+                        <li>ใช้ปุ่ม D34/D35 บนบอร์ดสั่งงานโดยไม่ต้องใช้มือถือ</li>
+                        <li>ทำโหมดหลบสิ่งกีดขวางอัตโนมัติเต็มรูปแบบ</li>
+                        <li>ต่อเซอร์โวสองตัวเป็นก้ามคีบแล้วแข่งเก็บของ</li>
+                        <li>ทำไฟเลี้ยวที่กะพริบตามทิศที่กำลังวิ่ง</li>
+                        <li>วัดระยะแล้วให้เสียงถี่ขึ้นเมื่อเข้าใกล้ เหมือนเซนเซอร์ถอยหลังในรถยนต์</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+
+    <!-- ============ DOWNLOADS ============ -->
+    <section id="downloads">
+        <div class="card" style="text-align:center;">
+            <h2 style="margin-bottom:18px;">ดาวน์โหลดไฟล์</h2>
+            <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+                <a href="https://github.com/alfaXphoori/RoboESP32/raw/main/KSU_RoBoESP32.ubl" class="btn" download>KSU_RoBoESP32.ubl</a>
+                <a href="https://github.com/alfaXphoori/RoboESP32/raw/main/RoboCar.ubp" class="btn ghost" download>RoboCar.ubp</a>
+                <a href="https://github.com/alfaXphoori/RoboESP32/raw/main/CP210x_Windows_Drivers.zip" class="btn ghost" download>CP210x Drivers</a>
+            </div>
+            <p style="color:var(--muted); font-size:.9rem; margin-top:18px;">
+                ไลบรารีใช้ตั้งแต่ด่าน 1 · ไฟล์โปรเจกต์เต็มใช้ตอนด่าน 8</p>
+        </div>
+    </section>
+
+    </main>
+</div>
 
 <footer>
     <div class="container">
@@ -819,6 +999,21 @@ KSU set arm angle (<span class="c-num">90</span>) degrees</code></pre>
             paint();
         });
         paint();
+
+        /* ไฮไลต์หัวข้อปัจจุบันใน sidebar */
+        var links = {}, all = document.querySelectorAll('.side a[href^="#"]');
+        Array.prototype.forEach.call(all, function (a) { links[a.getAttribute('href').slice(1)] = a; });
+        if (window.IntersectionObserver) {
+            var obs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (!e.isIntersecting) return;
+                    Array.prototype.forEach.call(all, function (a) { a.classList.remove('active'); });
+                    var hit = links[e.target.id];
+                    if (hit) hit.classList.add('active');
+                });
+            }, { rootMargin: '-90px 0px -65% 0px' });
+            Array.prototype.forEach.call(document.querySelectorAll('main section[id]'), function (s) { obs.observe(s); });
+        }
     })();
 </script>
 
