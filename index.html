@@ -431,19 +431,20 @@
         </div>
 
         <h3>ทดสอบว่าบอร์ดตอบสนองจริง</h3>
-        <p>ลากบล็อกนี้มาวางบนพื้นที่ทำงาน แล้ว<strong>คลิกที่ตัวบล็อกโดยตรง</strong> — ไฟดวงที่ 3 ต้องติดทันที</p>
-
-        <div class="script">
-            <span class="cap">คลิกบล็อกเดียว ไม่ต้องกดรันทั้งโปรแกรม</span>
-            <div class="bk">KSU LED number <i>3</i> <i>on</i></div>
-        </div>
+        <p>ลากบล็อก <span class="blk">KSU LED <span class="slot">D22</span> <span class="slot">on</span></span>
+           มาต่อใต้ <span class="blk">when started</span> ตามภาพ แล้วกดปุ่มเริ่ม ▶ — ไฟต้องติดทันที</p>
 
         <figure>
             <img src="images/lv1-first-led.png"
                  alt="สคริปต์ when started ต่อกับบล็อก KSU_RoBoESP32 LED D22 on">
-            <figcaption>อีกวิธีหนึ่ง — ต่อกับ <span class="blk">when started</span> แล้วกดปุ่มเริ่ม ▶ แทนการคลิกบล็อกเปล่า ๆ<br>
-                ภาพนี้สั่งไฟด้วย<strong>ชื่อขา</strong> (<code>D22</code>) แทนหมายเลขดวง ทั้งสองแบบใช้ได้</figcaption>
+            <figcaption>สองบล็อกเท่านี้พอ — <span class="blk">when started</span> อยู่ในหมวด <strong>Control</strong>
+                ส่วนบล็อกสีม่วงมาจากไลบรารี <strong>KSU_RoBoESP32</strong><br>
+                ภาพนี้เรียกไฟด้วย<strong>ชื่อขา</strong> (<code>D22</code>) จะใช้
+                <span class="blk">KSU LED number <span class="slot">3</span></span> เรียกเป็นหมายเลขดวงแทนก็ได้ ผลเหมือนกัน</figcaption>
         </figure>
+
+        <p><strong>หรือจะไม่ใช้ <span class="blk">when started</span> เลยก็ได้</strong> — ลากมาแค่บล็อกไฟบล็อกเดียว
+           แล้ว<strong>คลิกที่ตัวบล็อกโดยตรง</strong> ไฟก็ติดเหมือนกัน</p>
 
         <div class="tip">
             <p><strong>นี่คือท่าไม้ตายของ MicroBlocks:</strong> คลิกบล็อกไหน บล็อกนั้นทำงานทันที
@@ -475,57 +476,42 @@
         </div>
 
         <h3>ลองทีละบล็อก</h3>
-        <div class="script">
-            <span class="cap">คลิกทีละอัน ดูว่าอะไรเกิดขึ้น</span>
-            <div class="bk">KSU LED number <i>1</i> <i>on</i></div>
-            <div class="bk">KSU LED <i>all</i> <i>off</i></div>
-            <div class="bk">KSU light <i>on</i></div>
-            <div class="bk">KSU set RGB <i>all</i> red <i>255</i> green <i>0</i> blue <i>0</i></div>
-            <div class="bk">KSU change RGB brightness by <i>-25</i> %</div>
-        </div>
+        <p>คลิกทีละบล็อกดูว่าอะไรเกิดขึ้น — <span class="blk">KSU LED number <span class="slot">1</span> <span class="slot">on</span></span> ·
+           <span class="blk">KSU LED <span class="slot">all</span> <span class="slot">off</span></span> ·
+           <span class="blk">KSU light <span class="slot">on</span></span> ·
+           <span class="blk">KSU set RGB <span class="slot">all</span> red <span class="slot">255</span> green <span class="slot">0</span> blue <span class="slot">0</span></span> ·
+           <span class="blk">KSU change RGB brightness by <span class="slot">-25</span> %</span></p>
 
         <p><span class="blk">KSU light <span class="slot">on</span></span> คือทางลัดของไฟหน้าสีขาวนวล
            ส่วน <span class="blk">KSU set RGB</span> ผสมสีเองได้ทั้งสามค่า ค่าละ <code>0</code> ถึง <code>255</code>
            ช่องแรกเลือกได้ว่าจะสั่งดวง <code>0</code>, ดวง <code>1</code> หรือ <code>all</code> ทั้งสองดวง</p>
 
-        <h3>ลูปแรก: ไฟวิ่ง</h3>
-        <p>ประกอบบล็อกตามนี้แล้วคลิกที่สคริปต์ ไฟทั้งแปดดวงจะวิ่งไล่กันสามรอบ</p>
+        <h3>ลูปแรก: ไฟกับสีสลับกันไปเรื่อย ๆ</h3>
+        <p>ประกอบตามภาพนี้ เปิดไฟดวงหนึ่งค้างไว้ แล้ววนสลับสีไฟหน้าเขียว-น้ำเงินทุกครึ่งวินาที</p>
 
-        <div class="script">
-            <span class="cap">ไฟวิ่ง 8 ดวง</span>
-            <div class="bk ctrl">repeat <i>3</i></div>
-            <div class="cbody">
-                <div class="bk ctrl">for <s>i</s> in <i>8</i></div>
-                <div class="cbody">
-                    <div class="bk">KSU LED number <s>i</s> <i>on</i></div>
-                    <div class="bk ctrl">wait <i>80</i> millisecs</div>
-                    <div class="bk">KSU LED number <s>i</s> <i>off</i></div>
-                </div>
-            </div>
-            <p class="note-in">บล็อก <strong>repeat</strong> และ <strong>for</strong> อยู่ในหมวด Control ส่วนบล็อกสีม่วงมาจากไลบรารี KSU</p>
-        </div>
+        <figure>
+            <img src="images/lv2-led-rgb.png" alt="สคริปต์เปิด LED แล้วสลับสี RGB เขียวกับน้ำเงินใน forever">
+            <figcaption><span class="blk">forever</span> คือ "ทำวนไปเรื่อย ๆ ไม่มีวันจบ" อยู่ในหมวด <strong>Control</strong><br>
+                สังเกตว่าสั่งสีได้สองแบบ — <strong>คลิกเลือกสี</strong>จากวงกลม กับ<strong>ใส่เลขเอง</strong> red/green/blue</figcaption>
+        </figure>
+
+        <div class="tip"><p>ลองเปลี่ยนเลข <code>500</code> เป็น <code>2000</code> แล้วเป็น <code>100</code> ดู จะเห็นชัดว่าเลขนี้คุมจังหวะการสลับสี</p></div>
+
+        <h3>ขั้นต่อไป: ไฟวิ่ง 8 ดวง</h3>
+        <p>ทีนี้เพิ่ม <span class="blk">for <span class="slot">i</span> in <span class="slot">8</span></span> เข้าไป
+           จะได้ไฟไล่กันทีละดวงแทนที่จะติดพร้อมกัน</p>
+
+        <figure>
+            <img src="images/lv2-led-chase.png" alt="สคริปต์ไฟวิ่งด้วย for i in 8 เปิดแล้วปิดทีละดวง">
+            <figcaption>รอบแรก <span class="blk">for i in 8</span> ไล่<em>เปิด</em>ทีละดวง เปลี่ยนสีไฟหน้าคั่น
+                แล้วรอบสองไล่<em>ปิด</em>ทีละดวง จบด้วยเปลี่ยนสีอีกที<br>
+                ทั้งหมดอยู่ใน <span class="blk">forever</span> จึงวนซ้ำไม่มีหยุด</figcaption>
+        </figure>
 
         <div class="note">
-            <p><strong>อ่านออกเสียงได้ว่า</strong> "ทำซ้ำ 3 รอบ: ให้ i ไล่จาก 1 ถึง 8 แล้วแต่ละครั้งเปิดไฟดวงที่ i รอ 80 มิลลิวินาที แล้วปิด"
+            <p><strong>อ่านออกเสียงได้ว่า</strong> "ให้ i ไล่จาก 1 ถึง 8 แล้วแต่ละครั้งเปิดไฟดวงที่ i รอครึ่งวินาที"
                — ตัวแปร <s style="text-decoration:none;background:var(--bk-var);color:#fff;border-radius:50px;padding:1px 8px;font-family:monospace;font-size:.85em;">i</s>
-               คือกล่องที่เปลี่ยนค่าไปเรื่อย ๆ ทุกรอบ</p>
-        </div>
-
-        <div class="tip"><p>ลองเปลี่ยนเลข <code>80</code> เป็น <code>300</code> แล้วเป็น <code>20</code> ดู จะเห็นชัดว่าเลขนี้คุมความเร็วของไฟวิ่ง</p></div>
-
-        <h3>ตัวอย่างจริงจากห้องเรียน</h3>
-        <div class="grid">
-            <figure style="margin:0;">
-                <img src="images/lv2-led-rgb.png" alt="สคริปต์เปิด LED แล้วสลับสี RGB เขียวกับน้ำเงินใน forever">
-                <figcaption><strong>สลับสีไปมา</strong> — เปิด LED ค้างไว้ดวงหนึ่ง แล้ววน <span class="blk">set RGB</span>
-                    สลับเขียวกับน้ำเงินทุกครึ่งวินาที<br>สังเกตว่าใช้ได้ทั้งแบบ<strong>เลือกสี</strong>จากวงกลม
-                    และแบบ<strong>ใส่เลข</strong> red/green/blue เอง</figcaption>
-            </figure>
-            <figure style="margin:0;">
-                <img src="images/lv2-led-chase.png" alt="สคริปต์ไฟวิ่งด้วย for i in 8 เปิดแล้วปิดทีละดวง">
-                <figcaption><strong>ไฟวิ่งเต็มรูปแบบ</strong> — <span class="blk">for i in 8</span> รอบแรกไล่<em>เปิด</em>ทีละดวง
-                    รอบสองไล่<em>ปิด</em> คั่นด้วยการเปลี่ยนสีไฟหน้า<br>คือสคริปต์ข้างบนที่ต่อยอดอีกขั้น</figcaption>
-            </figure>
+               คือกล่องที่เปลี่ยนค่าไปเรื่อย ๆ ทุกรอบ ทำให้บล็อกเดียวสั่งได้ทั้งแปดดวงโดยไม่ต้องเขียนแปดครั้ง</p>
         </div>
 
         <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> ทำไฟวิ่งได้ และเปลี่ยนสีไฟหน้าเป็นสีที่ตัวเองชอบได้</p></div>
@@ -538,14 +524,11 @@
 
         <p>บนบอร์ดมีลำโพงเล็ก ๆ ติดมาแล้ว ไม่ต้องต่ออะไรเพิ่ม สั่งได้เลย</p>
 
-        <div class="script">
-            <span class="cap">คลิกทีละอัน ฟังความต่าง</span>
-            <div class="bk">KSU beep</div>
-            <div class="bk">KSU horn</div>
-            <div class="bk">KSU play tone <i>440</i> Hz for <i>300</i> ms</div>
-            <div class="bk">KSU play note <i>c</i> octave <i>0</i> for <i>400</i> ms</div>
-            <div class="bk">KSU play Happy Birthday</div>
-        </div>
+        <p>คลิกทีละบล็อกฟังความต่างก่อน — <span class="blk">KSU beep</span> ·
+           <span class="blk">KSU horn</span> ·
+           <span class="blk">KSU play tone <span class="slot">440</span> Hz for <span class="slot">300</span> ms</span> ·
+           <span class="blk">KSU play note <span class="slot">c</span> octave <span class="slot">0</span> for <span class="slot">400</span> ms</span> ·
+           <span class="blk">KSU play Happy Birthday</span></p>
 
         <div class="tw">
             <table>
@@ -559,19 +542,15 @@
             </table>
         </div>
 
-        <h3>แต่งเพลงสั้น ๆ</h3>
-        <div class="script">
-            <span class="cap">โด เร มี</span>
-            <div class="bk">KSU play note <i>c</i> octave <i>0</i> for <i>300</i> ms</div>
-            <div class="bk">KSU play note <i>d</i> octave <i>0</i> for <i>300</i> ms</div>
-            <div class="bk">KSU play note <i>e</i> octave <i>0</i> for <i>300</i> ms</div>
-        </div>
+        <h3>ต่อกันเป็นทำนอง</h3>
+        <p>เอา <span class="blk">KSU play note</span> มาต่อกันหลาย ๆ อัน เปลี่ยนตัวโน้ตในช่องแรกไปเรื่อย ๆ ก็ได้เพลงแล้ว</p>
 
         <figure>
             <img src="images/lv3-sound-scale.png" alt="สคริปต์ attach buzzer, horn, beep แล้ว forever เล่นโน้ต c ถึง b">
-            <figcaption>ตัวอย่างจริง — บีบแตรหนึ่งครั้ง ติ๊ดหนึ่งครั้ง แล้ววนเล่นสเกล <code>c d e f g a b</code> ไปเรื่อย ๆ<br>
+            <figcaption>ตัวอย่างจริง — บีบแตรหนึ่งครั้ง ติ๊ดหนึ่งครั้ง แล้ววน <span class="blk">forever</span>
+                เล่นสเกลครบเจ็ดตัว <code>c d e f g a b</code> ตัวละ 400 ms<br>
                 บล็อกสีน้ำเงิน <span class="blk">attach buzzer to pin <span class="slot">23</span></span> มาจากไลบรารี Tone
-                — ปกติ <span class="blk">KSU_RoBoESP32 setup</span> จัดการให้แล้ว ใส่เองก็ได้ไม่เสียหาย</figcaption>
+                — ปกติ <span class="blk">KSU setup</span> จัดการให้แล้ว ใส่เองซ้ำก็ไม่เสียหาย</figcaption>
         </figure>
 
         <div class="tip">
@@ -593,17 +572,13 @@
         </div>
 
         <h3>ลองสั่งทีละทิศ</h3>
-        <div class="script">
-            <span class="cap">คลิกทีละอัน — อย่าลืมคลิก stop ปิดท้าย</span>
-            <div class="bk">KSU setup</div>
-            <div class="bk">KSU set speed <i>70</i> %</div>
-            <div class="bk">KSU forward</div>
-            <div class="bk">KSU backward</div>
-            <div class="bk">KSU turn left</div>
-            <div class="bk">KSU turn right</div>
-            <div class="bk">KSU stop</div>
-            <p class="note-in">บล็อกเดินหน้า/ถอยหลังไม่มีการหยุดในตัว มันจะหมุนไปเรื่อย ๆ จนกว่าจะสั่ง <strong>KSU stop</strong></p>
-        </div>
+        <p>ประกอบตามภาพข้างล่าง — เริ่มด้วย <span class="blk">KSU setup</span> แล้วไล่
+           <span class="blk">KSU forward</span> · <span class="blk">KSU backward</span> ·
+           <span class="blk">KSU turn left</span> · <span class="blk">KSU turn right</span>
+           คั่นแต่ละทิศด้วย <span class="blk">wait <span class="slot">500</span> millisecs</span>
+           แล้วปิดท้ายด้วย <span class="blk">KSU stop</span></p>
+        <p>บล็อกเดินหน้า/ถอยหลัง<strong>ไม่มีการหยุดในตัว</strong> มันจะหมุนไปเรื่อย ๆ จนกว่าจะสั่ง
+           <span class="blk">KSU stop</span> — นี่คือเหตุผลที่ต้องมี stop ปิดท้ายเสมอ</p>
 
         <div class="warn">
             <p><strong>ต้องคลิก <span class="blk">KSU setup</span> ก่อนเสมอ ไม่งั้นรถจะนิ่งสนิท</strong> —
@@ -624,10 +599,9 @@
         </figure>
 
         <h3>รถวิ่งผิดทาง? แก้ตรงนี้</h3>
-        <p>มอเตอร์แต่ละคันประกอบมาไม่เหมือนกัน ถ้าทิศไม่ตรงให้คลิกบล็อกนี้ด้วยค่าตามตาราง (ค่าเริ่มต้นคือ <code>-1 -1</code>)</p>
-        <div class="script">
-            <div class="bk">KSU set motor trim M1 <i>-1</i> M2 <i>-1</i></div>
-        </div>
+        <p>มอเตอร์แต่ละคันประกอบมาไม่เหมือนกัน ถ้าทิศไม่ตรงให้คลิก
+           <span class="blk">KSU set motor trim M1 <span class="slot">-1</span> M2 <span class="slot">-1</span></span>
+           ด้วยค่าตามตาราง (ค่าที่ <span class="blk">KSU setup</span> ตั้งให้คือ <code>-1 -1</code>)</p>
         <div class="tw">
             <table>
                 <thead><tr><th>อาการ</th><th>ใส่ค่า</th></tr></thead>
@@ -641,17 +615,15 @@
         <div class="tip"><p>ค่านี้จำไว้จนกว่าจะปิดเครื่อง เจอค่าที่ถูกแล้วให้จดไว้ เดี๋ยวด่าน 7 จะเอาไปใส่ในโปรแกรมจริง</p></div>
 
         <h3>วิ่งตามเส้นทางที่วางไว้</h3>
-        <p>บล็อก <span class="blk">KSU drive</span> ต่างจากบล็อกข้างบน ตรงที่มันวิ่งตามเวลาที่กำหนดแล้ว<strong>หยุดเอง</strong>
-           เอามาต่อกันเป็นเส้นทางได้ สคริปต์นี้ทำให้รถวิ่งเป็นรูปสี่เหลี่ยม</p>
+        <p>ท่อน <span class="blk">forever</span> ในภาพข้างบนใช้บล็อก <span class="blk">KSU drive</span> ซึ่งต่างจากบล็อกทิศธรรมดา
+           ตรงที่มันวิ่งตามเวลาที่กำหนดแล้ว<strong>หยุดเอง</strong> จึงเอามาต่อกันเป็นเส้นทางได้โดยไม่ต้องคอยสั่ง stop</p>
 
-        <div class="script">
-            <span class="cap">วิ่งเป็นสี่เหลี่ยม</span>
-            <div class="bk ctrl">repeat <i>4</i></div>
-            <div class="cbody">
-                <div class="bk">KSU drive <i>forward</i> for <i>1000</i> ms</div>
-                <div class="bk">KSU drive <i>right</i> for <i>500</i> ms</div>
-            </div>
-            <p class="note-in">เลข 500 คือเวลาที่ใช้เลี้ยวให้ครบ 90 องศา — พื้นแต่ละแบบไม่เท่ากัน ต้องลองปรับเอง</p>
+        <div class="tip">
+            <p><strong>ลองต่อยอด:</strong> เปลี่ยนท่อนนั้นเป็น <span class="blk">repeat <span class="slot">4</span></span>
+               ที่มี <span class="blk">KSU drive <span class="slot">forward</span> for <span class="slot">1000</span> ms</span> และ
+               <span class="blk">KSU drive <span class="slot">right</span> for <span class="slot">500</span> ms</span> อยู่ข้างใน
+               รถจะวิ่งเป็นรูปสี่เหลี่ยม<br>
+               เลข <code>500</code> คือเวลาที่ใช้เลี้ยวให้ครบ 90 องศา พื้นแต่ละแบบไม่เท่ากัน ต้องลองปรับเอง</p>
         </div>
 
         <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> รถวิ่งถูกทิศทุกทิศ และวิ่งกลับมาใกล้จุดเดิมได้หลังวิ่งครบสี่เหลี่ยม</p></div>
@@ -692,12 +664,10 @@
         </div>
 
         <h3>ทดสอบ</h3>
-        <div class="script">
-            <span class="cap">เปลี่ยนเลขเป็น 0 / 90 / 180 สลับกันดู</span>
-            <div class="bk">KSU set servo <i>D4</i> to <i>90</i> degrees</div>
-            <div class="bk">KSU set arm angle <i>90</i> degrees</div>
-            <p class="note-in">สองบล็อกนี้ทำงานเหมือนกันเมื่อใช้ช่อง D4 — อันล่างเป็นทางลัดที่พิมพ์สั้นกว่า</p>
-        </div>
+        <p>คลิก <span class="blk">KSU set servo <span class="slot">D4</span> to <span class="slot">90</span> degrees</span>
+           แล้วเปลี่ยนเลขเป็น <code>0</code> / <code>90</code> / <code>180</code> สลับกันดู<br>
+           <span class="blk">KSU set arm angle <span class="slot">90</span> degrees</span> ทำงานเหมือนกันเป๊ะเมื่อใช้ช่อง D4
+           เป็นทางลัดที่พิมพ์สั้นกว่า</p>
 
         <div class="note">
             <p><strong>ทำไมเป็น 0 ถึง 180?</strong> บล็อกดั้งเดิมของ Cytron ใช้ −90 ถึง 90 ซึ่งมีเลขติดลบให้สับสน
@@ -705,23 +675,15 @@
         </div>
 
         <h3>ให้แขนกวาดไปมา</h3>
-        <div class="script">
-            <span class="cap">กวาดสามรอบแล้วกลับมาตรงกลาง</span>
-            <div class="bk ctrl">repeat <i>3</i></div>
-            <div class="cbody">
-                <div class="bk">KSU set arm angle <i>30</i> degrees</div>
-                <div class="bk ctrl">wait <i>400</i> millisecs</div>
-                <div class="bk">KSU set arm angle <i>150</i> degrees</div>
-                <div class="bk ctrl">wait <i>400</i> millisecs</div>
-            </div>
-            <div class="bk">KSU set arm angle <i>90</i> degrees</div>
-        </div>
+        <p>ประกอบตามภาพ — <span class="blk">KSU setup</span> แล้ววน <span class="blk">forever</span>
+           ไล่มุมทีละขั้น คั่นด้วย <span class="blk">wait</span> ทุกครั้ง</p>
 
         <figure>
             <img src="images/lv5-servo-sweep.png" alt="สคริปต์ setup แล้ว forever สั่งเซอร์โว D4 ไปที่ 0 45 90 180 องศา">
-            <figcaption>ตัวอย่างจริง — ไล่มุม <code>0 → 45 → 90 → 180</code> วนไปเรื่อย ๆ คั่นด้วย
-                <span class="blk">wait <span class="slot">1000</span></span> ทุกช่วง<br>
-                เวลารอ 1 วินาทีเผื่อไว้เยอะ จะได้เห็นชัดว่าแขนหยุดนิ่งที่แต่ละมุมจริง ๆ ก่อนไปมุมถัดไป</figcaption>
+            <figcaption>ไล่มุม <code>0 → 45 → 90 → 180</code> วนไปเรื่อย ๆ คั่นด้วย
+                <span class="blk">wait <span class="slot">1000</span> millisecs</span> ทุกช่วง<br>
+                เวลารอ 1 วินาทีเผื่อไว้เยอะ จะได้เห็นชัดว่าแขนหยุดนิ่งที่แต่ละมุมจริง ๆ ก่อนไปมุมถัดไป
+                — พอคล่องแล้วลองลดเหลือ <code>400</code> ดู</figcaption>
         </figure>
 
         <div class="note">
@@ -755,12 +717,9 @@
             </table>
         </div>
 
-        <div class="script">
-            <span class="cap">บอกไลบรารีว่าเสียบขาไหน แล้วคลิกอ่านค่า</span>
-            <div class="bk">KSU set ultrasonic trig <i>33</i> echo <i>32</i></div>
-            <div class="bk">KSU distance cm</div>
-            <p class="note-in">คลิกบล็อกอ่านค่า จะมีป้ายบอกระยะเป็นเซนติเมตรโผล่ขึ้นมา ลองเอามือบังหน้าเซนเซอร์แล้วคลิกใหม่</p>
-        </div>
+        <p>คลิก <span class="blk">KSU set ultrasonic trig <span class="slot">33</span> echo <span class="slot">32</span></span>
+           หนึ่งครั้งเพื่อบอกไลบรารีว่าเสียบขาไหน จากนั้นคลิก <span class="blk">KSU distance cm</span>
+           จะมีป้ายบอกระยะเป็นเซนติเมตรโผล่ขึ้นมา ลองเอามือบังหน้าเซนเซอร์แล้วคลิกใหม่</p>
 
         <div class="warn">
             <p><strong>ขา 33 กับ 32 คือ LED ดวงที่ 8 และ 7</strong> ไฟสองดวงนี้จะกะพริบตามจังหวะยิงคลื่นซึ่งไม่เป็นไร
@@ -771,15 +730,9 @@
         <p><strong>ตัวแปร</strong>คือกล่องใส่ของที่มีชื่อ เราเก็บค่าที่วัดได้ใส่กล่องไว้ก่อน แล้ว<strong>เงื่อนไข</strong> (<code>if</code>)
            คือการเปิดกล่องมาดูแล้วตัดสินใจว่าจะทำอะไรต่อ</p>
 
-        <div class="script">
-            <span class="cap">หยุดเองก่อนชน</span>
-            <div class="bk vr">set <s>cm</s> to <span style="background:var(--blk);border-radius:50px;padding:2px 9px;">KSU distance cm</span></div>
-            <div class="bk op">if <s>cm</s> &gt; <i>0</i> and <s>cm</s> &lt; <i>20</i></div>
-            <div class="cbody op">
-                <div class="bk">KSU stop</div>
-                <div class="bk">KSU beep</div>
-            </div>
-        </div>
+        <p>รูปแบบที่ต้องการคือ เก็บระยะใส่ตัวแปรชื่อ <span class="var">cm</span> ก่อนหนึ่งครั้ง
+           แล้วค่อยเอา <span class="var">cm</span> ไปเทียบใน <span class="blk">if</span> —
+           <em>ถ้า <span class="var">cm</span> มากกว่า 0 และน้อยกว่า 20 ให้หยุดแล้วส่งเสียง</em></p>
 
         <div class="note">
             <p><strong>ทำไมต้องเช็ก <code>cm &gt; 0</code> ด้วย?</strong> เพราะเลข 0 แปลว่า "ไม่มีเสียงสะท้อนกลับมา"
@@ -793,26 +746,9 @@
         </div>
 
         <h3>รวมกับด่าน 4: รถวิ่งเองแล้วหยุดเองได้</h3>
-        <div class="script">
-            <span class="cap">วิ่งไปเรื่อย ๆ จนกว่าจะเจอสิ่งกีดขวาง</span>
-            <div class="bk hat">when started</div>
-            <div class="bk">KSU set speed <i>60</i> %</div>
-            <div class="bk ctrl">forever</div>
-            <div class="cbody">
-                <div class="bk vr">set <s>cm</s> to <span style="background:var(--blk);border-radius:50px;padding:2px 9px;">KSU distance cm</span></div>
-                <div class="bk op">if <s>cm</s> &gt; <i>0</i> and <s>cm</s> &lt; <i>20</i></div>
-                <div class="cbody op">
-                    <div class="bk">KSU stop</div>
-                    <div class="bk">KSU beep</div>
-                </div>
-                <div class="bk op">else</div>
-                <div class="cbody op">
-                    <div class="bk">KSU forward</div>
-                </div>
-            </div>
-        </div>
+        <p>เอา <span class="blk">if</span> ข้างบนใส่ใน <span class="blk">forever</span> แล้วเติม
+           <span class="blk">else</span> ให้วิ่งต่อเมื่อทางโล่ง — สองภาพนี้คือขั้นตอนที่ห้องเรียนทำจริง</p>
 
-        <h3>ตัวอย่างจริงจากห้องเรียน</h3>
         <div class="grid">
             <figure style="margin:0;">
                 <img src="images/lv6-distance-rgb.png" alt="สคริปต์ say ระยะ แล้ว if ระยะน้อยกว่า 5 ไฟแดง ไม่งั้นไฟเขียว">
