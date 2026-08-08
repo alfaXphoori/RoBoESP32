@@ -438,6 +438,13 @@
             <div class="bk">KSU LED number <i>3</i> <i>on</i></div>
         </div>
 
+        <figure>
+            <img src="images/lv1-first-led.png"
+                 alt="สคริปต์ when started ต่อกับบล็อก KSU_RoBoESP32 LED D22 on">
+            <figcaption>อีกวิธีหนึ่ง — ต่อกับ <span class="blk">when started</span> แล้วกดปุ่มเริ่ม ▶ แทนการคลิกบล็อกเปล่า ๆ<br>
+                ภาพนี้สั่งไฟด้วย<strong>ชื่อขา</strong> (<code>D22</code>) แทนหมายเลขดวง ทั้งสองแบบใช้ได้</figcaption>
+        </figure>
+
         <div class="tip">
             <p><strong>นี่คือท่าไม้ตายของ MicroBlocks:</strong> คลิกบล็อกไหน บล็อกนั้นทำงานทันที
                ไม่ต้องกดรันทั้งโปรแกรมและไม่ต้องรอคอมไพล์ ใช้ลองของทีละชิ้นได้เร็วมาก — ทั้งคอร์สนี้จะใช้วิธีนี้ตลอด</p>
@@ -506,6 +513,21 @@
 
         <div class="tip"><p>ลองเปลี่ยนเลข <code>80</code> เป็น <code>300</code> แล้วเป็น <code>20</code> ดู จะเห็นชัดว่าเลขนี้คุมความเร็วของไฟวิ่ง</p></div>
 
+        <h3>ตัวอย่างจริงจากห้องเรียน</h3>
+        <div class="grid">
+            <figure style="margin:0;">
+                <img src="images/lv2-led-rgb.png" alt="สคริปต์เปิด LED แล้วสลับสี RGB เขียวกับน้ำเงินใน forever">
+                <figcaption><strong>สลับสีไปมา</strong> — เปิด LED ค้างไว้ดวงหนึ่ง แล้ววน <span class="blk">set RGB</span>
+                    สลับเขียวกับน้ำเงินทุกครึ่งวินาที<br>สังเกตว่าใช้ได้ทั้งแบบ<strong>เลือกสี</strong>จากวงกลม
+                    และแบบ<strong>ใส่เลข</strong> red/green/blue เอง</figcaption>
+            </figure>
+            <figure style="margin:0;">
+                <img src="images/lv2-led-chase.png" alt="สคริปต์ไฟวิ่งด้วย for i in 8 เปิดแล้วปิดทีละดวง">
+                <figcaption><strong>ไฟวิ่งเต็มรูปแบบ</strong> — <span class="blk">for i in 8</span> รอบแรกไล่<em>เปิด</em>ทีละดวง
+                    รอบสองไล่<em>ปิด</em> คั่นด้วยการเปลี่ยนสีไฟหน้า<br>คือสคริปต์ข้างบนที่ต่อยอดอีกขั้น</figcaption>
+            </figure>
+        </div>
+
         <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> ทำไฟวิ่งได้ และเปลี่ยนสีไฟหน้าเป็นสีที่ตัวเองชอบได้</p></div>
     </section>
 
@@ -545,6 +567,13 @@
             <div class="bk">KSU play note <i>e</i> octave <i>0</i> for <i>300</i> ms</div>
         </div>
 
+        <figure>
+            <img src="images/lv3-sound-scale.png" alt="สคริปต์ attach buzzer, horn, beep แล้ว forever เล่นโน้ต c ถึง b">
+            <figcaption>ตัวอย่างจริง — บีบแตรหนึ่งครั้ง ติ๊ดหนึ่งครั้ง แล้ววนเล่นสเกล <code>c d e f g a b</code> ไปเรื่อย ๆ<br>
+                บล็อกสีน้ำเงิน <span class="blk">attach buzzer to pin <span class="slot">23</span></span> มาจากไลบรารี Tone
+                — ปกติ <span class="blk">KSU_RoBoESP32 setup</span> จัดการให้แล้ว ใส่เองก็ได้ไม่เสียหาย</figcaption>
+        </figure>
+
         <div class="tip">
             <p><strong>ผสมกับด่านที่แล้ว:</strong> ลองให้ไฟเปลี่ยนสีพร้อมกับเสียงแต่ละโน้ต
                จะได้ของเล่นชิ้นแรกที่มีทั้งภาพและเสียง</p>
@@ -566,6 +595,7 @@
         <h3>ลองสั่งทีละทิศ</h3>
         <div class="script">
             <span class="cap">คลิกทีละอัน — อย่าลืมคลิก stop ปิดท้าย</span>
+            <div class="bk">KSU setup</div>
             <div class="bk">KSU set speed <i>70</i> %</div>
             <div class="bk">KSU forward</div>
             <div class="bk">KSU backward</div>
@@ -574,6 +604,24 @@
             <div class="bk">KSU stop</div>
             <p class="note-in">บล็อกเดินหน้า/ถอยหลังไม่มีการหยุดในตัว มันจะหมุนไปเรื่อย ๆ จนกว่าจะสั่ง <strong>KSU stop</strong></p>
         </div>
+
+        <div class="warn">
+            <p><strong>ต้องคลิก <span class="blk">KSU setup</span> ก่อนเสมอ ไม่งั้นรถจะนิ่งสนิท</strong> —
+               กำลังมอเตอร์คิดจาก <em>ความเร็ว × ค่า trim</em> และทั้งสองค่ายังว่างอยู่จนกว่าจะมีบล็อกไปตั้งให้
+               คูณกันแล้วได้ 0 รถจึงไม่ขยับทั้งที่โปรแกรมดูถูกทุกอย่าง
+               <br><span style="color:var(--muted);font-size:.92rem;">ใส่ <span class="blk">KSU set speed</span> อย่างเดียวยังไม่พอ
+               เพราะ trim ยังว่าง — <span class="blk">KSU setup</span> ตั้งให้ครบทั้งคู่ในทีเดียว</span></p>
+        </div>
+
+        <figure>
+            <img src="images/lv4-motor-drive.png" alt="สคริปต์ setup แล้วสั่งเดินหน้า ถอยหลัง เลี้ยวซ้ายขวา ตามด้วย forever ที่ใช้ drive">
+            <figcaption>ตัวอย่างจริง — เริ่มด้วย <span class="blk">KSU setup</span> แล้วไล่ทีละทิศคั่นด้วย
+                <span class="blk">wait <span class="slot">500</span></span> ปิดท้ายด้วย stop<br>
+                ท่อนล่างใน <span class="blk">forever</span> ใช้ <span class="blk">KSU drive</span> ที่<strong>หยุดเอง</strong>
+                วิ่งหน้า-ถอยหลังสลับกันไปเรื่อย ๆ
+                <br><span style="color:var(--muted);font-size:.92rem;">ในภาพบล็อกหยุดยังเขียนว่า <code>KSU_RoBoESP32_stop</code>
+                ตอนนี้เปลี่ยนเป็น <code>KSU_RoBoESP32 stop</code> แล้ว เป็นบล็อกเดียวกัน</span></figcaption>
+        </figure>
 
         <h3>รถวิ่งผิดทาง? แก้ตรงนี้</h3>
         <p>มอเตอร์แต่ละคันประกอบมาไม่เหมือนกัน ถ้าทิศไม่ตรงให้คลิกบล็อกนี้ด้วยค่าตามตาราง (ค่าเริ่มต้นคือ <code>-1 -1</code>)</p>
@@ -669,6 +717,13 @@
             <div class="bk">KSU set arm angle <i>90</i> degrees</div>
         </div>
 
+        <figure>
+            <img src="images/lv5-servo-sweep.png" alt="สคริปต์ setup แล้ว forever สั่งเซอร์โว D4 ไปที่ 0 45 90 180 องศา">
+            <figcaption>ตัวอย่างจริง — ไล่มุม <code>0 → 45 → 90 → 180</code> วนไปเรื่อย ๆ คั่นด้วย
+                <span class="blk">wait <span class="slot">1000</span></span> ทุกช่วง<br>
+                เวลารอ 1 วินาทีเผื่อไว้เยอะ จะได้เห็นชัดว่าแขนหยุดนิ่งที่แต่ละมุมจริง ๆ ก่อนไปมุมถัดไป</figcaption>
+        </figure>
+
         <div class="note">
             <p><strong>ทำไมต้องมี wait คั่น?</strong> การสั่งมุมใช้เวลาเสี้ยววินาที แต่แขนต้องใช้เวลา<em>เดินทาง</em>จริง
                ถ้าสั่งมุมใหม่ทันทีโดยไม่รอ แขนจะยังไปไม่ถึงมุมเดิมแล้วถูกสั่งให้กลับ ผลคือมันสั่นอยู่กับที่แทนที่จะกวาด</p>
@@ -757,6 +812,23 @@
             </div>
         </div>
 
+        <h3>ตัวอย่างจริงจากห้องเรียน</h3>
+        <div class="grid">
+            <figure style="margin:0;">
+                <img src="images/lv6-distance-rgb.png" alt="สคริปต์ say ระยะ แล้ว if ระยะน้อยกว่า 5 ไฟแดง ไม่งั้นไฟเขียว">
+                <figcaption><strong>ขั้นแรก: ดูค่าก่อน</strong> — <span class="blk">say</span> โชว์ระยะบนจอ
+                    พร้อมเปลี่ยนไฟหน้าเป็นแดงเมื่อใกล้กว่า 5 ซม. ยังไม่สั่งมอเตอร์<br>
+                    <span style="color:var(--acc-amber);">ภาพนี้เรียกบล็อกวัดระยะ <strong>2 ครั้ง</strong>ในรอบเดียว —
+                    ทำงานได้แต่ช้ากว่าที่ควร ลองแก้เป็นเก็บใส่ตัวแปรครั้งเดียวดู</span></figcaption>
+            </figure>
+            <figure style="margin:0;">
+                <img src="images/lv6-distance-drive.png" alt="สคริปต์ setup แล้ว if ระยะน้อยกว่า 5 ไฟแดงและหยุด ไม่งั้นไฟเขียวและวิ่งต่อ">
+                <figcaption><strong>ขั้นสอง: ให้รถตัดสินใจเอง</strong> — เพิ่ม <span class="blk">KSU setup</span> เข้าไป
+                    แล้วเปลี่ยนจากแค่เปลี่ยนสี เป็น<strong>หยุด</strong>เมื่อเจอสิ่งกีดขวาง และ
+                    <span class="blk">KSU drive forward</span> ต่อเมื่อทางโล่ง</figcaption>
+            </figure>
+        </div>
+
         <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> รถวิ่งเองแล้วหยุดพร้อมส่งเสียงเมื่อเอามือไปบังหน้า</p></div>
     </section>
 
@@ -832,6 +904,25 @@
             <p><strong>สังเกตไหมว่าไม่มีอะไรใหม่เลย</strong> ทุกปุ่มบนหน้าเว็บคือบล็อกที่เราเล่นมาแล้วทั้งนั้น
                ด่านนี้แค่เพิ่ม<em>ช่องทางสั่ง</em>จากระยะไกลเข้าไป</p>
         </div>
+
+        <h3>อยากเห็นว่าหน้าเว็บส่งอะไรมาจริง ๆ</h3>
+        <p>ก่อนจะให้รถทำตามคำสั่ง ลองแค่<strong>อ่านคำที่ส่งมา</strong>ดูก่อน วิธีนี้ทำให้เห็นกับตาว่าการกดปุ่มบนมือถือ
+           คือการส่ง<em>คำหนึ่งคำ</em>มาที่บอร์ด ไม่มีอะไรลึกลับ</p>
+
+        <figure>
+            <img src="images/lv7-web-say.png" alt="สคริปต์ start web control แล้ว forever set command แล้ว say command">
+            <figcaption><strong>โหมดดูอย่างเดียว</strong> — เอา <span class="blk">KSU do command</span> ออก
+                ใส่ <span class="blk">say <span class="slot">command</span></span> แทน<br>
+                กดปุ่มบนมือถือแล้วดูป้ายข้อความในหน้าต่าง MicroBlocks จะเห็นคำว่า <code>Forward</code>, <code>Speed</code> โผล่มาทีละคำ
+                <br><span style="color:var(--muted);font-size:.92rem;">ต้องเสียบสาย USB ค้างไว้ถึงจะเห็นป้าย say — ถอดสายไปวิ่งจริงจะไม่มีอะไรแสดง</span></figcaption>
+        </figure>
+
+        <figure>
+            <img src="images/lv7-web-ifchain.png" alt="สคริปต์เดียวกันแต่เพิ่ม if command = Forward, Stop, Backward">
+            <figcaption><strong>แล้วค่อยเอาไปสั่งงาน</strong> — ต่อ <span class="blk">if</span> เข้าไปทีละคำ
+                <code>Forward</code> <code>Stop</code> <code>Backward</code><br>
+                นี่คือวิธีที่ทำให้เข้าใจว่า <span class="blk">KSU do command</span> ทำอะไรอยู่ข้างใน — เดี๋ยวด่าน 8 จะเห็นครบทั้งสิบคำ</figcaption>
+        </figure>
 
         <div class="win"><p><strong>✅ ผ่านด่านนี้เมื่อ:</strong> ขับรถจากมือถือได้ครบสี่ทิศ เปิดปิดไฟได้ และบีบแตรได้</p></div>
     </section>
