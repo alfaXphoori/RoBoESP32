@@ -4,7 +4,7 @@ version 2 0
 description 'Robot car answer key, built on the KSU_RoBoESP32 library.'
 variables command cm 
 
-script 50 50 {
+script 55 54 {
 whenStarted
 comment 'ANSWER KEY
 Connect a phone to the RoboCar hotspot,
@@ -24,50 +24,24 @@ that the one block above is not magic.
 The other eleven words - ServoB ServoC ServoD Rgb Dim Led
 Leds Motor Tone Song Beep - are handled the same way, just
 with more numbers. See _KSU_ROBOESP32_do2 in the library.'
-KSU_ROBOESP32_start 'RoboCar' 'robocar123'
+KSU_ROBOESP32_start 'RoboCar' 'aaaaaaaa'
 forever {
   command = (KSU_ROBOESP32_command)
   KSU_ROBOESP32_do command
   waitMillis 10
-}
-if (command == 'Forward') {
-  KSU_ROBOESP32_forward
-}
-if (command == 'Backward') {
-  KSU_ROBOESP32_backward
-}
-if (command == 'Left') {
-  KSU_ROBOESP32_left
-}
-if (command == 'Right') {
-  KSU_ROBOESP32_right
-}
-if (command == 'Stop') {
-  KSU_ROBOESP32_stop
-}
-if (command == 'Light1') {
-  KSU_ROBOESP32_light 'on'
-}
-if (command == 'Light0') {
-  KSU_ROBOESP32_light 'off'
-}
-if (command == 'Horn') {
-  KSU_ROBOESP32_horn
-}
-if (command == 'Speed') {
-  KSU_ROBOESP32_speed (KSU_ROBOESP32_value)
-}
-if (command == 'Servo') {
-  KSU_ROBOESP32_servo 'D4' (KSU_ROBOESP32_value)
+  cm = (KSU_ROBOESP32_distance)
+  if (and (cm > 0) (cm < 5)) {
+    KSU_ROBOESP32_beep
+  }
 }
 }
 
-script 620 60 {
+script 625 64 {
 comment 'If a motor runs the wrong way, click this block with
 different numbers. Use 1 for normal and -1 for reversed.'
 }
 
-script 1150 60 {
+script 1155 64 {
 comment 'ULTRASONIC SENSOR (HC-SR04) - optional extra.
 Wiring: VCC to 5V, GND to GND, trig to pin 33, echo to pin 32.
 That is what KSU_RoBoESP32 start web control already sets, so a car wired
@@ -87,29 +61,29 @@ With no sensor plugged in at all, KSU_RoBoESP32 distance cm reports 0, so
 nothing here breaks a car that has no sensor.'
 }
 
-script 620 180 {
+script 625 184 {
 KSU_ROBOESP32_trim -1 -1
 }
 
-script 620 250 {
+script 625 254 {
 comment 'Report the address to type into the browser.'
 }
 
-script 620 340 {
+script 625 344 {
 sayIt (KSU_ROBOESP32_ip)
 }
 
-script 1150 380 {
+script 1155 384 {
 KSU_ROBOESP32_ultrasonic 33 32
 }
 
-script 620 430 {
+script 625 434 {
 comment 'DEMO BLOCKS - click any one to run it on its own,
 without pressing Start. Handy for showing the class what
 the new blocks do before they open the LIGHT and MORE tabs.'
 }
 
-script 1150 460 {
+script 1155 464 {
 comment 'OBSTACLE STOP - not attached, nothing runs it.
 Drag these blocks into the forever loop above, just under
 KSU_RoBoESP32 do command, and the car stops and beeps when something
@@ -125,35 +99,40 @@ back, so without it the car would stop the moment it had
 nothing in front of it at all.'
 }
 
-script 620 590 {
+script 625 594 {
 KSU_ROBOESP32_drive 'forward' 500
 }
 
-script 620 660 {
+script 625 664 {
 KSU_ROBOESP32_lednum 3 'on'
 }
 
-script 620 730 {
+script 625 734 {
 KSU_ROBOESP32_rgbraw 'all' 255 0 0
 }
 
-script 1150 760 {
-cm = (KSU_ROBOESP32_distance)
-if (and (cm > 0) (cm < 20)) {
-  KSU_ROBOESP32_stop
-  KSU_ROBOESP32_beep
-}
+script 50 803 {
+if (command == 'Forward') {KSU_ROBOESP32_forward}
+if (command == 'Backward') {KSU_ROBOESP32_backward}
+if (command == 'Left') {KSU_ROBOESP32_left}
+if (command == 'Right') {KSU_ROBOESP32_right}
+if (command == 'Stop') {KSU_ROBOESP32_stop}
+if (command == 'Light1') {KSU_ROBOESP32_light 'on'}
+if (command == 'Light0') {KSU_ROBOESP32_light 'off'}
+if (command == 'Horn') {KSU_ROBOESP32_horn}
+if (command == 'Speed') {KSU_ROBOESP32_speed (KSU_ROBOESP32_value)}
+if (command == 'Servo') {KSU_ROBOESP32_servo 'D4' (KSU_ROBOESP32_value)}
 }
 
-script 620 800 {
+script 625 804 {
 KSU_ROBOESP32_note 'nt;c' 0 400
 }
 
-script 620 870 {
+script 625 874 {
 sayIt (KSU_ROBOESP32_button 'D34')
 }
 
-script 620 940 {
+script 625 944 {
 sayIt (KSU_ROBOESP32_distance)
 }
 
@@ -236,12 +215,12 @@ version 2 1
 depends 'Robo ESP32' WiFi 'HTTP server' Tone 
 tags robot car wifi esp32 cytron education 
 choices ksudir forward backward left right 
-choices ksugpio D16 D17 D21 D22 D25 D26 D32 D33 all 
+choices ksuservo D4 D5 D18 D19 
 choices ksuonoff on off 
 choices ksurgb '0' '1' all 
 choices ksubutton D34 D35 
 choices ksumotor M1 M2 both 
-choices ksuservo D4 D5 D18 D19 
+choices ksugpio D16 D17 D21 D22 D25 D26 D32 D33 all 
 description 'Drive every part of a Cytron ROBO ESP32 robot car from a phone browser.
 
 The board becomes its own WiFi hotspot and serves a landscape control page with
@@ -565,14 +544,6 @@ converts once here.'
   roboESP32_set_servo pin (deg - 90)
 }
 
-to KSU_ROBOESP32_song {
-  roboESP32_play_song
-}
-
-to KSU_ROBOESP32_speed n {
-  _ksu_spd = n
-}
-
 to KSU_ROBOESP32_setup {
   comment 'Wake the board up without starting WiFi. Put this at the top of
 any program that drives the car from your own blocks.
@@ -596,6 +567,14 @@ uses the phone does not need it as well.'
   KSU_ROBOESP32_servo 'D5' 90
   KSU_ROBOESP32_servo 'D18' 90
   KSU_ROBOESP32_servo 'D19' 90
+}
+
+to KSU_ROBOESP32_song {
+  roboESP32_play_song
+}
+
+to KSU_ROBOESP32_speed n {
+  _ksu_spd = n
 }
 
 to KSU_ROBOESP32_start ssid password {
