@@ -38,9 +38,7 @@
             --chip-bg: rgba(255, 255, 255, 0.08);
             --chip-fg: #A5F3D0;
             --blk: #7C3AED;
-            --bk-ctrl: #B45309;
             --bk-var: #C2410C;
-            --bk-op: #047857;
             --acc-blue: #60A5FA;
             --acc-green: #34D399;
             --acc-amber: #FBBF24;
@@ -70,9 +68,7 @@
             --chip-bg: rgba(15, 23, 42, 0.06);
             --chip-fg: #0F6E4F;
             --blk: #7C3AED;
-            --bk-ctrl: #B45309;
             --bk-var: #C2410C;
-            --bk-op: #047857;
             --acc-blue: #1D4ED8;
             --acc-green: #047857;
             --acc-amber: #A16207;
@@ -239,31 +235,6 @@
             color: var(--primary-ink); font-weight: 700; font-size: .92rem;
         }
         .steps b { color: var(--text-strong); }
-
-        /* ---------- ภาพจำลองบล็อก MicroBlocks ---------- */
-        .script {
-            background: var(--surface-2); border: 1px solid var(--line);
-            border-radius: 14px; padding: 18px 20px; margin: 18px 0;
-            overflow-x: auto;
-        }
-        .script .cap {
-            display: block; font-size: .78rem; letter-spacing: 1px; text-transform: uppercase;
-            color: var(--muted); margin-bottom: 12px; font-weight: 600;
-        }
-        .bk {
-            display: table; font-family: 'JetBrains Mono', monospace; font-size: .84rem;
-            font-weight: 600; color: #fff; background: var(--blk);
-            padding: 7px 13px; border-radius: 6px; margin-bottom: 4px; white-space: nowrap;
-        }
-        .bk.hat { background: var(--bk-ctrl); border-radius: 14px 14px 6px 6px; }
-        .bk.ctrl { background: var(--bk-ctrl); }
-        .bk.vr { background: var(--bk-var); }
-        .bk.op { background: var(--bk-op); }
-        .bk i { font-style: normal; background: #fff; color: #111; border-radius: 50px; padding: 1px 9px; margin: 0 3px; }
-        .bk s { text-decoration: none; background: rgba(0,0,0,.25); border-radius: 50px; padding: 1px 9px; margin: 0 3px; }
-        .cbody { margin-left: 16px; padding-left: 12px; border-left: 6px solid var(--bk-ctrl); }
-        .cbody.op { border-left-color: var(--bk-op); }
-        .script .note-in { font-size: .82rem; color: var(--muted); margin: 10px 0 0; font-family: 'Prompt', sans-serif; }
 
         /* ---------- Blocks inline ---------- */
         .blk, .rep, .var {
@@ -933,22 +904,12 @@
         <p>วิธีที่ง่ายที่สุดคือ<strong>ยึดปุ่มที่มีอยู่แล้วมาใช้ใหม่</strong> เช่นจับปุ่มแตรให้ทำท่าเต้นแทน
            (ต้องถอด <span class="blk">KSU do command</span> ออกก่อน ไม่งั้นมันจะบีบแตรแข่งกับเรา)</p>
 
-        <div class="script">
-            <span class="cap">ท่าเต้นเมื่อกดปุ่มแตร</span>
-            <div class="bk op">if <s>command</s> = <i>Horn</i></div>
-            <div class="cbody op">
-                <div class="bk ctrl">repeat <i>3</i></div>
-                <div class="cbody">
-                    <div class="bk">KSU turn left</div>
-                    <div class="bk">KSU set RGB <i>all</i> red <i>255</i> green <i>0</i> blue <i>0</i></div>
-                    <div class="bk ctrl">wait <i>200</i> millisecs</div>
-                    <div class="bk">KSU turn right</div>
-                    <div class="bk">KSU set RGB <i>all</i> red <i>0</i> green <i>0</i> blue <i>255</i></div>
-                    <div class="bk ctrl">wait <i>200</i> millisecs</div>
-                </div>
-                <div class="bk">KSU stop</div>
-            </div>
-        </div>
+        <p><strong>ท่าเต้นเมื่อกดปุ่มแตร</strong> — ใส่ <span class="blk">if <span class="slot">command</span> = <span class="slot">Horn</span></span>
+           แล้วข้างในวาง <span class="blk">repeat <span class="slot">3</span></span> ที่สลับ
+           <span class="blk">KSU turn left</span> กับ <span class="blk">KSU turn right</span>
+           คั่นด้วย <span class="blk">KSU set RGB</span> เปลี่ยนสีแดง-น้ำเงิน และ
+           <span class="blk">wait <span class="slot">200</span> millisecs</span> ทุกจังหวะ
+           ปิดท้ายนอกลูปด้วย <span class="blk">KSU stop</span></p>
 
         <p>ส่วนการเพิ่ม<strong>ปุ่มใหม่จริง ๆ</strong>บนหน้าเว็บนั้นต้องแก้ 3 จุดพร้อมกัน ขาดจุดใดจุดหนึ่งคำสั่งจะเงียบหายไปเฉย ๆ
            รายละเอียดทั้งหมดอยู่ในคู่มือไลบรารี</p>
