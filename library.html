@@ -401,8 +401,8 @@
 
     <h3>เรื่องสำคัญที่สุดที่ต้องรู้ก่อน: ไลบรารีมี 2 สำเนา</h3>
     <p><code>RoboCar.ubp</code> <strong>ฝังสำเนาไลบรารีของตัวเองไว้ข้างใน</strong> การแก้ไฟล์ <code>.ubl</code> เฉย ๆ
-       จึงไม่ทำให้พฤติกรรมของ <code>.ubp</code> ที่ส่งออกไปแล้วเปลี่ยนแปลง และเพราะสองสำเนานี้ตั้งชื่อไม่เหมือนกัน
-       ชื่อบล็อกที่นักเรียนเห็นจึงต่างกันตามไฟล์ที่เปิด</p>
+       จึงไม่ทำให้พฤติกรรมของ <code>.ubp</code> ที่ส่งออกไปแล้วเปลี่ยนแปลง — ต้องแก้ทั้งสองไฟล์เสมอ
+       แต่<strong>ชื่อบล็อกที่นักเรียนเห็นตรงกันแล้วทั้งสองทาง</strong> เปิดไฟล์ไหนก็เจอชื่อเดียวกัน</p>
 
     <div class="tw">
         <table>
@@ -410,17 +410,17 @@
                 <tr><th></th><th>เปิดจาก <code>RoboCar.ubp</code></th><th>เพิ่มจาก <code>KSU_RoBoESP32.ubl</code></th></tr>
             </thead>
             <tbody>
-                <tr><td>ชื่อบล็อกที่เห็น</td><td><span class="blk">KSU forward</span></td><td><span class="blk">KSU_RoBoESP32 forward</span></td></tr>
-                <tr><td>บล็อกเริ่มต้น</td><td><span class="blk">KSU start web control</span></td><td><span class="blk">KSU_RoBoESP32 start web control</span></td></tr>
-                <tr><td>การทำงาน</td><td colspan="2" style="white-space:normal;"><span class="p-ok pill">เหมือนกันทุกประการ</span> ต่างกันแค่ชื่อที่แสดงเท่านั้น</td></tr>
+                <tr><td>ชื่อบล็อกที่เห็น</td><td><span class="blk">KSU_RoBoESP32 forward</span></td><td><span class="blk">KSU_RoBoESP32 forward</span></td></tr>
+                <tr><td>บล็อกเริ่มต้น</td><td><span class="blk">KSU_RoBoESP32 start web control</span></td><td><span class="blk">KSU_RoBoESP32 start web control</span></td></tr>
+                <tr><td>การทำงาน</td><td colspan="2" style="white-space:normal;"><span class="p-ok pill">เหมือนกันทุกประการ</span> ทั้งชื่อและพฤติกรรม</td></tr>
             </tbody>
         </table>
     </div>
 
     <div class="note">
-        <p><strong>ในคู่มือนี้เขียนชื่อบล็อกแบบสั้น</strong> (<span class="blk">KSU forward</span>) ตามที่เห็นใน
-        <code>RoboCar.ubp</code> เพราะเป็นไฟล์ที่ใช้สอนจริง ถ้านักเรียนเพิ่มไลบรารีจากไฟล์ <code>.ubl</code> เอง
-        ให้อ่านว่า <code>KSU</code> = <code>KSU_RoBoESP32</code> ทุกที่</p>
+        <p><strong>ในคู่มือนี้ยังเขียนชื่อบล็อกแบบย่อ</strong> (<span class="blk">KSU forward</span>) เพื่อให้ตารางอ่านง่าย
+        เวลาอ่านให้เติม <code>_RoBoESP32</code> เข้าไปเสมอ — <code>KSU</code> = <code>KSU_RoBoESP32</code> ทุกที่
+        ชื่อจริงบนบอร์ดคือ <span class="blk">KSU_RoBoESP32 forward</span></p>
     </div>
 </section>
 

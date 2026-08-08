@@ -423,10 +423,11 @@
         </ol>
 
         <div class="note">
-            <p><strong>ชื่อบล็อกที่เห็นจะยาวกว่าที่เขียนในคู่มือนี้</strong> — เมื่อเพิ่มจากไฟล์ <code>.ubl</code>
-               บล็อกจะชื่อ <span class="blk">KSU_RoBoESP32 forward</span> แต่คู่มือนี้เขียนย่อว่า <span class="blk">KSU forward</span>
-               เพื่อให้อ่านง่าย <strong>เป็นบล็อกตัวเดียวกัน</strong> และเมื่อถึงด่าน 8 ที่เปิดไฟล์ <code>RoboCar.ubp</code>
-               ชื่อในนั้นจะสั้นแบบเดียวกับในคู่มือพอดี</p>
+            <p><strong>ชื่อบล็อกที่เห็นจะยาวกว่าที่เขียนในคู่มือนี้</strong> — บนบอร์ดบล็อกจะชื่อ
+               <span class="blk">KSU_RoBoESP32 forward</span> แต่คู่มือนี้เขียนย่อว่า <span class="blk">KSU forward</span>
+               เพื่อให้อ่านง่าย <strong>เป็นบล็อกตัวเดียวกัน</strong> ชื่อเต็มขึ้นต้นด้วย
+               <code>KSU_RoBoESP32</code> เสมอ ทั้งตอนเพิ่มไลบรารีเองในด่านนี้ และตอนเปิดไฟล์
+               <code>RoboCar.ubp</code> ในด่าน 8</p>
         </div>
 
         <h3>ทดสอบว่าบอร์ดตอบสนองจริง</h3>
@@ -770,7 +771,8 @@
         <h3>สคริปต์ทั้งหมดที่ต้องใช้</h3>
         <figure>
             <img src="images/blocks-main-loop.png" alt="สคริปต์หลักในลูป forever">
-            <figcaption>ภาพจาก MicroBlocks จริง — ชื่อบล็อกในภาพเป็นแบบสั้นเพราะถ่ายจากไฟล์ <code>RoboCar.ubp</code> ในด่าน 8</figcaption>
+            <figcaption>ภาพจาก MicroBlocks จริง — ภาพนี้ถ่ายไว้ตอนที่ไฟล์ <code>RoboCar.ubp</code> ยังใช้ชื่อบล็อกแบบสั้น
+                ตอนนี้ชื่อจริงบนบอร์ดขึ้นต้นด้วย <code>KSU_RoBoESP32</code> ทุกตัว แต่การต่อบล็อกเหมือนในภาพทุกอย่าง</figcaption>
         </figure>
 
         <div class="tw">
@@ -860,8 +862,9 @@
         </div>
 
         <div class="note">
-            <p><strong>ชื่อบล็อกจะสั้นลงแล้ว</strong> — ในไฟล์นี้บล็อกชื่อ <span class="blk">KSU forward</span> ตรงกับที่คู่มือเขียนมาตลอด
-               (ไม่ใช่ <span class="blk">KSU_RoBoESP32 forward</span> แบบที่เห็นตอนเพิ่มไลบรารีเองในด่าน 1) เป็นบล็อกตัวเดียวกัน แค่ตั้งชื่อไว้ต่างกัน</p>
+            <p><strong>ชื่อบล็อกเหมือนกับตอนเพิ่มไลบรารีเองทุกตัว</strong> — ในไฟล์นี้บล็อกก็ชื่อ
+               <span class="blk">KSU_RoBoESP32 forward</span> เหมือนที่เห็นมาตั้งแต่ด่าน 1 ไม่ต้องจำชื่อใหม่
+               (คู่มือยังเขียนย่อว่า <span class="blk">KSU forward</span> เพื่อให้อ่านง่ายเหมือนเดิม)</p>
         </div>
 
         <h3>บล็อกอัตโนมัติไม่ใช่เวทมนตร์</h3>

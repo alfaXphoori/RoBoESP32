@@ -1,6 +1,6 @@
 module KSU_RoBoESP32 Input
 author 'Kalasin University'
-version 2 0
+version 2 1
 depends 'Robo ESP32' WiFi 'HTTP server' Tone
 tags robot car wifi esp32 cytron education
 choices KSU_RoBoESP32onoff on off
@@ -32,6 +32,11 @@ Typical program:
 
 Connect a phone to the hotspot and open http://192.168.4.1
 
+To drive the car from your own blocks with no phone and no WiFi, start with
+KSU_RoBoESP32 setup instead. It sets the speed, the motor trim, the servos and
+the sensor pins, which the driving blocks need before they can move anything -
+without it KSU_RoBoESP32 forward works out to zero power and nothing happens.
+
 Wiring: motors into M1 and M2, servos into D4/D5/D18/D19 as needed. Nothing
 else is needed, the RGB LEDs and the buzzer are already on the board. An
 HC-SR04 ultrasonic sensor is optional: VCC to 5V, GND to GND, trig to pin 33
@@ -39,6 +44,7 @@ and echo to pin 32. Those two pins are also LED number 8 and LED number 7, so
 leave those two LEDs alone while the sensor is plugged in.'
 variables _KSU_RoBoESP32_spd _KSU_RoBoESP32_rev1 _KSU_RoBoESP32_rev2 _KSU_RoBoESP32_args _KSU_RoBoESP32_req _KSU_RoBoESP32_path _KSU_RoBoESP32_trig _KSU_RoBoESP32_echo
 
+  spec ' ' 'KSU_RoBoESP32_setup' 'KSU_RoBoESP32 setup'
   spec ' ' 'KSU_RoBoESP32_start' 'KSU_RoBoESP32 start web control name _ password _' 'str str' 'RoboCar' 'robocar123'
   spec 'r' 'KSU_RoBoESP32_command' 'KSU_RoBoESP32 web command'
   spec 'r' 'KSU_RoBoESP32_value' 'KSU_RoBoESP32 command value'
@@ -50,7 +56,7 @@ variables _KSU_RoBoESP32_spd _KSU_RoBoESP32_rev1 _KSU_RoBoESP32_rev2 _KSU_RoBoES
   spec ' ' 'KSU_RoBoESP32_backward' 'KSU_RoBoESP32 backward'
   spec ' ' 'KSU_RoBoESP32_left' 'KSU_RoBoESP32 turn left'
   spec ' ' 'KSU_RoBoESP32_right' 'KSU_RoBoESP32 turn right'
-  spec ' ' 'KSU_RoBoESP32_stop' 'KSU_RoBoESP32_stop'
+  spec ' ' 'KSU_RoBoESP32_stop' 'KSU_RoBoESP32 stop'
   spec ' ' 'KSU_RoBoESP32_speed' 'KSU_RoBoESP32 set speed _ %' 'num' 70
   spec ' ' 'KSU_RoBoESP32_drive' 'KSU_RoBoESP32 drive _ for _ ms' 'menu.KSU_RoBoESP32dir num' 'forward' 500
   spec ' ' 'KSU_RoBoESP32_steer' 'KSU_RoBoESP32 steer _ (-100 left to 100 right)' 'num' 0
@@ -93,15 +99,17 @@ variables _KSU_RoBoESP32_spd _KSU_RoBoESP32_rev1 _KSU_RoBoESP32_rev2 _KSU_RoBoES
   spec 'r' '_KSU_RoBoESP32_p7' '_KSU_RoBoESP32_p7'
   spec 'r' '_KSU_RoBoESP32_p8' '_KSU_RoBoESP32_p8'
 
-to KSU_RoBoESP32_start ssid password {
-  comment 'Start the hotspot and the web server.
-The password must be at least 8 characters.
-Speed starts at 70 percent, all four servos centre at 90
-degrees, and both motors start trimmed to -1, which suits a
-car with the motors mounted facing each other. Use the motor
-trim block to change that.
-The ultrasonic sensor starts on trig 33 and echo 32; use the
-KSU_RoBoESP32 set ultrasonic block to move it.'
+to KSU_RoBoESP32_setup {
+  comment 'Wake the board up without starting WiFi. Put this at the top of
+any program that drives the car from your own blocks.
+Speed starts at 70 percent, both motors start trimmed to -1,
+all four servos centre at 90 degrees, the buzzer is attached
+and the ultrasonic sensor starts on trig 33 and echo 32.
+Without this block the speed and the trim are still empty, so
+KSU_RoBoESP32 forward works out to zero power and the car
+stands still even though nothing looks wrong.
+KSU_RoBoESP32 start web control runs KSU_RoBoESP32 setup for
+you, so a program that uses the phone does not need it as well.'
   _KSU_RoBoESP32_spd = 70
   _KSU_RoBoESP32_args = ('[data:makeList]' 90)
   _KSU_RoBoESP32_rev1 = -1
@@ -114,6 +122,16 @@ KSU_RoBoESP32 set ultrasonic block to move it.'
   KSU_RoBoESP32_servo 'D5' 90
   KSU_RoBoESP32_servo 'D18' 90
   KSU_RoBoESP32_servo 'D19' 90
+}
+
+to KSU_RoBoESP32_start ssid password {
+  comment 'Start the hotspot and the web server.
+The password must be at least 8 characters.
+Everything else is set up by KSU_RoBoESP32 setup, which this
+block runs first: speed 70 percent, motor trim -1, all four
+servos at 90 degrees, ultrasonic on trig 33 and echo 32.
+Use the motor trim block to change the trim.'
+  KSU_RoBoESP32_setup
   wifiCreateHotspot ssid password
   roboESP32_set_RGB 'all' (colorFromRGB 0 40 20)
 }

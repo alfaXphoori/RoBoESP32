@@ -2,7 +2,7 @@ module main
 author 'Kalasin University'
 version 2 0 
 description 'Robot car answer key, built on the KSU_RoBoESP32 library.'
-variables command cm
+variables command cm 
 
 script 50 50 {
 whenStarted
@@ -10,22 +10,13 @@ comment 'ANSWER KEY
 Connect a phone to the RoboCar hotspot,
 then open http://192.168.4.1 and hold the phone sideways.
 
-KSU do command handles every command the page can send -
+KSU_RoBoESP32 do command handles every command the page can send -
 the direction pad and both sliders on the DRIVE tab, and
 also the colours, the eight LEDs, the four servos, the raw
 motor sliders and the buzzer on the LIGHT and MORE tabs.
 That is why this loop is three blocks long.'
-KSU_ROBOESP32_start 'RoboCar' 'robocar123'
-forever {
-  command = (KSU_ROBOESP32_command)
-  KSU_ROBOESP32_do command
-  waitMillis 10
-}
-}
-
-script 50 330 {
 comment 'THE LONG FORM - not attached, nothing runs it.
-This is what KSU do command does internally for the ten
+This is what KSU_RoBoESP32 do command does internally for the ten
 words on the DRIVE tab. Students build this by hand in
 Part 2 of the worksheet; keep it here to show the class
 that the one block above is not magic.
@@ -33,9 +24,12 @@ that the one block above is not magic.
 The other eleven words - ServoB ServoC ServoD Rgb Dim Led
 Leds Motor Tone Song Beep - are handled the same way, just
 with more numbers. See _KSU_ROBOESP32_do2 in the library.'
+KSU_ROBOESP32_start 'RoboCar' 'robocar123'
+forever {
+  command = (KSU_ROBOESP32_command)
+  KSU_ROBOESP32_do command
+  waitMillis 10
 }
-
-script 50 560 {
 if (command == 'Forward') {
   KSU_ROBOESP32_forward
 }
@@ -73,6 +67,26 @@ comment 'If a motor runs the wrong way, click this block with
 different numbers. Use 1 for normal and -1 for reversed.'
 }
 
+script 1150 60 {
+comment 'ULTRASONIC SENSOR (HC-SR04) - optional extra.
+Wiring: VCC to 5V, GND to GND, trig to pin 33, echo to pin 32.
+That is what KSU_RoBoESP32 start web control already sets, so a car wired
+this way needs no extra block.
+
+Pins 33 and 32 are also LED number 8 and LED number 7. The two
+LEDs blink along with the pings, which is harmless, but do not
+switch LED 7 or LED 8 on from the LIGHT tab while the sensor is
+plugged in - the board and the sensor would be pushing the same
+wire in opposite directions.
+
+Click the block below only to move the sensor somewhere else.
+Trig has to sit on a pin that can be an output: pins 34 35 36
+and 39 are input only and can never fire the sensor.
+
+With no sensor plugged in at all, KSU_RoBoESP32 distance cm reports 0, so
+nothing here breaks a car that has no sensor.'
+}
+
 script 620 180 {
 KSU_ROBOESP32_trim -1 -1
 }
@@ -85,10 +99,30 @@ script 620 340 {
 sayIt (KSU_ROBOESP32_ip)
 }
 
+script 1150 380 {
+KSU_ROBOESP32_ultrasonic 33 32
+}
+
 script 620 430 {
 comment 'DEMO BLOCKS - click any one to run it on its own,
 without pressing Start. Handy for showing the class what
 the new blocks do before they open the LIGHT and MORE tabs.'
+}
+
+script 1150 460 {
+comment 'OBSTACLE STOP - not attached, nothing runs it.
+Drag these blocks into the forever loop above, just under
+KSU_RoBoESP32 do command, and the car stops and beeps when something
+comes within 20 cm.
+
+Read the sensor once into cm and then test cm twice. Reading
+the block itself twice would ping twice, and each ping can
+hold the loop up for as long as 25 milliseconds, which is
+long enough to make the phone feel slow.
+
+The cm > 0 half of the test matters: 0 means no echo came
+back, so without it the car would stop the moment it had
+nothing in front of it at all.'
 }
 
 script 620 590 {
@@ -103,6 +137,14 @@ script 620 730 {
 KSU_ROBOESP32_rgbraw 'all' 255 0 0
 }
 
+script 1150 760 {
+cm = (KSU_ROBOESP32_distance)
+if (and (cm > 0) (cm < 20)) {
+  KSU_ROBOESP32_stop
+  KSU_ROBOESP32_beep
+}
+}
+
 script 620 800 {
 KSU_ROBOESP32_note 'nt;c' 0 400
 }
@@ -115,67 +157,91 @@ script 620 940 {
 sayIt (KSU_ROBOESP32_distance)
 }
 
-script 1150 60 {
-comment 'ULTRASONIC SENSOR (HC-SR04) - optional extra.
-Wiring: VCC to 5V, GND to GND, trig to pin 33, echo to pin 32.
-That is what KSU start web control already sets, so a car wired
-this way needs no extra block.
 
-Pins 33 and 32 are also LED number 8 and LED number 7. The two
-LEDs blink along with the pings, which is harmless, but do not
-switch LED 7 or LED 8 on from the LIGHT tab while the sensor is
-plugged in - the board and the sensor would be pushing the same
-wire in opposite directions.
+module 'HTTP server' Comm
+author MicroBlocks
+version 1 3 
+depends WiFi 
+tags http network 
+description 'Create an HTTP server in MicroBlocks. You can use this library to allow remote control for your Wifi-enabled board.'
 
-Click the block below only to move the sensor somewhere else.
-Trig has to sit on a pin that can be an output: pins 34 35 36
-and 39 are input only and can never fire the sensor.
+  spec 'r' '[net:httpServerGetRequest]' 'HTTP server request : binary data _ : port _' 'bool num' false 8080
+  spec 'r' 'request method' 'method of request _' 'str' ''
+  spec 'r' 'path of request' 'path of request _' 'str' ''
+  spec 'r' 'headers of request' 'headers of request _' 'str' ''
+  spec 'r' 'body of request' 'body of request _' 'str' ''
+  spec 'r' 'content length of request' 'content length of request _' 'str' ''
+  spec ' ' '[net:respondToHttpRequest]' 'respond _ to HTTP request : with body _ : and headers _ : keepAlive _' 'str str str bool' '200 OK' 'Welcome to the MicroBlocks HTTP server' 'Content-Type: text/plain' false
+  spec 'r' '_endOfHeaders' '_end of headers _' 'str'
+  spec 'r' '_toString' '_toString _' 'auto' 'abc'
 
-With no sensor plugged in at all, KSU distance cm reports 0, so
-nothing here breaks a car that has no sensor.'
+to '_endOfHeaders' request {
+  return ('[data:find]' ('[data:unicodeString]' ('[data:makeList]' 13 10 13 10)) request)
 }
 
-script 1150 380 {
-KSU_ROBOESP32_ultrasonic 33 32
+to '_toString' aStringOrByteArray {
+  comment 'If argument is a byte array, convert it to a string. '
+  if (not (isType aStringOrByteArray 'string')) {
+    aStringOrByteArray = ('[data:join]' '' aStringOrByteArray)
+  }
+  return aStringOrByteArray
 }
 
-script 1150 460 {
-comment 'OBSTACLE STOP - not attached, nothing runs it.
-Drag these blocks into the forever loop above, just under
-KSU do command, and the car stops and beeps when something
-comes within 20 cm.
-
-Read the sensor once into cm and then test cm twice. Reading
-the block itself twice would ping twice, and each ping can
-hold the loop up for as long as 25 milliseconds, which is
-long enough to make the phone feel slow.
-
-The cm > 0 half of the test matters: 0 means no echo came
-back, so without it the car would stop the moment it had
-nothing in front of it at all.'
+to 'body of request' request {
+  i = ('_endOfHeaders' request)
+  if (i < 0) {
+    return ''
+  }
+  return ('[data:copyFromTo]' request (i + 4))
 }
 
-script 1150 760 {
-cm = (KSU_ROBOESP32_distance)
-if (and (cm > 0) (cm < 20)) {
-  KSU_ROBOESP32_stop
-  KSU_ROBOESP32_beep
+to 'content length of request' request {
+  local 'i' ('_endOfHeaders' request)
+  if (i < 0) {
+    return 0
+  }
+  local 'j' ('[data:find]' 'Content-Length: ' request)
+  if (j < 0) {
+    comment 'Try alternate capitalization'
+    j = ('[data:find]' 'Content-length: ' request)
+  }
+  if (or (j < 0) (j > i)) {
+    return 0
+  }
+  j += 16
+  local 'k' ('[data:find]' ('[data:unicodeString]' 13) request j)
+  return (('[data:copyFromTo]' request j (k - 1)) + 0)
 }
+
+to 'headers of request' request {
+  i = ('_endOfHeaders' request)
+  if (i < 0) {
+    return ''
+  }
+  return ('_toString' ('[data:copyFromTo]' request 1 (i - 1)))
+}
+
+to 'path of request' request {
+  return ('_toString' ('[data:copyFromTo]' request (('[data:find]' ' ' request) + 1) (('[data:find]' ' HTTP' request) - 1)))
+}
+
+to 'request method' request {
+  return ('_toString' ('[data:copyFromTo]' request 1 (('[data:find]' ' ' request) - 1)))
 }
 
 
 module KSU_RoBoESP32 Input
 author 'Kalasin University'
-version 2 0
-depends 'Robo ESP32' WiFi 'HTTP server' Tone
-tags robot car wifi esp32 cytron education
-choices ksuonoff on off
-choices ksumotor M1 M2 both
-choices ksudir forward backward left right
-choices ksuservo D4 D5 D18 D19
-choices ksurgb '0' '1' all
-choices ksugpio D16 D17 D21 D22 D25 D26 D32 D33 all
-choices ksubutton D34 D35
+version 2 1 
+depends 'Robo ESP32' WiFi 'HTTP server' Tone 
+tags robot car wifi esp32 cytron education 
+choices ksudir forward backward left right 
+choices ksugpio D16 D17 D21 D22 D25 D26 D32 D33 all 
+choices ksuonoff on off 
+choices ksurgb '0' '1' all 
+choices ksubutton D34 D35 
+choices ksumotor M1 M2 both 
+choices ksuservo D4 D5 D18 D19 
 description 'Drive every part of a Cytron ROBO ESP32 robot car from a phone browser.
 
 The board becomes its own WiFi hotspot and serves a landscape control page with
@@ -185,67 +251,73 @@ selector, a brightness dimmer and eight numbered GPIO LED toggles. MORE has
 sliders for all four servos, raw sliders for both motors, buzzer tone/song/beep
 buttons, and a live readout of the two onboard buttons. This library now
 covers the whole Cytron Robo ESP32 board, plus Tone, reachable either from your
-own if-chain or from the single KSU do command auto-pilot block.
+own if-chain or from the single KSU_RoBoESP32 do command auto-pilot block.
 
 Typical program:
 
   when started
-    KSU start web control name (RoboCar) password (robocar123)
+    KSU_RoBoESP32 start web control name (RoboCar) password (robocar123)
     forever
-      set (command) to (KSU web command)
-      KSU do command (command)
+      set (command) to (KSU_RoBoESP32 web command)
+      KSU_RoBoESP32 do command (command)
       wait (10) millisecs
 
 Connect a phone to the hotspot and open http://192.168.4.1
+
+To drive the car from your own blocks with no phone and no WiFi, start with
+KSU_RoBoESP32 setup instead. It sets the speed, the motor trim, the servos and the sensor
+pins, which the driving blocks need before they can move anything - without it
+KSU_RoBoESP32 forward works out to zero power and nothing happens.
 
 Wiring: motors into M1 and M2, servos into D4/D5/D18/D19 as needed. Nothing
 else is needed, the RGB LEDs and the buzzer are already on the board. An
 HC-SR04 ultrasonic sensor is optional: VCC to 5V, GND to GND, trig to pin 33
 and echo to pin 32. Those two pins are also LED number 8 and LED number 7, so
 leave those two LEDs alone while the sensor is plugged in.'
-variables _ksu_spd _ksu_rev1 _ksu_rev2 _ksu_args _ksu_req _ksu_path _ksu_trig _ksu_echo
+variables _ksu_spd _ksu_rev1 _ksu_rev2 _ksu_args _ksu_req _ksu_path _ksu_trig _ksu_echo 
 
-  spec ' ' 'KSU_ROBOESP32_start' 'KSU start web control name _ password _' 'str str' 'RoboCar' 'robocar123'
-  spec 'r' 'KSU_ROBOESP32_command' 'KSU web command'
-  spec 'r' 'KSU_ROBOESP32_value' 'KSU command value'
-  spec 'r' 'KSU_ROBOESP32_valueN' 'KSU command value # _' 'num' 1
-  spec ' ' 'KSU_ROBOESP32_do' 'KSU do command _' 'str' ''
-  spec 'r' 'KSU_ROBOESP32_ip' 'KSU IP address'
+  spec ' ' 'KSU_ROBOESP32_setup' 'KSU_RoBoESP32 setup'
+  spec ' ' 'KSU_ROBOESP32_start' 'KSU_RoBoESP32 start web control name _ password _' 'str str' 'RoboCar' 'robocar123'
+  spec 'r' 'KSU_ROBOESP32_command' 'KSU_RoBoESP32 web command'
+  spec 'r' 'KSU_ROBOESP32_value' 'KSU_RoBoESP32 command value'
+  spec 'r' 'KSU_ROBOESP32_valueN' 'KSU_RoBoESP32 command value # _' 'num' 1
+  spec ' ' 'KSU_ROBOESP32_do' 'KSU_RoBoESP32 do command _' 'str' ''
+  spec 'r' 'KSU_ROBOESP32_ip' 'KSU_RoBoESP32 IP address'
   space
-  spec ' ' 'KSU_ROBOESP32_forward' 'KSU forward'
-  spec ' ' 'KSU_ROBOESP32_backward' 'KSU backward'
-  spec ' ' 'KSU_ROBOESP32_left' 'KSU turn left'
-  spec ' ' 'KSU_ROBOESP32_right' 'KSU turn right'
-  spec ' ' 'KSU_ROBOESP32_stop' 'KSU stop'
-  spec ' ' 'KSU_ROBOESP32_speed' 'KSU set speed _ %' 'num' 70
-  spec ' ' 'KSU_ROBOESP32_drive' 'KSU drive _ for _ ms' 'menu.ksudir num' 'forward' 500
-  spec ' ' 'KSU_ROBOESP32_steer' 'KSU steer _ (-100 left to 100 right)' 'num' 0
-  spec ' ' 'KSU_ROBOESP32_motor' 'KSU set motor _ power _ (-100 to 100)' 'menu.ksumotor num' 'M1' 70
-  spec ' ' 'KSU_ROBOESP32_trim' 'KSU set motor trim M1 _ M2 _' 'num num' -1 -1
+  spec ' ' 'KSU_ROBOESP32_forward' 'KSU_RoBoESP32 forward'
+  spec ' ' 'KSU_ROBOESP32_backward' 'KSU_RoBoESP32 backward'
+  spec ' ' 'KSU_ROBOESP32_left' 'KSU_RoBoESP32 turn left'
+  spec ' ' 'KSU_ROBOESP32_right' 'KSU_RoBoESP32 turn right'
+  spec ' ' 'KSU_ROBOESP32_stop' 'KSU_RoBoESP32 stop'
+  spec ' ' 'KSU_ROBOESP32_speed' 'KSU_RoBoESP32 set speed _ %' 'num' 70
+  spec ' ' 'KSU_ROBOESP32_drive' 'KSU_RoBoESP32 drive _ for _ ms' 'menu.ksudir num' 'forward' 500
+  spec ' ' 'KSU_ROBOESP32_steer' 'KSU_RoBoESP32 steer _ (-100 left to 100 right)' 'num' 0
+  spec ' ' 'KSU_ROBOESP32_motor' 'KSU_RoBoESP32 set motor _ power _ (-100 to 100)' 'menu.ksumotor num' 'M1' 70
+  spec ' ' 'KSU_ROBOESP32_trim' 'KSU_RoBoESP32 set motor trim M1 _ M2 _' 'num num' -1 -1
   space
-  spec ' ' 'KSU_ROBOESP32_arm' 'KSU set arm angle _ degrees (0 to 180)' 'num' 90
-  spec ' ' 'KSU_ROBOESP32_servo' 'KSU set servo _ to _ degrees (0 to 180)' 'menu.ksuservo num' 'D4' 90
+  spec ' ' 'KSU_ROBOESP32_arm' 'KSU_RoBoESP32 set arm angle _ degrees (0 to 180)' 'num' 90
+  spec ' ' 'KSU_ROBOESP32_servo' 'KSU_RoBoESP32 set servo _ to _ degrees (0 to 180)' 'menu.ksuservo num' 'D4' 90
   space
-  spec ' ' 'KSU_ROBOESP32_light' 'KSU light _' 'menu.ksuonoff' 'on'
-  spec ' ' 'KSU_ROBOESP32_rgb' 'KSU set RGB _ color _' 'menu.ksurgb color' 'all'
-  spec ' ' 'KSU_ROBOESP32_rgbraw' 'KSU set RGB _ red _ green _ blue _' 'menu.ksurgb num num num' 'all' 255 240 200
-  spec ' ' 'KSU_ROBOESP32_dim' 'KSU change RGB brightness by _ %' 'num' 25
-  spec ' ' 'KSU_ROBOESP32_led' 'KSU LED _ _' 'menu.ksugpio menu.ksuonoff' 'D16' 'on'
-  spec ' ' 'KSU_ROBOESP32_lednum' 'KSU LED number _ (1 to 8) _' 'num menu.ksuonoff' 1 'on'
+  spec ' ' 'KSU_ROBOESP32_light' 'KSU_RoBoESP32 light _' 'menu.ksuonoff' 'on'
+  spec ' ' 'KSU_ROBOESP32_rgb' 'KSU_RoBoESP32 set RGB _ color _' 'menu.ksurgb color' 'all'
+  spec ' ' 'KSU_ROBOESP32_rgbraw' 'KSU_RoBoESP32 set RGB _ red _ green _ blue _' 'menu.ksurgb num num num' 'all' 255 240 200
+  spec ' ' 'KSU_ROBOESP32_dim' 'KSU_RoBoESP32 change RGB brightness by _ %' 'num' 25
+  spec ' ' 'KSU_ROBOESP32_led' 'KSU_RoBoESP32 LED _ _' 'menu.ksugpio menu.ksuonoff' 'D16' 'on'
+  spec ' ' 'KSU_ROBOESP32_lednum' 'KSU_RoBoESP32 LED number _ (1 to 8) _' 'num menu.ksuonoff' 1 'on'
   space
-  spec ' ' 'KSU_ROBOESP32_horn' 'KSU horn'
-  spec ' ' 'KSU_ROBOESP32_beep' 'KSU beep'
-  spec ' ' 'KSU_ROBOESP32_tone' 'KSU play tone _ Hz for _ ms' 'num num' 440 300
-  spec ' ' 'KSU_ROBOESP32_note' 'KSU play note _ octave _ for _ ms' 'str.tone_NoteName num num' 'nt;c' 0 400
-  spec ' ' 'KSU_ROBOESP32_song' 'KSU play Happy Birthday'
+  spec ' ' 'KSU_ROBOESP32_horn' 'KSU_RoBoESP32 horn'
+  spec ' ' 'KSU_ROBOESP32_beep' 'KSU_RoBoESP32 beep'
+  spec ' ' 'KSU_ROBOESP32_tone' 'KSU_RoBoESP32 play tone _ Hz for _ ms' 'num num' 440 300
+  spec ' ' 'KSU_ROBOESP32_note' 'KSU_RoBoESP32 play note _ octave _ for _ ms' 'str.tone_NoteName num num' 'nt;c' 0 400
+  spec ' ' 'KSU_ROBOESP32_song' 'KSU_RoBoESP32 play Happy Birthday'
   space
-  spec 'r' 'KSU_ROBOESP32_button' 'KSU button _ is pressed' 'menu.ksubutton' 'D34'
-  spec 'r' 'KSU_ROBOESP32_read' 'KSU read analog pin _' 'auto' ''
-  spec 'r' 'KSU_ROBOESP32_distance' 'KSU distance cm'
-  spec ' ' 'KSU_ROBOESP32_ultrasonic' 'KSU set ultrasonic trig _ echo _' 'num num' 33 32
+  spec 'r' 'KSU_ROBOESP32_button' 'KSU_RoBoESP32 button _ is pressed' 'menu.ksubutton' 'D34'
+  spec 'r' 'KSU_ROBOESP32_read' 'KSU_RoBoESP32 read analog pin _' 'auto' ''
+  spec 'r' 'KSU_ROBOESP32_distance' 'KSU_RoBoESP32 distance cm'
+  spec ' ' 'KSU_ROBOESP32_ultrasonic' 'KSU_RoBoESP32 set ultrasonic trig _ echo _' 'num num' 33 32
   space
-  spec ' ' '_KSU_ROBOESP32_sendPage' '_ksu send control page'
-  spec ' ' '_KSU_ROBOESP32_status' '_ksu send status'
+  spec ' ' '_KSU_ROBOESP32_sendPage' '_KSU_RoBoESP32 send control page'
+  spec ' ' '_KSU_ROBOESP32_status' '_KSU_RoBoESP32 send status'
   spec ' ' '_KSU_ROBOESP32_do2' '_KSU_ROBOESP32_do2 _' 'str' ''
   spec 'r' '_KSU_ROBOESP32_rgbWhich' '_KSU_ROBOESP32_rgbWhich _' 'num' 0
   spec 'r' '_KSU_ROBOESP32_motorName' '_KSU_ROBOESP32_motorName _' 'num' 1
@@ -259,29 +331,23 @@ variables _ksu_spd _ksu_rev1 _ksu_rev2 _ksu_args _ksu_req _ksu_path _ksu_trig _k
   spec 'r' '_KSU_ROBOESP32_p7' '_KSU_ROBOESP32_p7'
   spec 'r' '_KSU_ROBOESP32_p8' '_KSU_ROBOESP32_p8'
 
-to KSU_ROBOESP32_start ssid password {
-  comment 'Start the hotspot and the web server.
-The password must be at least 8 characters.
-Speed starts at 70 percent, all four servos centre at 90
-degrees, and both motors start trimmed to -1, which suits a
-car with the motors mounted facing each other. Use the motor
-trim block to change that.
-The ultrasonic sensor starts on trig 33 and echo 32; use the
-KSU set ultrasonic block to move it.'
-  _ksu_spd = 70
-  _ksu_args = ('[data:makeList]' 90)
-  _ksu_rev1 = -1
-  _ksu_rev2 = -1
-  KSU_ROBOESP32_ultrasonic 33 32
-  KSU_ROBOESP32_stop
-  roboESP32_clear_RGB
-  'attach buzzer to pin' 23
-  KSU_ROBOESP32_servo 'D4' 90
-  KSU_ROBOESP32_servo 'D5' 90
-  KSU_ROBOESP32_servo 'D18' 90
-  KSU_ROBOESP32_servo 'D19' 90
-  wifiCreateHotspot ssid password
-  roboESP32_set_RGB 'all' (colorFromRGB 0 40 20)
+to KSU_ROBOESP32_arm deg {
+  comment 'The arm servo plugs into header D4. Same as
+KSU_RoBoESP32 set servo (D4) to (deg) degrees.'
+  KSU_ROBOESP32_servo 'D4' deg
+}
+
+to KSU_ROBOESP32_backward {
+  roboESP32_set_motor 'M1' (0 - (_ksu_spd * _ksu_rev1))
+  roboESP32_set_motor 'M2' (0 - (_ksu_spd * _ksu_rev2))
+}
+
+to KSU_ROBOESP32_beep {
+  'play frequency' 880 60
+}
+
+to KSU_ROBOESP32_button pin {
+  return (roboESP32_button pin)
 }
 
 to KSU_ROBOESP32_command {
@@ -289,19 +355,19 @@ to KSU_ROBOESP32_command {
 nothing has arrived yet. Serving the page, answering a status
 poll, and splitting off any numbers that came with the command
 all happen in here - a program only ever sees a plain word such
-as Forward or Rgb. Read any numbers with KSU command value or
-KSU command value #.'
+as Forward or Rgb. Read any numbers with KSU_RoBoESP32 command value or
+KSU_RoBoESP32 command value #.'
   _ksu_req = ('[net:httpServerGetRequest]')
   if (_ksu_req == '') {
     return ''
   }
   _ksu_path = ('[data:copyFromTo]' ('path of request' _ksu_req) 2)
   if (_ksu_path == '') {
-    _KSU_ROBOESP32_sendPage
+    '_KSU_ROBOESP32_sendPage'
     return ''
   }
   if (_ksu_path == 'Status') {
-    _KSU_ROBOESP32_status
+    '_KSU_ROBOESP32_status'
     return ''
   }
   '[net:respondToHttpRequest]' '200 OK' 'ok'
@@ -325,248 +391,10 @@ KSU command value #.'
   return word
 }
 
-to KSU_ROBOESP32_value {
-  comment 'Report the first number that came with the last command, or
-90 (the middle servo angle) when the last command carried no
-number at all - for example after Forward or Stop.'
-  if ((size _ksu_args) < 1) {
-    return 90
-  }
-  return (at 1 _ksu_args)
-}
-
-to KSU_ROBOESP32_valueN i {
-  comment 'Report the i-th number that came with the last command
-(1 is the first one), or 0 if there is no such number.'
-  if (or (i < 1) (i > (size _ksu_args))) {
-    return 0
-  }
-  return (at i _ksu_args)
-}
-
-to KSU_ROBOESP32_do word {
-  comment 'The auto-pilot block. Call it once per loop with the word
-from KSU web command and it does everything the page can ask
-for, including reading back any numbers that came with it. Put
-this one block in your forever loop instead of a long if-chain.'
-  if (word == 'Forward') {
-    KSU_ROBOESP32_forward
-  } (word == 'Backward') {
-    KSU_ROBOESP32_backward
-  } (word == 'Left') {
-    KSU_ROBOESP32_left
-  } (word == 'Right') {
-    KSU_ROBOESP32_right
-  } (word == 'Stop') {
-    KSU_ROBOESP32_stop
-  } (word == 'Light1') {
-    KSU_ROBOESP32_light 'on'
-  } (word == 'Light0') {
-    KSU_ROBOESP32_light 'off'
-  } (word == 'Horn') {
-    KSU_ROBOESP32_horn
-  } (word == 'Speed') {
-    KSU_ROBOESP32_speed (KSU_ROBOESP32_value)
-  } (word == 'Servo') {
-    KSU_ROBOESP32_servo 'D4' (KSU_ROBOESP32_value)
-  } else {
-    _KSU_ROBOESP32_do2 word
-  }
-}
-
-to KSU_ROBOESP32_ip {
-  return ('[net:myIPAddress]')
-}
-
-to KSU_ROBOESP32_forward {
-  roboESP32_set_motor 'M1' (_ksu_spd * _ksu_rev1)
-  roboESP32_set_motor 'M2' (_ksu_spd * _ksu_rev2)
-}
-
-to KSU_ROBOESP32_backward {
-  roboESP32_set_motor 'M1' (0 - (_ksu_spd * _ksu_rev1))
-  roboESP32_set_motor 'M2' (0 - (_ksu_spd * _ksu_rev2))
-}
-
-to KSU_ROBOESP32_left {
-  roboESP32_set_motor 'M1' (0 - (_ksu_spd * _ksu_rev1))
-  roboESP32_set_motor 'M2' (_ksu_spd * _ksu_rev2)
-}
-
-to KSU_ROBOESP32_right {
-  roboESP32_set_motor 'M1' (_ksu_spd * _ksu_rev1)
-  roboESP32_set_motor 'M2' (0 - (_ksu_spd * _ksu_rev2))
-}
-
-to KSU_ROBOESP32_stop {
-  roboESP32_stop_motor 'both'
-}
-
-to KSU_ROBOESP32_speed n {
-  _ksu_spd = n
-}
-
-to KSU_ROBOESP32_drive dir ms {
-  comment 'Run one of the four directions for _ milliseconds, then stop.'
-  if (dir == 'forward') {
-    KSU_ROBOESP32_forward
-  } (dir == 'backward') {
-    KSU_ROBOESP32_backward
-  } (dir == 'left') {
-    KSU_ROBOESP32_left
-  } (dir == 'right') {
-    KSU_ROBOESP32_right
-  }
-  waitMillis ms
-  KSU_ROBOESP32_stop
-}
-
-to KSU_ROBOESP32_steer s {
-  comment '-100 spins in place to the left, 0 drives straight, 100
-spins in place to the right. The wheel on the inside of the
-turn slows down (and can reverse); the outside wheel keeps
-going at the current set speed.
-
-The multiply happens before the divide on purpose. This board
-does whole-number arithmetic, so dividing first would throw
-away every steering value smaller than 50.'
-  local 'inner' (maximum -100 (minimum 100 ((_ksu_spd * (50 - (absoluteValue s))) / 50)))
-  if (s < 0) {
-    roboESP32_set_motor 'M1' (inner * _ksu_rev1)
-    roboESP32_set_motor 'M2' (_ksu_spd * _ksu_rev2)
-  } else {
-    roboESP32_set_motor 'M1' (_ksu_spd * _ksu_rev1)
-    roboESP32_set_motor 'M2' (inner * _ksu_rev2)
-  }
-}
-
-to KSU_ROBOESP32_motor which power {
-  comment 'Raw single-motor control, -100 to 100. The motor trim is
-still applied, so this matches the direction of Forward /
-Backward for whichever wheel you pick.'
-  if (which == 'M1') {
-    roboESP32_set_motor 'M1' (power * _ksu_rev1)
-  } (which == 'M2') {
-    roboESP32_set_motor 'M2' (power * _ksu_rev2)
-  } else {
-    roboESP32_set_motor 'M1' (power * _ksu_rev1)
-    roboESP32_set_motor 'M2' (power * _ksu_rev2)
-  }
-}
-
-to KSU_ROBOESP32_trim m1 m2 {
-  comment 'Use 1 for a motor that runs the right way and -1 for one
-that is wired backwards.
-
-  car drives backwards and turns the wrong way -> both -1
-  car spins instead of driving forward -> flip only one of them'
-  _ksu_rev1 = m1
-  _ksu_rev2 = m2
-}
-
-to KSU_ROBOESP32_arm deg {
-  comment 'The arm servo plugs into header D4. Same as
-KSU set servo (D4) to (deg) degrees.'
-  KSU_ROBOESP32_servo 'D4' deg
-}
-
-to KSU_ROBOESP32_servo pin deg {
-  comment 'pin is D4, D5, D18 or D19. The page and this block both
-use 0 to 180; the Cytron board itself wants -90 to 90, so this
-converts once here.'
-  roboESP32_set_servo pin (deg - 90)
-}
-
-to KSU_ROBOESP32_light state {
-  if (state == 'on') {
-    roboESP32_set_RGB 'all' (colorFromRGB 255 240 200)
-  } else {
-    roboESP32_clear_RGB
-  }
-}
-
-to KSU_ROBOESP32_rgb which color {
-  roboESP32_set_RGB which color
-}
-
-to KSU_ROBOESP32_rgbraw which r g b {
-  roboESP32_set_RGB which (colorFromRGB r g b)
-}
-
 to KSU_ROBOESP32_dim delta {
   comment 'Positive numbers brighten the RGB LEDs, negative numbers
 dim them.'
   'roboESP32_increase_RGB _brightness' delta
-}
-
-to KSU_ROBOESP32_led pin state {
-  comment 'One GPIO LED (D16 D17 D21 D22 D25 D26 D32 D33), or all
-eight at once if you pick all.'
-  roboESP32_set_GPIO pin (state == 'on')
-}
-
-to KSU_ROBOESP32_lednum i onOff {
-  comment 'LED number 1 to 8, in the order printed on the board:
-D16 D17 D21 D22 D25 D26 D32 D33.
-Numbers outside 1 to 8 are ignored rather than stopping the
-program, so a mistyped address in the browser is harmless.'
-  if (and (i >= 1) (i <= 8)) {
-    digitalWriteOp (at i ('[data:makeList]' 16 17 21 22 25 26 32 33)) (onOff == 'on')
-  }
-}
-
-to KSU_ROBOESP32_horn {
-  'play frequency' 700 120
-  'play frequency' 520 180
-}
-
-to KSU_ROBOESP32_beep {
-  'play frequency' 880 60
-}
-
-to KSU_ROBOESP32_tone hz ms {
-  'play frequency' hz ms
-}
-
-to KSU_ROBOESP32_note note octave ms {
-  'play tone' note octave ms
-}
-
-to KSU_ROBOESP32_song {
-  roboESP32_play_song
-}
-
-to KSU_ROBOESP32_button pin {
-  return (roboESP32_button pin)
-}
-
-to KSU_ROBOESP32_read pin {
-  comment 'Read an analog value on a Grove or expansion pin - give
-the GPIO number printed on the board, for example 34.'
-  return (analogReadOp pin)
-}
-
-to KSU_ROBOESP32_ultrasonic trig echo {
-  comment 'Tell the library which pins the HC-SR04 is plugged into.
-KSU start web control already sets trig 33 and echo 32, so most
-projects never touch this block.
-
-Pins 33 and 32 are the same pins as LED number 8 and LED number
-7. Nothing breaks, but the two LEDs blink along with the pings,
-and turning LED 7 or LED 8 on from the LIGHT tab fights the
-sensor for the wire. Leave those two LEDs alone while the
-sensor is plugged in.
-
-Not every pin can do this job. Pins 34 35 36 and 39 are input
-only - they have no output driver at all, so a trig wired to
-one of them can never be pulled high, the sensor never fires,
-and the distance block just keeps reporting 0. Echo can live on
-any of them, trig cannot. Free output-capable pins on this
-board are the other LED pins (16 17 21 22 25 26) and any servo
-header with no servo in it (4 5 18 19).'
-  _ksu_trig = trig
-  _ksu_echo = echo
-  digitalWriteOp _ksu_trig false
 }
 
 to KSU_ROBOESP32_distance {
@@ -605,13 +433,362 @@ several times in a row makes the car slow to answer the phone.'
   return (usecs / 58)
 }
 
-to _KSU_ROBOESP32_sendPage {
-  comment 'The page is stored in several small blocks because one
-MicroBlocks script cannot compile to more than 1000 bytes.'
-  '[net:respondToHttpRequest]' '200 OK' ('[data:join]' (_KSU_ROBOESP32_p1) (_KSU_ROBOESP32_p2) (_KSU_ROBOESP32_p3) (_KSU_ROBOESP32_p4) (_KSU_ROBOESP32_p5) (_KSU_ROBOESP32_p6) (_KSU_ROBOESP32_p7) (_KSU_ROBOESP32_p8)) 'Content-Type: text/html'
+to KSU_ROBOESP32_do word {
+  comment 'The auto-pilot block. Call it once per loop with the word
+from KSU_RoBoESP32 web command and it does everything the page can ask
+for, including reading back any numbers that came with it. Put
+this one block in your forever loop instead of a long if-chain.'
+  if (word == 'Forward') {
+    KSU_ROBOESP32_forward
+  } (word == 'Backward') {
+    KSU_ROBOESP32_backward
+  } (word == 'Left') {
+    KSU_ROBOESP32_left
+  } (word == 'Right') {
+    KSU_ROBOESP32_right
+  } (word == 'Stop') {
+    KSU_ROBOESP32_stop
+  } (word == 'Light1') {
+    KSU_ROBOESP32_light 'on'
+  } (word == 'Light0') {
+    KSU_ROBOESP32_light 'off'
+  } (word == 'Horn') {
+    KSU_ROBOESP32_horn
+  } (word == 'Speed') {
+    KSU_ROBOESP32_speed (KSU_ROBOESP32_value)
+  } (word == 'Servo') {
+    KSU_ROBOESP32_servo 'D4' (KSU_ROBOESP32_value)
+  } else {
+    '_KSU_ROBOESP32_do2' word
+  }
 }
 
-to _KSU_ROBOESP32_status {
+to KSU_ROBOESP32_drive dir ms {
+  comment 'Run one of the four directions for _ milliseconds, then stop.'
+  if (dir == 'forward') {
+    KSU_ROBOESP32_forward
+  } (dir == 'backward') {
+    KSU_ROBOESP32_backward
+  } (dir == 'left') {
+    KSU_ROBOESP32_left
+  } (dir == 'right') {
+    KSU_ROBOESP32_right
+  }
+  waitMillis ms
+  KSU_ROBOESP32_stop
+}
+
+to KSU_ROBOESP32_forward {
+  roboESP32_set_motor 'M1' (_ksu_spd * _ksu_rev1)
+  roboESP32_set_motor 'M2' (_ksu_spd * _ksu_rev2)
+}
+
+to KSU_ROBOESP32_horn {
+  'play frequency' 700 120
+  'play frequency' 520 180
+}
+
+to KSU_ROBOESP32_ip {
+  return ('[net:myIPAddress]')
+}
+
+to KSU_ROBOESP32_led pin state {
+  comment 'One GPIO LED (D16 D17 D21 D22 D25 D26 D32 D33), or all
+eight at once if you pick all.'
+  roboESP32_set_GPIO pin (state == 'on')
+}
+
+to KSU_ROBOESP32_lednum i onOff {
+  comment 'LED number 1 to 8, in the order printed on the board:
+D16 D17 D21 D22 D25 D26 D32 D33.
+Numbers outside 1 to 8 are ignored rather than stopping the
+program, so a mistyped address in the browser is harmless.'
+  if (and (i >= 1) (i <= 8)) {
+    digitalWriteOp (at i ('[data:makeList]' 16 17 21 22 25 26 32 33)) (onOff == 'on')
+  }
+}
+
+to KSU_ROBOESP32_left {
+  roboESP32_set_motor 'M1' (0 - (_ksu_spd * _ksu_rev1))
+  roboESP32_set_motor 'M2' (_ksu_spd * _ksu_rev2)
+}
+
+to KSU_ROBOESP32_light state {
+  if (state == 'on') {
+    roboESP32_set_RGB 'all' (colorFromRGB 255 240 200)
+  } else {
+    roboESP32_clear_RGB
+  }
+}
+
+to KSU_ROBOESP32_motor which power {
+  comment 'Raw single-motor control, -100 to 100. The motor trim is
+still applied, so this matches the direction of Forward /
+Backward for whichever wheel you pick.'
+  if (which == 'M1') {
+    roboESP32_set_motor 'M1' (power * _ksu_rev1)
+  } (which == 'M2') {
+    roboESP32_set_motor 'M2' (power * _ksu_rev2)
+  } else {
+    roboESP32_set_motor 'M1' (power * _ksu_rev1)
+    roboESP32_set_motor 'M2' (power * _ksu_rev2)
+  }
+}
+
+to KSU_ROBOESP32_note note octave ms {
+  'play tone' note octave ms
+}
+
+to KSU_ROBOESP32_read pin {
+  comment 'Read an analog value on a Grove or expansion pin - give
+the GPIO number printed on the board, for example 34.'
+  return (analogReadOp pin)
+}
+
+to KSU_ROBOESP32_rgb which color {
+  roboESP32_set_RGB which color
+}
+
+to KSU_ROBOESP32_rgbraw which r g b {
+  roboESP32_set_RGB which (colorFromRGB r g b)
+}
+
+to KSU_ROBOESP32_right {
+  roboESP32_set_motor 'M1' (_ksu_spd * _ksu_rev1)
+  roboESP32_set_motor 'M2' (0 - (_ksu_spd * _ksu_rev2))
+}
+
+to KSU_ROBOESP32_servo pin deg {
+  comment 'pin is D4, D5, D18 or D19. The page and this block both
+use 0 to 180; the Cytron board itself wants -90 to 90, so this
+converts once here.'
+  roboESP32_set_servo pin (deg - 90)
+}
+
+to KSU_ROBOESP32_song {
+  roboESP32_play_song
+}
+
+to KSU_ROBOESP32_speed n {
+  _ksu_spd = n
+}
+
+to KSU_ROBOESP32_setup {
+  comment 'Wake the board up without starting WiFi. Put this at the top of
+any program that drives the car from your own blocks.
+Speed starts at 70 percent, both motors start trimmed to -1,
+all four servos centre at 90 degrees, the buzzer is attached
+and the ultrasonic sensor starts on trig 33 and echo 32.
+Without this block the speed and the trim are still empty, so
+KSU_RoBoESP32 forward works out to zero power and the car stands still
+even though nothing looks wrong.
+KSU_RoBoESP32 start web control runs KSU_RoBoESP32 setup for you, so a program that
+uses the phone does not need it as well.'
+  _ksu_spd = 70
+  _ksu_args = ('[data:makeList]' 90)
+  _ksu_rev1 = -1
+  _ksu_rev2 = -1
+  KSU_ROBOESP32_ultrasonic 33 32
+  KSU_ROBOESP32_stop
+  roboESP32_clear_RGB
+  'attach buzzer to pin' 23
+  KSU_ROBOESP32_servo 'D4' 90
+  KSU_ROBOESP32_servo 'D5' 90
+  KSU_ROBOESP32_servo 'D18' 90
+  KSU_ROBOESP32_servo 'D19' 90
+}
+
+to KSU_ROBOESP32_start ssid password {
+  comment 'Start the hotspot and the web server.
+The password must be at least 8 characters.
+Everything else is set up by KSU_RoBoESP32 setup, which this block runs
+first: speed 70 percent, motor trim -1, all four servos at 90
+degrees, ultrasonic on trig 33 and echo 32.
+Use the motor trim block to change the trim.'
+  KSU_ROBOESP32_setup
+  wifiCreateHotspot ssid password
+  roboESP32_set_RGB 'all' (colorFromRGB 0 40 20)
+}
+
+to KSU_ROBOESP32_steer s {
+  comment '-100 spins in place to the left, 0 drives straight, 100
+spins in place to the right. The wheel on the inside of the
+turn slows down (and can reverse); the outside wheel keeps
+going at the current set speed.
+
+The multiply happens before the divide on purpose. This board
+does whole-number arithmetic, so dividing first would throw
+away every steering value smaller than 50.'
+  local 'inner' (maximum -100 (minimum 100 ((_ksu_spd * (50 - (absoluteValue s))) / 50)))
+  if (s < 0) {
+    roboESP32_set_motor 'M1' (inner * _ksu_rev1)
+    roboESP32_set_motor 'M2' (_ksu_spd * _ksu_rev2)
+  } else {
+    roboESP32_set_motor 'M1' (_ksu_spd * _ksu_rev1)
+    roboESP32_set_motor 'M2' (inner * _ksu_rev2)
+  }
+}
+
+to KSU_ROBOESP32_stop {
+  roboESP32_stop_motor 'both'
+}
+
+to KSU_ROBOESP32_tone hz ms {
+  'play frequency' hz ms
+}
+
+to KSU_ROBOESP32_trim m1 m2 {
+  comment 'Use 1 for a motor that runs the right way and -1 for one
+that is wired backwards.
+
+  car drives backwards and turns the wrong way -> both -1
+  car spins instead of driving forward -> flip only one of them'
+  _ksu_rev1 = m1
+  _ksu_rev2 = m2
+}
+
+to KSU_ROBOESP32_ultrasonic trig echo {
+  comment 'Tell the library which pins the HC-SR04 is plugged into.
+KSU_RoBoESP32 start web control already sets trig 33 and echo 32, so most
+projects never touch this block.
+
+Pins 33 and 32 are the same pins as LED number 8 and LED number
+7. Nothing breaks, but the two LEDs blink along with the pings,
+and turning LED 7 or LED 8 on from the LIGHT tab fights the
+sensor for the wire. Leave those two LEDs alone while the
+sensor is plugged in.
+
+Not every pin can do this job. Pins 34 35 36 and 39 are input
+only - they have no output driver at all, so a trig wired to
+one of them can never be pulled high, the sensor never fires,
+and the distance block just keeps reporting 0. Echo can live on
+any of them, trig cannot. Free output-capable pins on this
+board are the other LED pins (16 17 21 22 25 26) and any servo
+header with no servo in it (4 5 18 19).'
+  _ksu_trig = trig
+  _ksu_echo = echo
+  digitalWriteOp _ksu_trig false
+}
+
+to KSU_ROBOESP32_value {
+  comment 'Report the first number that came with the last command, or
+90 (the middle servo angle) when the last command carried no
+number at all - for example after Forward or Stop.'
+  if ((size _ksu_args) < 1) {
+    return 90
+  }
+  return (at 1 _ksu_args)
+}
+
+to KSU_ROBOESP32_valueN i {
+  comment 'Report the i-th number that came with the last command
+(1 is the first one), or 0 if there is no such number.'
+  if (or (i < 1) (i > (size _ksu_args))) {
+    return 0
+  }
+  return (at i _ksu_args)
+}
+
+to '_KSU_ROBOESP32_do2' word {
+  comment 'Second half of the auto-pilot word list - called from KSU
+do command so that block stays under the 1000 byte compiled
+script limit. Never call this one directly.'
+  if (word == 'ServoB') {
+    KSU_ROBOESP32_servo 'D5' (KSU_ROBOESP32_value)
+  } (word == 'ServoC') {
+    KSU_ROBOESP32_servo 'D18' (KSU_ROBOESP32_value)
+  } (word == 'ServoD') {
+    KSU_ROBOESP32_servo 'D19' (KSU_ROBOESP32_value)
+  } (word == 'Rgb') {
+    KSU_ROBOESP32_rgbraw ('_KSU_ROBOESP32_rgbWhich' (KSU_ROBOESP32_valueN 1)) (KSU_ROBOESP32_valueN 2) (KSU_ROBOESP32_valueN 3) (KSU_ROBOESP32_valueN 4)
+  } (word == 'Dim') {
+    KSU_ROBOESP32_dim (KSU_ROBOESP32_value)
+  } (word == 'Led') {
+    KSU_ROBOESP32_lednum (KSU_ROBOESP32_valueN 1) ('_KSU_ROBOESP32_onOff' (KSU_ROBOESP32_valueN 2))
+  } (word == 'Leds') {
+    KSU_ROBOESP32_led 'all' ('_KSU_ROBOESP32_onOff' (KSU_ROBOESP32_value))
+  } (word == 'Motor') {
+    KSU_ROBOESP32_motor ('_KSU_ROBOESP32_motorName' (KSU_ROBOESP32_valueN 1)) (KSU_ROBOESP32_valueN 2)
+  } (word == 'Tone') {
+    KSU_ROBOESP32_tone (KSU_ROBOESP32_valueN 1) (KSU_ROBOESP32_valueN 2)
+  } (word == 'Song') {
+    KSU_ROBOESP32_song
+  } (word == 'Beep') {
+    KSU_ROBOESP32_beep
+  }
+}
+
+to '_KSU_ROBOESP32_motorName' n {
+  comment 'Convert the pages numeric motor number (1 or 2) into the
+menu value the Robo ESP32 blocks expect (M1 or M2).'
+  if (n == 2) {
+    return 'M2'
+  } else {
+    return 'M1'
+  }
+}
+
+to '_KSU_ROBOESP32_onOff' n {
+  comment 'Convert a 1/0 from the page into on/off for the light
+blocks.'
+  if (n == 1) {
+    return 'on'
+  } else {
+    return 'off'
+  }
+}
+
+to '_KSU_ROBOESP32_p1' {
+  return '<!doctype html><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=no"><style>*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%}body{margin:0;font:16px system-ui;background:#0e1116;color:#e6edf3;text-align:center;overflow:hidden}#w{display:flex;flex-direction:column;height:100dvh;padding:10px;gap:8px}.z{flex:1;display:none;overflow-y:auto}.z.y{display:flex;gap:12px}#li,#mo{flex-direction:column}#p{flex:1.1;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:8px}#F{grid-area:1/2}#L{grid-area:2/1}#S{grid-area:2/2}#R{grid-area:2/3}#B{grid-area:3/2}#g{flex:1;display:flex;flex-direction:column;'
+}
+
+to '_KSU_ROBOESP32_p2' {
+  return 'justify-content:center;gap:10px}button{border:0;border-radius:14px;background:#1b2430;color:#7ee2b8;font-size:26px;touch-action:none}.on{background:#7ee2b8!important;color:#0e1116!important}#S{background:#2a1b20;color:#ff8f8f;font-size:20px}input{-webkit-appearance:none;appearance:none;width:100%;height:56px;background:none;margin:0}input::-webkit-slider-runnable-track{height:22px;border-radius:11px;background:#1b2430}input::-webkit-slider-thumb{-webkit-appearance:none;width:48px;height:48px;border-radius:24px;background:#7ee2b8;margin-top:-13px}input::-moz-range-track{height:22px;border-radius:11px;background:#1b2430}input::-moz-range-thumb{width:48px;height:48px;border:0;border-radius:24px'
+}
+
+to '_KSU_ROBOESP32_p3' {
+  return ';background:#7ee2b8}.n{font-size:14px;letter-spacing:1px;color:#9aa6b4;text-align:left}.x{display:flex;gap:8px}.x button{flex:1;height:52px;font-size:14px}.x div{flex:1}#rot{display:none;padding-top:44vh;color:#7ee2b8;letter-spacing:1px}@media(orientation:portrait){#w{display:none}#rot{display:block}}</style><div id=w><div id=Y class=x></div><div id=d class="z y"><div id=p><button id=F>&#9650;</button><button id=L>&#9664;</button><button id=S>&#9632;</button><button id=R>&#9654;</button><button id=B>&#9660;</button></div><div id=g><div><div id=t class=n>SPEED 70%</div><input id=sp type=range min=20 max=100 value=70></div><div><div id=u class=n>SERVO 90&deg;</div><input id=sv type=range min=0'
+}
+
+to '_KSU_ROBOESP32_p4' {
+  return ' max=180 value=90></div><div id=r class=x><button id=W>&#9728; LIGHT</button><button id=H>&#9834; HORN</button></div></div></div><div id=li class=z><div id=O class=x></div><div id=A class=x></div><div id=Q class=x></div></div><div id=mo class=z><div id=X></div><div id=K class=x></div><div id=I class=n></div></div></div><div id=rot>&#8635; ROTATE TO LANDSCAPE</div><script>var q=null,b=0,C={F:"Forward",B:"Backward",L:"Left",R:"Right"},E=function(i){return document.getElementById(i)};function s(p){q=p;g()}function g(){if(b||q==null)return;b=1;var p=q;q=null;var d=function(){b=0;g()};fetch("/"+p).then(d,d)}"FBLR".split("").forEach(function(i){var e=E(i);e.onpointerdown=function(v){'
+}
+
+to '_KSU_ROBOESP32_p5' {
+  return 'v.preventDefault();e.className="on";s(C[i])};e.onpointerup=e.onpointercancel=e.onpointerleave=function(){if(e.className){e.className="";s("Stop")}}});E("S").onclick=function(){s("Stop")};var m=0;E("W").onpointerdown=function(v){v.preventDefault();m=m?0:1;this.className=m?"on":"";s("Light"+m)};E("H").onpointerdown=function(v){v.preventDefault();s("Horn")};E("sp").oninput=function(){E("t").textContent="SPEED "+this.value+"%"};E("sp").onchange=function(){s("Speed_"+this.value)};E("sv").oninput=function(){E("u").textContent="SERVO "+this.value+"\u00b0";s("Servo_"+this.value)};var k={ArrowUp:"F",ArrowDown:"B",ArrowLeft:"L",ArrowRight:"R",w:"F",s:"B",a:"L",d:"R"};onkeydown=function(e){var c=k['
+}
+
+to '_KSU_ROBOESP32_p6' {
+  return 'e.key];if(c&&!e.repeat){E(c).className="on";s(C[c])}};onkeyup=function(e){var c=k[e.key];if(c){E(c).className="";s("Stop")}};const y=t=>document.createElement(t);const M=(p,t,f)=>p.appendChild(Object.assign(y("button"),{textContent:t,onclick:f}));const T=["DRIVE","LIGHT","MORE"].map((l,i)=>M(Y,l,()=>P(i)));let G=0,J=0,Z=0;T[0].className="on";function P(n){Z=n;for(let i=0;i<3;i++){[d,li,mo][i].className=i==n?"z y":"z";T[i].className=i==n?"on":""}}[[255,0,0],[255,80,0],[255,220,0],[0,200,0],[0,200,200],[0,80,255],[200,0,255],[255,255,255]].forEach(c=>M(O,"",()=>s("Rgb_"+G+"_"+c.join("_"))).style.background="rgb("+c+")");[0,1,"ALL"].forEach((l,i)=>M(A,l,()=>G=i));for(let i=1;i<9;i++)'
+}
+
+to '_KSU_ROBOESP32_p7' {
+  return '{const e=M(Q,i);e.onclick=()=>s("Led_"+i+"_"+ +e.classList.toggle("on"))}const V=(p,o,h,v,b,f)=>{const d=p.appendChild(y("div"));d.textContent=b;const i=d.appendChild(Object.assign(y("input"),{type:"range",min:o,max:h,value:v}));i.oninput=()=>f(i.value);return i};[["_","D4"],["B_","D5"],["C_","D18"],["D_","D19"]].forEach(a=>V(X,0,180,90,a[1],v=>s("Servo"+a[0]+v)));[1,2].forEach(i=>{const N=V(K,-100,100,0,"M"+i,v=>s("Motor_"+i+"_"+v));N.onchange=()=>{N.value=0;N.oninput()}});[[A,"DIM-","Dim_-25"],[A,"DIM+","Dim_25"],[A,"ON","Leds_1"],[A,"OFF","Leds_0"],[K,"SONG","Song"],[K,"BEEP","Beep"]].forEach(a=>M(a[0],a[1],()=>s(a[2])));const U=V(K,200,2000,440,"TONE",()=>{});M(K,"PLAY",()=>s("Tone_"+'
+}
+
+to '_KSU_ROBOESP32_p8' {
+  return 'U.value+"_300"));const sd=Object.assign(y("div"),{className:"n",textContent:"DIST -- cm"});sd.style.cssText="font-size:22px;color:#7ee2b8";E("g").insertBefore(sd,E("g").firstChild);function N(){if(Z==1||b){J=setTimeout(N,400);return}fetch("/Status").then(r=>r.text(),()=>0).then(t=>{if(t){const v=t.split(","),c=(+v[4]||"--");sd.textContent="DIST "+c+" cm";I.textContent="D34 "+(+v[0]?"\u25cf":"\u25cb")+" D35 "+(+v[1]?"\u25cf":"\u25cb")+" DIST "+c+" cm"}J=setTimeout(N,Z==2?500:800)})}N();</script>'
+}
+
+to '_KSU_ROBOESP32_rgbWhich' n {
+  comment 'Convert the pages numeric RGB target (0, 1 or 2) into the
+menu value the Robo ESP32 blocks expect (0, 1 or all).'
+  if (n == 2) {
+    return 'all'
+  } (n == 1) {
+    return '1'
+  } else {
+    return '0'
+  }
+}
+
+to '_KSU_ROBOESP32_sendPage' {
+  comment 'The page is stored in several small blocks because one
+MicroBlocks script cannot compile to more than 1000 bytes.'
+  '[net:respondToHttpRequest]' '200 OK' ('[data:join]' ('_KSU_ROBOESP32_p1') ('_KSU_ROBOESP32_p2') ('_KSU_ROBOESP32_p3') ('_KSU_ROBOESP32_p4') ('_KSU_ROBOESP32_p5') ('_KSU_ROBOESP32_p6') ('_KSU_ROBOESP32_p7') ('_KSU_ROBOESP32_p8')) 'Content-Type: text/html'
+}
+
+to '_KSU_ROBOESP32_status' {
   comment 'Answer a /Status poll from the MORE tab without ever handing
 the word to the student program. Body is plain text
 b1,b2,speed,value,cm - for example 1,0,70,90,23 - where b1/b2 are
@@ -628,101 +805,6 @@ distance (0 when nothing echoes back).'
   }
   '[net:respondToHttpRequest]' '200 OK' ('[data:join]' b1 ',' b2 ',' _ksu_spd ',' (KSU_ROBOESP32_value) ',' (KSU_ROBOESP32_distance)) 'Content-Type: text/plain'
 }
-
-to _KSU_ROBOESP32_do2 word {
-  comment 'Second half of the auto-pilot word list - called from KSU
-do command so that block stays under the 1000 byte compiled
-script limit. Never call this one directly.'
-  if (word == 'ServoB') {
-    KSU_ROBOESP32_servo 'D5' (KSU_ROBOESP32_value)
-  } (word == 'ServoC') {
-    KSU_ROBOESP32_servo 'D18' (KSU_ROBOESP32_value)
-  } (word == 'ServoD') {
-    KSU_ROBOESP32_servo 'D19' (KSU_ROBOESP32_value)
-  } (word == 'Rgb') {
-    KSU_ROBOESP32_rgbraw (_KSU_ROBOESP32_rgbWhich (KSU_ROBOESP32_valueN 1)) (KSU_ROBOESP32_valueN 2) (KSU_ROBOESP32_valueN 3) (KSU_ROBOESP32_valueN 4)
-  } (word == 'Dim') {
-    KSU_ROBOESP32_dim (KSU_ROBOESP32_value)
-  } (word == 'Led') {
-    KSU_ROBOESP32_lednum (KSU_ROBOESP32_valueN 1) (_KSU_ROBOESP32_onOff (KSU_ROBOESP32_valueN 2))
-  } (word == 'Leds') {
-    KSU_ROBOESP32_led 'all' (_KSU_ROBOESP32_onOff (KSU_ROBOESP32_value))
-  } (word == 'Motor') {
-    KSU_ROBOESP32_motor (_KSU_ROBOESP32_motorName (KSU_ROBOESP32_valueN 1)) (KSU_ROBOESP32_valueN 2)
-  } (word == 'Tone') {
-    KSU_ROBOESP32_tone (KSU_ROBOESP32_valueN 1) (KSU_ROBOESP32_valueN 2)
-  } (word == 'Song') {
-    KSU_ROBOESP32_song
-  } (word == 'Beep') {
-    KSU_ROBOESP32_beep
-  }
-}
-
-to _KSU_ROBOESP32_rgbWhich n {
-  comment 'Convert the pages numeric RGB target (0, 1 or 2) into the
-menu value the Robo ESP32 blocks expect (0, 1 or all).'
-  if (n == 2) {
-    return 'all'
-  } (n == 1) {
-    return '1'
-  } else {
-    return '0'
-  }
-}
-
-to _KSU_ROBOESP32_motorName n {
-  comment 'Convert the pages numeric motor number (1 or 2) into the
-menu value the Robo ESP32 blocks expect (M1 or M2).'
-  if (n == 2) {
-    return 'M2'
-  } else {
-    return 'M1'
-  }
-}
-
-to _KSU_ROBOESP32_onOff n {
-  comment 'Convert a 1/0 from the page into on/off for the light
-blocks.'
-  if (n == 1) {
-    return 'on'
-  } else {
-    return 'off'
-  }
-}
-
-to _KSU_ROBOESP32_p1 {
-  return '<!doctype html><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=no"><style>*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%}body{margin:0;font:16px system-ui;background:#0e1116;color:#e6edf3;text-align:center;overflow:hidden}#w{display:flex;flex-direction:column;height:100dvh;padding:10px;gap:8px}.z{flex:1;display:none;overflow-y:auto}.z.y{display:flex;gap:12px}#li,#mo{flex-direction:column}#p{flex:1.1;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:8px}#F{grid-area:1/2}#L{grid-area:2/1}#S{grid-area:2/2}#R{grid-area:2/3}#B{grid-area:3/2}#g{flex:1;display:flex;flex-direction:column;'
-}
-
-to _KSU_ROBOESP32_p2 {
-  return 'justify-content:center;gap:10px}button{border:0;border-radius:14px;background:#1b2430;color:#7ee2b8;font-size:26px;touch-action:none}.on{background:#7ee2b8!important;color:#0e1116!important}#S{background:#2a1b20;color:#ff8f8f;font-size:20px}input{-webkit-appearance:none;appearance:none;width:100%;height:56px;background:none;margin:0}input::-webkit-slider-runnable-track{height:22px;border-radius:11px;background:#1b2430}input::-webkit-slider-thumb{-webkit-appearance:none;width:48px;height:48px;border-radius:24px;background:#7ee2b8;margin-top:-13px}input::-moz-range-track{height:22px;border-radius:11px;background:#1b2430}input::-moz-range-thumb{width:48px;height:48px;border:0;border-radius:24px'
-}
-
-to _KSU_ROBOESP32_p3 {
-  return ';background:#7ee2b8}.n{font-size:14px;letter-spacing:1px;color:#9aa6b4;text-align:left}.x{display:flex;gap:8px}.x button{flex:1;height:52px;font-size:14px}.x div{flex:1}#rot{display:none;padding-top:44vh;color:#7ee2b8;letter-spacing:1px}@media(orientation:portrait){#w{display:none}#rot{display:block}}</style><div id=w><div id=Y class=x></div><div id=d class="z y"><div id=p><button id=F>&#9650;</button><button id=L>&#9664;</button><button id=S>&#9632;</button><button id=R>&#9654;</button><button id=B>&#9660;</button></div><div id=g><div><div id=t class=n>SPEED 70%</div><input id=sp type=range min=20 max=100 value=70></div><div><div id=u class=n>SERVO 90&deg;</div><input id=sv type=range min=0'
-}
-
-to _KSU_ROBOESP32_p4 {
-  return ' max=180 value=90></div><div id=r class=x><button id=W>&#9728; LIGHT</button><button id=H>&#9834; HORN</button></div></div></div><div id=li class=z><div id=O class=x></div><div id=A class=x></div><div id=Q class=x></div></div><div id=mo class=z><div id=X></div><div id=K class=x></div><div id=I class=n></div></div></div><div id=rot>&#8635; ROTATE TO LANDSCAPE</div><script>var q=null,b=0,C={F:"Forward",B:"Backward",L:"Left",R:"Right"},E=function(i){return document.getElementById(i)};function s(p){q=p;g()}function g(){if(b||q==null)return;b=1;var p=q;q=null;var d=function(){b=0;g()};fetch("/"+p).then(d,d)}"FBLR".split("").forEach(function(i){var e=E(i);e.onpointerdown=function(v){'
-}
-
-to _KSU_ROBOESP32_p5 {
-  return 'v.preventDefault();e.className="on";s(C[i])};e.onpointerup=e.onpointercancel=e.onpointerleave=function(){if(e.className){e.className="";s("Stop")}}});E("S").onclick=function(){s("Stop")};var m=0;E("W").onpointerdown=function(v){v.preventDefault();m=m?0:1;this.className=m?"on":"";s("Light"+m)};E("H").onpointerdown=function(v){v.preventDefault();s("Horn")};E("sp").oninput=function(){E("t").textContent="SPEED "+this.value+"%"};E("sp").onchange=function(){s("Speed_"+this.value)};E("sv").oninput=function(){E("u").textContent="SERVO "+this.value+"\u00b0";s("Servo_"+this.value)};var k={ArrowUp:"F",ArrowDown:"B",ArrowLeft:"L",ArrowRight:"R",w:"F",s:"B",a:"L",d:"R"};onkeydown=function(e){var c=k['
-}
-
-to _KSU_ROBOESP32_p6 {
-  return 'e.key];if(c&&!e.repeat){E(c).className="on";s(C[c])}};onkeyup=function(e){var c=k[e.key];if(c){E(c).className="";s("Stop")}};const y=t=>document.createElement(t);const M=(p,t,f)=>p.appendChild(Object.assign(y("button"),{textContent:t,onclick:f}));const T=["DRIVE","LIGHT","MORE"].map((l,i)=>M(Y,l,()=>P(i)));let G=0,J=0,Z=0;T[0].className="on";function P(n){Z=n;for(let i=0;i<3;i++){[d,li,mo][i].className=i==n?"z y":"z";T[i].className=i==n?"on":""}}[[255,0,0],[255,80,0],[255,220,0],[0,200,0],[0,200,200],[0,80,255],[200,0,255],[255,255,255]].forEach(c=>M(O,"",()=>s("Rgb_"+G+"_"+c.join("_"))).style.background="rgb("+c+")");[0,1,"ALL"].forEach((l,i)=>M(A,l,()=>G=i));for(let i=1;i<9;i++)'
-}
-
-to _KSU_ROBOESP32_p7 {
-  return '{const e=M(Q,i);e.onclick=()=>s("Led_"+i+"_"+ +e.classList.toggle("on"))}const V=(p,o,h,v,b,f)=>{const d=p.appendChild(y("div"));d.textContent=b;const i=d.appendChild(Object.assign(y("input"),{type:"range",min:o,max:h,value:v}));i.oninput=()=>f(i.value);return i};[["_","D4"],["B_","D5"],["C_","D18"],["D_","D19"]].forEach(a=>V(X,0,180,90,a[1],v=>s("Servo"+a[0]+v)));[1,2].forEach(i=>{const N=V(K,-100,100,0,"M"+i,v=>s("Motor_"+i+"_"+v));N.onchange=()=>{N.value=0;N.oninput()}});[[A,"DIM-","Dim_-25"],[A,"DIM+","Dim_25"],[A,"ON","Leds_1"],[A,"OFF","Leds_0"],[K,"SONG","Song"],[K,"BEEP","Beep"]].forEach(a=>M(a[0],a[1],()=>s(a[2])));const U=V(K,200,2000,440,"TONE",()=>{});M(K,"PLAY",()=>s("Tone_"+'
-}
-
-to _KSU_ROBOESP32_p8 {
-  return 'U.value+"_300"));const sd=Object.assign(y("div"),{className:"n",textContent:"DIST -- cm"});sd.style.cssText="font-size:22px;color:#7ee2b8";E("g").insertBefore(sd,E("g").firstChild);function N(){if(Z==1||b){J=setTimeout(N,400);return}fetch("/Status").then(r=>r.text(),()=>0).then(t=>{if(t){const v=t.split(","),c=(+v[4]||"--");sd.textContent="DIST "+c+" cm";I.textContent="D34 "+(+v[0]?"\u25cf":"\u25cb")+" D35 "+(+v[1]?"\u25cf":"\u25cb")+" DIST "+c+" cm"}J=setTimeout(N,Z==2?500:800)})}N();</script>'
-}
-
-
 
 
 module NeoPixel Output
@@ -928,8 +1010,6 @@ to setNeoPixelColors25 c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13 c14 c15 c16 c1
 }
 
 
-
-
 module 'Robo ESP32' Input
 author 'Cytron Technologies'
 version 1 1 
@@ -1065,8 +1145,6 @@ to roboESP32_stop_motor motor {
 }
 
 
-
-
 module Servo Output
 author MicroBlocks
 version 1 4 
@@ -1170,8 +1248,6 @@ to stopServo which {
     atPut ('_servoIndex' which) _servoPulseWidth 0
   }
 }
-
-
 
 
 module Tone Output
@@ -1382,8 +1458,6 @@ to tone_startNote note octave {
 }
 
 
-
-
 module WiFi Comm
 author MicroBlocks
 version 1 10 
@@ -1459,79 +1533,4 @@ to wifiCreateHotspot ssid password {
   '[net:setDomainName]' 'microblocks'
   sayIt 'My IP address is:' ('[net:myIPAddress]')
 }
-
-
-
-
-module 'HTTP server' Comm
-author MicroBlocks
-version 1 3
-depends WiFi
-tags http network
-description 'Create an HTTP server in MicroBlocks. You can use this library to allow remote control for your Wifi-enabled board.'
-
-  spec 'r' '[net:httpServerGetRequest]' 'HTTP server request : binary data _ : port _' 'bool num' false 8080
-  spec 'r' 'request method' 'method of request _' 'str' ''
-  spec 'r' 'path of request' 'path of request _' 'str' ''
-  spec 'r' 'headers of request' 'headers of request _' 'str' ''
-  spec 'r' 'body of request' 'body of request _' 'str' ''
-  spec 'r' 'content length of request' 'content length of request _' 'str' ''
-  spec ' ' '[net:respondToHttpRequest]' 'respond _ to HTTP request : with body _ : and headers _ : keepAlive _' 'str str str bool' '200 OK' 'Welcome to the MicroBlocks HTTP server' 'Content-Type: text/plain' false
-  spec 'r' '_endOfHeaders' '_end of headers _' 'str'
-  spec 'r' '_toString' '_toString _' 'auto' 'abc'
-
-to 'body of request' request {
-  i = ('_endOfHeaders' request)
-  if (i < 0) {
-    return ''
-  }
-  return ('[data:copyFromTo]' request (i + 4))
-}
-
-to 'content length of request' request {
-  local 'i' ('_endOfHeaders' request)
-  if (i < 0) {
-    return 0
-  }
-  local 'j' ('[data:find]' 'Content-Length: ' request)
-  if (j < 0) {
-    comment 'Try alternate capitalization'
-    j = ('[data:find]' 'Content-length: ' request)
-  }
-  if (or (j < 0) (j > i)) {
-    return 0
-  }
-  j += 16
-  local 'k' ('[data:find]' ('[data:unicodeString]' 13) request j)
-  return (('[data:copyFromTo]' request j (k - 1)) + 0)
-}
-
-to 'headers of request' request {
-  i = ('_endOfHeaders' request)
-  if (i < 0) {
-    return ''
-  }
-  return ('_toString' ('[data:copyFromTo]' request 1 (i - 1)))
-}
-
-to 'path of request' request {
-  return ('_toString' ('[data:copyFromTo]' request (('[data:find]' ' ' request) + 1) (('[data:find]' ' HTTP' request) - 1)))
-}
-
-to 'request method' request {
-  return ('_toString' ('[data:copyFromTo]' request 1 (('[data:find]' ' ' request) - 1)))
-}
-
-to '_endOfHeaders' request {
-  return ('[data:find]' ('[data:unicodeString]' ('[data:makeList]' 13 10 13 10)) request)
-}
-
-to '_toString' aStringOrByteArray {
-  comment 'If argument is a byte array, convert it to a string. '
-  if (not (isType aStringOrByteArray 'string')) {
-    aStringOrByteArray = ('[data:join]' '' aStringOrByteArray)
-  }
-  return aStringOrByteArray
-}
-
 
