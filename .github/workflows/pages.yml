@@ -23,6 +23,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      # Pages Source must be "GitHub Actions", not "Deploy from a branch".
+      # On a branch source GitHub also runs its built-in "pages build and
+      # deployment" workflow, and the two deployments race for the
+      # github-pages environment — whichever loses gets cancelled, which is
+      # how commit 4193bb7 silently failed to reach the live site.
+      - name: Force Pages source to GitHub Actions
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api -X PUT "repos/${GITHUB_REPOSITORY}/pages" -f build_type=workflow \
+            && echo "Pages source set to GitHub Actions" \
+            || echo "Could not change Pages source - set it by hand in Settings > Pages"
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
